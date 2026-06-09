@@ -1,5 +1,46 @@
 {
-  "LandingPage": {
-    "title": "Hello world!"
+  "Common": {
+    "siteName": "Chronicle",
+    "minRead": "分"
+  },
+  "Header": {
+    "articles": "記事",
+    "about": "について"
+  },
+  "Footer": {
+    "copyright": "© 2024 Chronicle. Crafted with precision.",
+    "privacyPolicy": "プライバシーポリシー",
+    "termsOfService": "利用規約",
+    "contact": "お問い合わせ"
+  },
+  "SearchBar": {
+    "placeholder": "記事、タグ、トピックを検索..."
+  },
+  "Home": {
+    "title": {
+      "title": "遠回りの先へ",
+      "subtitle": "海外で働き、学び、鍛える。フランスからカナダへ続く挑戦の記録。"
+    },
+    "featured": {
+      "heading": "FEATURED / 注目の記事"
+    },
+    "latest": {
+      "heading": "LATEST / 最新の記事"
+    },
+    "tags": {
+      "heading": "TAGS / タグ"
+    },
+    "newsletter": {
+      "title": "ニュースレター",
+      "description": "最新の技術記事、カナダでの生活の知見、パーソナルなプロジェクトの進捗を月に1回お届けします。",
+      "emailPlaceholder": "メールアドレス",
+      "subscribeButton": "購読する"
+    }
+  },
+  "About": {
+    "title": "This is About page!"
+  },
+  "Search": {
+    "title": "This is Search page!"
   }
 }
