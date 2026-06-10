@@ -1,5 +1,46 @@
 {
-  "LandingPage": {
-    "title": "Hello world!"
+  "Common": {
+    "siteName": "Chronicle",
+    "minRead": "min read"
+  },
+  "Header": {
+    "articles": "Articles",
+    "about": "About"
+  },
+  "Footer": {
+    "copyright": "© 2024 Chronicle. Crafted with precision.",
+    "privacyPolicy": "Privacy Policy",
+    "termsOfService": "Terms of Service",
+    "contact": "Contact"
+  },
+  "SearchBar": {
+    "placeholder": "Search articles, tags, topics..."
+  },
+  "Home": {
+    "title": {
+      "title": "Beyond the Detour",
+      "subtitle": "Working, learning, and training abroad. A chronicle of challenges from France to Canada."
+    },
+    "featured": {
+      "heading": "FEATURED"
+    },
+    "latest": {
+      "heading": "LATEST"
+    },
+    "tags": {
+      "heading": "TAGS"
+    },
+    "newsletter": {
+      "title": "Newsletter",
+      "description": "Get the latest tech articles, insights from life in Canada, and updates on personal projects once a month.",
+      "emailPlaceholder": "Email address",
+      "subscribeButton": "Subscribe"
+    }
+  },
+  "About": {
+    "title": "This is About page!"
+  },
+  "Search": {
+    "title": "This is Search page!"
   }
 }

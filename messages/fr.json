@@ -1,5 +1,46 @@
 {
-  "LandingPage": {
-    "title": "Hello world!"
+  "Common": {
+    "siteName": "Chronicle",
+    "minRead": "min de lecture"
+  },
+  "Header": {
+    "articles": "Articles",
+    "about": "À propos"
+  },
+  "Footer": {
+    "copyright": "© 2024 Chronicle. Conçu avec précision.",
+    "privacyPolicy": "Politique de confidentialité",
+    "termsOfService": "Conditions d'utilisation",
+    "contact": "Contact"
+  },
+  "SearchBar": {
+    "placeholder": "Rechercher des articles, des tags, des sujets..."
+  },
+  "Home": {
+    "title": {
+      "title": "Au-delà du détour",
+      "subtitle": "Travailler, apprendre et s'entraîner à l'étranger. Une chronique des défis de la France au Canada."
+    },
+    "featured": {
+      "heading": "À LA UNE"
+    },
+    "latest": {
+      "heading": "DERNIERS ARTICLES"
+    },
+    "tags": {
+      "heading": "TAGS"
+    },
+    "newsletter": {
+      "title": "Newsletter",
+      "description": "Recevez les derniers articles techniques, des insights de la vie au Canada et des mises à jour sur les projets personnels une fois par mois.",
+      "emailPlaceholder": "Adresse e-mail",
+      "subscribeButton": "S'abonner"
+    }
+  },
+  "About": {
+    "title": "This is About page!"
+  },
+  "Search": {
+    "title": "This is Search page!"
   }
 }
