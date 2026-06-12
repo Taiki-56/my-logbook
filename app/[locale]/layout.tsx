@@ -3,8 +3,6 @@ import type { Metadata } from "next";
 import { NextIntlClientProvider, hasLocale } from "next-intl";
 import { notFound } from "next/navigation";
 
-import Footer from "@/components/Footer";
-import Header from "@/components/Header";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -27,11 +25,7 @@ const LocaleLayout = async ({ children, params }: Props) => {
   return (
     <html lang={locale}>
       <body>
-        <NextIntlClientProvider>
-          <Header />
-          {children}
-          <Footer />
-        </NextIntlClientProvider>
+        <NextIntlClientProvider>{children}</NextIntlClientProvider>
       </body>
     </html>
   );
