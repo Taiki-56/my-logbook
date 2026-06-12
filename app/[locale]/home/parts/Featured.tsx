@@ -63,7 +63,7 @@ const Featured = () => {
   const handleTagClick = (e: React.MouseEvent, tag: string) => {
     e.preventDefault();
     e.stopPropagation();
-    router.push(`/tags?tag=${tag}`);
+    router.push(`/posts?tag=${tag}`);
   };
 
   return (

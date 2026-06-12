@@ -38,9 +38,192 @@
     }
   },
   "About": {
-    "title": "This is About page!"
+    "profile": {
+      "name": "Alex Mercer",
+      "jobTitle": "INGÉNIEUR LOGICIEL"
+    },
+    "coreFocus": {
+      "heading": "DOMAINES PRINCIPAUX",
+      "focuses": ["Apprentissage automatique", "Architecture système", "React & Node", "Hypertrophie"]
+    },
+    "biography": {
+      "heading": "Entre code et culture.",
+      "paragraph1": "Actuellement basé entre Toronto et Tokyo, je conçois et construis des systèmes logiciels haute performance. Mon travail est motivé par une fascination profonde pour la façon dont l'intelligence artificielle peut augmenter les capacités humaines, en se concentrant fortement sur l'architecture évolutive et les interfaces utilisateur minimales et précises.",
+      "paragraph2": "La discipline requise pour concevoir des systèmes distribués robustes est parallèle à mon engagement envers le bodybuilding. Les deux exigent de la cohérence, une progression progressive et une attention méticuleuse aux détails. Qu'il s'agisse d'optimiser un réseau neuronal ou de structurer un cycle d'entraînement, la philosophie sous-jacente reste la même : la pratique délibérée produit des résultats exponentiels."
+    },
+    "trajectory": {
+      "heading": "Trajectoire",
+      "current": "PRÉSENT",
+      "timeline": [
+        {
+          "period": "2022 - PRÉSENT",
+          "title": "Ingénieur IA senior",
+          "company": "Nexus Labs, Tokyo (À distance).",
+          "description": "Direction du développement de frameworks d'orchestration LLM et optimisation des pipelines d'inférence pour les clients d'entreprise."
+        },
+        {
+          "period": "2019 - 2022",
+          "title": "Développeur Full Stack",
+          "company": "Vanguard Tech, Toronto.",
+          "description": "Architecture et mise à l'échelle d'une architecture microservices gérant plus de 10 millions de requêtes quotidiennes. Mentorat d'ingénieurs juniors."
+        }
+      ]
+    }
   },
   "Search": {
-    "title": "This is Search page!"
+    "noResults": {
+      "heading": "Aucun résultat trouvé",
+      "description": "Nous n'avons trouvé aucun article correspondant à votre recherche. Essayez de vérifier l'orthographe ou d'utiliser des termes plus généraux.",
+      "suggestedTopics": "SUJETS SUGGÉRÉS",
+      "viewAll": "Voir tous les articles"
+    }
+  },
+  "Posts": {
+    "pageTitle": "Tous les articles",
+    "searchPrefix": "Recherche:",
+    "tagPrefix": "Tag:",
+    "clear": "Effacer",
+    "activeFilters": "FILTRES ACTIFS",
+    "readTime": "min de lecture",
+    "previousPage": "Précédent",
+    "nextPage": "Suivant"
+  },
+  "Admin": {
+    "login": {
+      "title": "BlogAdmin",
+      "subtitle": "Connectez-vous à votre compte",
+      "emailLabel": "E-mail",
+      "emailPlaceholder": "vous@exemple.com",
+      "passwordLabel": "Mot de passe",
+      "passwordPlaceholder": "••••••••",
+      "forgotPassword": "Mot de passe oublié ?",
+      "signInButton": "Se connecter"
+    },
+    "sidebar": {
+      "version": "v2.4.0",
+      "newPost": "Nouvel article",
+      "dashboard": "Tableau de bord",
+      "posts": "Articles",
+      "media": "Médias",
+      "settings": "Paramètres",
+      "support": "Support"
+    },
+    "dashboard": {
+      "title": "Tableau de bord CMS",
+      "tabDashboard": "Tableau de bord",
+      "tabPosts": "Articles",
+      "overview": "Aperçu",
+      "metricsSubtitle": "Vos métriques de contenu pour les 30 derniers jours.",
+      "lastDays": "30 derniers jours",
+      "totalPosts": "TOTAL DES ARTICLES",
+      "draftPosts": "BROUILLONS",
+      "published": "PUBLIÉS",
+      "private": "PRIVÉS",
+      "stable": "Stable",
+      "vsLastMonth": "vs mois dernier",
+      "recentActivity": "Activité récente",
+      "viewAll": "Voir tout",
+      "postTitle": "TITRE DE L'ARTICLE",
+      "action": "ACTION",
+      "user": "UTILISATEUR",
+      "time": "HEURE",
+      "edited": "Modifié",
+      "translated": "Traduit",
+      "publishedAction": "Publié",
+      "systemStatus": "État du système",
+      "database": "Base de données",
+      "cdn": "CDN",
+      "operational": "Opérationnel",
+      "translationQueue": "FILE DE TRADUCTION",
+      "pendingItems": "Éléments en attente"
+    },
+    "posts": {
+      "title": "Gestion des articles",
+      "createPost": "Créer un article",
+      "searchPlaceholder": "Rechercher des articles par titre ou auteur...",
+      "allStatuses": "Tous les statuts",
+      "allCategories": "Toutes les catégories",
+      "tableTitle": "TITRE",
+      "tableAuthor": "AUTEUR",
+      "tableStatus": "STATUT",
+      "tableUpdatedAt": "MIS À JOUR LE",
+      "tableActions": "ACTIONS",
+      "statusPublished": "Publié",
+      "statusDraft": "Brouillon",
+      "statusArchived": "Archivé",
+      "showing": "Affichage de",
+      "to": "à",
+      "of": "sur",
+      "entries": "entrées"
+    },
+    "editor": {
+      "title": "Éditeur d'article",
+      "editTitle": "Modifier l'article",
+      "languageTabs": {
+        "japanese": "Japonais (JA)",
+        "english": "Anglais (EN)",
+        "french": "Français (FR)"
+      },
+      "autoSyncing": "Synchronisation automatique activée",
+      "titlePlaceholder": "Entrez le titre...",
+      "contentPlaceholder": "Commencez à écrire...",
+      "aiAssistant": "ASSISTANT IA",
+      "translateToEnglish": "Traduire en anglais",
+      "translateToFrench": "Traduire en français",
+      "generateSEO": "Générer les métadonnées SEO",
+      "suggestTags": "Suggérer des tags",
+      "publishSettings": "PARAMÈTRES DE PUBLICATION",
+      "status": "Statut",
+      "draft": "Brouillon",
+      "published": "Publié",
+      "scheduled": "Programmé",
+      "visibility": "Visibilité",
+      "public": "Public",
+      "private": "Privé",
+      "schedule": "Programmation",
+      "seoMetadata": "MÉTADONNÉES SEO",
+      "metaTitle": "Méta-titre",
+      "metaTitlePlaceholder": "Entrez le méta-titre...",
+      "metaDescription": "Méta-description",
+      "metaDescriptionPlaceholder": "Entrez la méta-description...",
+      "tagsCategories": "TAGS ET CATÉGORIES",
+      "tagsPlaceholder": "Ajouter un tag et appuyer sur Entrée...",
+      "saveDraft": "Enregistrer le brouillon",
+      "publish": "Publier",
+      "imageBlock": "Bloc Image - Cliquer pour modifier",
+      "paragraph": "Paragraphe"
+    },
+    "media": {
+      "title": "Bibliothèque multimédia",
+      "subtitle": "Gérez vos ressources, images et documents.",
+      "uploadAssets": "Télécharger des ressources",
+      "grid": "Grille",
+      "list": "Liste",
+      "allTypes": "Tous les types",
+      "images": "Images",
+      "documents": "Documents",
+      "video": "Vidéo",
+      "sortBy": "Trier par :",
+      "dateAddedNewest": "Date d'ajout (plus récent)",
+      "searchPlaceholder": "placeholder"
+    },
+    "settings": {
+      "title": "Paramètres",
+      "subtitle": "Gérez la configuration de votre site et les intégrations externes.",
+      "siteLogo": "LOGO DU SITE",
+      "logoInstructions": "Téléchargez une image carrée. Taille recommandée : 256x256 pixels. Formats JPEG ou PNG uniquement.",
+      "removeLogo": "Supprimer le logo",
+      "siteName": "NOM DU SITE",
+      "description": "DESCRIPTION",
+      "descriptionHelp": "Cette description peut apparaître dans les balises méta et les résultats de recherche.",
+      "socialProfiles": "Profils sociaux",
+      "githubUrl": "URL GITHUB",
+      "twitterUrl": "URL X (TWITTER)",
+      "cancel": "Annuler",
+      "saveChanges": "Enregistrer les modifications"
+    },
+    "header": {
+      "searchPlaceholder": "Rechercher..."
+    }
   }
 }

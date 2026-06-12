@@ -38,9 +38,192 @@
     }
   },
   "About": {
-    "title": "This is About page!"
+    "profile": {
+      "name": "Alex Mercer",
+      "jobTitle": "ソフトウェアエンジニア"
+    },
+    "coreFocus": {
+      "heading": "主な関心領域",
+      "focuses": ["機械学習", "システムアーキテクチャ", "React & Node", "筋肥大"]
+    },
+    "biography": {
+      "heading": "コードと文化を繋ぐ。",
+      "paragraph1": "現在トロントと東京を拠点に、高性能なソフトウェアシステムを設計・構築しています。人工知能が人間の能力をどのように拡張できるかという深い関心に基づき、スケーラブルなアーキテクチャとミニマルで精密なユーザーインターフェースに重点を置いて取り組んでいます。",
+      "paragraph2": "堅牢な分散システムを設計するために必要な規律は、ボディビルディングへの献身と共通しています。どちらも一貫性、段階的な進歩、そして細部への綿密な注意を必要とします。ニューラルネットワークの最適化であれ、トレーニングサイクルの構造化であれ、根底にある哲学は同じです。意図的な実践が指数関数的な結果をもたらすのです。"
+    },
+    "trajectory": {
+      "heading": "キャリアの軌跡",
+      "current": "現在",
+      "timeline": [
+        {
+          "period": "2022年 - 現在",
+          "title": "シニアAIエンジニア",
+          "company": "Nexus Labs, 東京 (リモート)",
+          "description": "エンタープライズクライアント向けのLLMオーケストレーションフレームワークの開発と推論パイプラインの最適化をリード。"
+        },
+        {
+          "period": "2019年 - 2022年",
+          "title": "フルスタック開発者",
+          "company": "Vanguard Tech, トロント",
+          "description": "1日1000万以上のリクエストを処理するマイクロサービスアーキテクチャの設計と拡張。ジュニアエンジニアの指導も担当。"
+        }
+      ]
+    }
   },
   "Search": {
-    "title": "This is Search page!"
+    "noResults": {
+      "heading": "結果が見つかりませんでした",
+      "description": "検索条件に一致する記事が見つかりませんでした。スペルを確認するか、より一般的な用語を使用してみてください。",
+      "suggestedTopics": "おすすめのトピック",
+      "viewAll": "すべての記事を見る"
+    }
+  },
+  "Posts": {
+    "pageTitle": "すべての投稿",
+    "searchPrefix": "検索:",
+    "tagPrefix": "タグ:",
+    "clear": "クリア",
+    "activeFilters": "有効なフィルター",
+    "readTime": "分",
+    "previousPage": "前へ",
+    "nextPage": "次へ"
+  },
+  "Admin": {
+    "login": {
+      "title": "BlogAdmin",
+      "subtitle": "アカウントにサインイン",
+      "emailLabel": "メールアドレス",
+      "emailPlaceholder": "you@example.com",
+      "passwordLabel": "パスワード",
+      "passwordPlaceholder": "••••••••",
+      "forgotPassword": "パスワードをお忘れですか?",
+      "signInButton": "サインイン"
+    },
+    "sidebar": {
+      "version": "v2.4.0",
+      "newPost": "新規投稿",
+      "dashboard": "ダッシュボード",
+      "posts": "投稿",
+      "media": "メディア",
+      "settings": "設定",
+      "support": "サポート"
+    },
+    "dashboard": {
+      "title": "CMS ダッシュボード",
+      "tabDashboard": "ダッシュボード",
+      "tabPosts": "投稿",
+      "overview": "概要",
+      "metricsSubtitle": "過去30日間のコンテンツメトリクス。",
+      "lastDays": "過去30日間",
+      "totalPosts": "総投稿数",
+      "draftPosts": "下書き投稿",
+      "published": "公開済み",
+      "private": "非公開",
+      "stable": "安定",
+      "vsLastMonth": "対先月比",
+      "recentActivity": "最近のアクティビティ",
+      "viewAll": "すべて表示",
+      "postTitle": "投稿タイトル",
+      "action": "アクション",
+      "user": "ユーザー",
+      "time": "時刻",
+      "edited": "編集済み",
+      "translated": "翻訳済み",
+      "publishedAction": "公開済み",
+      "systemStatus": "システムステータス",
+      "database": "データベース",
+      "cdn": "CDN",
+      "operational": "稼働中",
+      "translationQueue": "翻訳キュー",
+      "pendingItems": "保留中のアイテム"
+    },
+    "posts": {
+      "title": "記事管理",
+      "createPost": "投稿を作成",
+      "searchPlaceholder": "タイトルまたは著者で記事を検索...",
+      "allStatuses": "すべてのステータス",
+      "allCategories": "すべてのカテゴリ",
+      "tableTitle": "タイトル",
+      "tableAuthor": "著者",
+      "tableStatus": "ステータス",
+      "tableUpdatedAt": "更新日時",
+      "tableActions": "アクション",
+      "statusPublished": "公開済み",
+      "statusDraft": "下書き",
+      "statusArchived": "アーカイブ済み",
+      "showing": "表示中",
+      "to": "から",
+      "of": "全",
+      "entries": "件"
+    },
+    "editor": {
+      "title": "投稿エディタ",
+      "editTitle": "投稿を編集",
+      "languageTabs": {
+        "japanese": "日本語 (JA)",
+        "english": "英語 (EN)",
+        "french": "フランス語 (FR)"
+      },
+      "autoSyncing": "自動同期有効",
+      "titlePlaceholder": "タイトルを入力...",
+      "contentPlaceholder": "本文を入力...",
+      "aiAssistant": "AI アシスタント",
+      "translateToEnglish": "英語に翻訳",
+      "translateToFrench": "フランス語に翻訳",
+      "generateSEO": "SEO メタデータを生成",
+      "suggestTags": "タグを提案",
+      "publishSettings": "公開設定",
+      "status": "ステータス",
+      "draft": "下書き",
+      "published": "公開済み",
+      "scheduled": "予約投稿",
+      "visibility": "表示設定",
+      "public": "公開",
+      "private": "非公開",
+      "schedule": "スケジュール",
+      "seoMetadata": "SEO メタデータ",
+      "metaTitle": "メタタイトル",
+      "metaTitlePlaceholder": "メタタイトルを入力...",
+      "metaDescription": "メタディスクリプション",
+      "metaDescriptionPlaceholder": "メタディスクリプションを入力...",
+      "tagsCategories": "タグとカテゴリ",
+      "tagsPlaceholder": "タグを追加してEnterキーを押す...",
+      "saveDraft": "下書き保存",
+      "publish": "公開",
+      "imageBlock": "画像ブロック - クリックして編集",
+      "paragraph": "段落"
+    },
+    "media": {
+      "title": "メディアライブラリ",
+      "subtitle": "アセット、画像、ドキュメントを管理します。",
+      "uploadAssets": "アセットをアップロード",
+      "grid": "グリッド",
+      "list": "リスト",
+      "allTypes": "すべてのタイプ",
+      "images": "画像",
+      "documents": "ドキュメント",
+      "video": "動画",
+      "sortBy": "並び替え:",
+      "dateAddedNewest": "追加日（新しい順）",
+      "searchPlaceholder": "placeholder"
+    },
+    "settings": {
+      "title": "設定",
+      "subtitle": "サイト設定と外部統合を管理します。",
+      "siteLogo": "サイトロゴ",
+      "logoInstructions": "正方形の画像をアップロードしてください。推奨サイズは256x256ピクセルです。JPEGまたはPNG形式のみ。",
+      "removeLogo": "ロゴを削除",
+      "siteName": "サイト名",
+      "description": "説明",
+      "descriptionHelp": "この説明はメタタグや検索結果に表示される場合があります。",
+      "socialProfiles": "ソーシャルプロフィール",
+      "githubUrl": "GITHUB URL",
+      "twitterUrl": "X (TWITTER) URL",
+      "cancel": "キャンセル",
+      "saveChanges": "変更を保存"
+    },
+    "header": {
+      "searchPlaceholder": "検索..."
+    }
   }
 }

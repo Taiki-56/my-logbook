@@ -38,9 +38,192 @@
     }
   },
   "About": {
-    "title": "This is About page!"
+    "profile": {
+      "name": "Alex Mercer",
+      "jobTitle": "SOFTWARE ENGINEER"
+    },
+    "coreFocus": {
+      "heading": "CORE FOCUS",
+      "focuses": ["Machine Learning", "Systems Architecture", "React & Node", "Hypertrophy"]
+    },
+    "biography": {
+      "heading": "Bridging code and culture.",
+      "paragraph1": "Currently operating between Toronto and Tokyo, I design and build high-performance software systems. My work is driven by a deep fascination with how artificial intelligence can augment human capabilities, focusing heavily on scalable architecture and minimal, precise user interfaces.",
+      "paragraph2": "The discipline required to engineer robust distributed systems parallels my dedication to bodybuilding. Both demand consistency, incremental progression, and a meticulous attention to detail. Whether optimizing a neural network or structuring a training cycle, the underlying philosophy remains the same: deliberate practice yields exponential results."
+    },
+    "trajectory": {
+      "heading": "Trajectory",
+      "current": "PRESENT",
+      "timeline": [
+        {
+          "period": "2022 - PRESENT",
+          "title": "Senior AI Engineer",
+          "company": "Nexus Labs, Tokyo (Remote).",
+          "description": "Spearheading development of LLM orchestration frameworks and optimizing inference pipelines for enterprise clients."
+        },
+        {
+          "period": "2019 - 2022",
+          "title": "Full Stack Developer",
+          "company": "Vanguard Tech, Toronto.",
+          "description": "Architected and scaled microservices architecture handling 10M+ daily requests. Mentored junior engineers."
+        }
+      ]
+    }
   },
   "Search": {
-    "title": "This is Search page!"
+    "noResults": {
+      "heading": "No results found",
+      "description": "We couldn't find any articles matching your search. Try checking your spelling or using more general terms.",
+      "suggestedTopics": "SUGGESTED TOPICS",
+      "viewAll": "View all articles"
+    }
+  },
+  "Posts": {
+    "pageTitle": "All Posts",
+    "searchPrefix": "Search:",
+    "tagPrefix": "Tag:",
+    "clear": "Clear",
+    "activeFilters": "ACTIVE FILTERS",
+    "readTime": "min read",
+    "previousPage": "Previous",
+    "nextPage": "Next"
+  },
+  "Admin": {
+    "login": {
+      "title": "BlogAdmin",
+      "subtitle": "Sign in to your account",
+      "emailLabel": "Email",
+      "emailPlaceholder": "you@example.com",
+      "passwordLabel": "Password",
+      "passwordPlaceholder": "••••••••",
+      "forgotPassword": "Forgot password?",
+      "signInButton": "Sign In"
+    },
+    "sidebar": {
+      "version": "v2.4.0",
+      "newPost": "New Post",
+      "dashboard": "Dashboard",
+      "posts": "Posts",
+      "media": "Media",
+      "settings": "Settings",
+      "support": "Support"
+    },
+    "dashboard": {
+      "title": "CMS Dashboard",
+      "tabDashboard": "Dashboard",
+      "tabPosts": "Posts",
+      "overview": "Overview",
+      "metricsSubtitle": "Your content metrics for the last 30 days.",
+      "lastDays": "Last 30 Days",
+      "totalPosts": "TOTAL POSTS",
+      "draftPosts": "DRAFT POSTS",
+      "published": "PUBLISHED",
+      "private": "PRIVATE",
+      "stable": "Stable",
+      "vsLastMonth": "vs last month",
+      "recentActivity": "Recent Activity",
+      "viewAll": "View All",
+      "postTitle": "POST TITLE",
+      "action": "ACTION",
+      "user": "USER",
+      "time": "TIME",
+      "edited": "Edited",
+      "translated": "Translated",
+      "publishedAction": "Published",
+      "systemStatus": "System Status",
+      "database": "Database",
+      "cdn": "CDN",
+      "operational": "Operational",
+      "translationQueue": "TRANSLATION QUEUE",
+      "pendingItems": "Pending items"
+    },
+    "posts": {
+      "title": "Article Management",
+      "createPost": "Create Post",
+      "searchPlaceholder": "Search articles by title or author...",
+      "allStatuses": "All Statuses",
+      "allCategories": "All Categories",
+      "tableTitle": "TITLE",
+      "tableAuthor": "AUTHOR",
+      "tableStatus": "STATUS",
+      "tableUpdatedAt": "UPDATED AT",
+      "tableActions": "ACTIONS",
+      "statusPublished": "Published",
+      "statusDraft": "Draft",
+      "statusArchived": "Archived",
+      "showing": "Showing",
+      "to": "to",
+      "of": "of",
+      "entries": "entries"
+    },
+    "editor": {
+      "title": "Post Editor",
+      "editTitle": "Edit Post",
+      "languageTabs": {
+        "japanese": "Japanese (JA)",
+        "english": "English (EN)",
+        "french": "French (FR)"
+      },
+      "autoSyncing": "Auto-syncing enabled",
+      "titlePlaceholder": "Enter title...",
+      "contentPlaceholder": "Start writing...",
+      "aiAssistant": "AI ASSISTANT",
+      "translateToEnglish": "Translate to English",
+      "translateToFrench": "Translate to French",
+      "generateSEO": "Generate SEO Metadata",
+      "suggestTags": "Suggest Tags",
+      "publishSettings": "PUBLISH SETTINGS",
+      "status": "Status",
+      "draft": "Draft",
+      "published": "Published",
+      "scheduled": "Scheduled",
+      "visibility": "Visibility",
+      "public": "Public",
+      "private": "Private",
+      "schedule": "Schedule",
+      "seoMetadata": "SEO METADATA",
+      "metaTitle": "Meta Title",
+      "metaTitlePlaceholder": "Enter meta title...",
+      "metaDescription": "Meta Description",
+      "metaDescriptionPlaceholder": "Enter meta description...",
+      "tagsCategories": "TAGS & CATEGORIES",
+      "tagsPlaceholder": "Add tag and press Enter...",
+      "saveDraft": "Save Draft",
+      "publish": "Publish",
+      "imageBlock": "Image Block - Click to Edit",
+      "paragraph": "Paragraph"
+    },
+    "media": {
+      "title": "Media Library",
+      "subtitle": "Manage your assets, images, and documents.",
+      "uploadAssets": "Upload Assets",
+      "grid": "Grid",
+      "list": "List",
+      "allTypes": "All Types",
+      "images": "Images",
+      "documents": "Documents",
+      "video": "Video",
+      "sortBy": "Sort by:",
+      "dateAddedNewest": "Date Added (Newest)",
+      "searchPlaceholder": "placeholder"
+    },
+    "settings": {
+      "title": "Settings",
+      "subtitle": "Manage your site configuration and external integrations.",
+      "siteLogo": "SITE LOGO",
+      "logoInstructions": "Upload a square image. Recommended size is 256x256 pixels. JPEG or PNG formats only.",
+      "removeLogo": "Remove Logo",
+      "siteName": "SITE NAME",
+      "description": "DESCRIPTION",
+      "descriptionHelp": "This description may appear in meta tags and search results.",
+      "socialProfiles": "Social Profiles",
+      "githubUrl": "GITHUB URL",
+      "twitterUrl": "X (TWITTER) URL",
+      "cancel": "Cancel",
+      "saveChanges": "Save Changes"
+    },
+    "header": {
+      "searchPlaceholder": "Search..."
+    }
   }
 }

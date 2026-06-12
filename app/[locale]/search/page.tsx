@@ -1,8 +1,13 @@
-import { useTranslations } from "next-intl";
+import SearchBar from "@/components/SearchBar";
+import SearchResults from "./parts/SearchResults";
 
 const Page = () => {
-  const t = useTranslations("Home.title");
-  return <h1>{t("title")}</h1>;
+  return (
+    <div className="max-w-170 mx-auto px-4 lg:px-6 py-12 lg:py-16">
+      <SearchBar />
+      <SearchResults />
+    </div>
+  );
 };
 
 export default Page;
