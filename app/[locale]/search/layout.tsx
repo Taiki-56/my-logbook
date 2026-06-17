@@ -1,7 +1,11 @@
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 
-const SearchLayout = async (children: React.ReactNode) => {
+type Props = {
+  children: React.ReactNode;
+};
+
+const SearchLayout = async ({ children }: Props) => {
   return (
     <>
       <Header />

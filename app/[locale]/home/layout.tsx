@@ -1,7 +1,11 @@
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 
-const HomeLayout = async (children: React.ReactNode) => {
+type Props = {
+  children: React.ReactNode;
+};
+
+const HomeLayout = async ({ children }: Props) => {
   return (
     <>
       <Header />
