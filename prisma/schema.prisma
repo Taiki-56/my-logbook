@@ -1,0 +1,252 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../lib/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum PostStatus {
+  DRAFT
+  PUBLISHED
+  PRIVATE
+}
+
+enum Locale {
+  JA
+  EN
+  FR
+}
+
+enum AIGenerationType {
+  TRANSLATION_EN
+  TRANSLATION_FR
+  TAG_GENERATION
+  SEO_GENERATION
+  EMBEDDING_GENERATION
+}
+
+enum AIGenerationStatus {
+  PENDING
+  SUCCESS
+  FAILED
+}
+
+model User {
+  id           String   @id @default(uuid()) @db.Uuid
+  email        String   @unique
+  passwordHash String
+
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  posts        Post[]
+
+  @@map("users")
+}
+
+model Post {
+  id           String      @id @default(uuid()) @db.Uuid
+
+  authorId     String      @db.Uuid
+
+  status       PostStatus  @default(DRAFT)
+
+  publishedAt  DateTime?
+
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+
+  author        User                @relation(fields: [authorId], references: [id])
+
+  translations  PostTranslation[]
+
+  postTags      PostTag[]
+
+  postMedia     PostMedia[]
+
+  aiLogs        AIGenerationLog[]
+
+  @@map("posts")
+}
+
+model PostTranslation {
+  id              String   @id @default(uuid()) @db.Uuid
+
+  postId          String   @db.Uuid
+
+  locale          Locale
+
+  title           String
+
+  slug            String   @unique
+
+  projectData     Json
+
+  html            String   @db.Text
+
+  seoTitle        String?
+
+  seoDescription  String?  @db.Text
+
+  isAiGenerated   Boolean  @default(false)
+
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  post            Post @relation(fields: [postId], references: [id])
+
+  embeddings      PostEmbedding[]
+
+  @@unique([postId, locale])
+
+  @@map("post_translations")
+}
+
+model Tag {
+  id          String   @id @default(uuid()) @db.Uuid
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  translations TagTranslation[]
+
+  postTags     PostTag[]
+
+  @@map("tags")
+}
+
+model TagTranslation {
+  id          String   @id @default(uuid()) @db.Uuid
+
+  tagId       String   @db.Uuid
+
+  locale      Locale
+
+  name        String
+
+  slug        String
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  tag         Tag @relation(fields: [tagId], references: [id])
+
+  @@unique([tagId, locale])
+
+  @@map("tag_translations")
+}
+
+model PostTag {
+  postId String @db.Uuid
+  tagId  String @db.Uuid
+
+  post   Post @relation(fields: [postId], references: [id])
+
+  tag    Tag  @relation(fields: [tagId], references: [id])
+
+  @@id([postId, tagId])
+
+  @@map("post_tags")
+}
+
+model Media {
+  id          String   @id @default(uuid()) @db.Uuid
+
+  publicId    String
+
+  url         String   @db.Text
+
+  mimeType    String
+
+  width       Int?
+
+  height      Int?
+
+  fileSize    Int?
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  postMedia   PostMedia[]
+
+  @@map("media")
+}
+
+model PostMedia {
+  postId   String @db.Uuid
+
+  mediaId  String @db.Uuid
+
+  post     Post  @relation(fields: [postId], references: [id])
+
+  media    Media @relation(fields: [mediaId], references: [id])
+
+  @@id([postId, mediaId])
+
+  @@map("post_media")
+}
+
+model PostEmbedding {
+  id                 String   @id @default(uuid()) @db.Uuid
+  postTranslationId  String   @db.Uuid
+
+  locale             Locale
+
+  embeddingModel     String
+
+  vector             String   @db.Text
+
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  postTranslation PostTranslation @relation(fields: [postTranslationId], references: [id])
+
+  @@map("post_embeddings")
+}
+
+model AIGenerationLog {
+  id          String   @id @default(uuid()) @db.Uuid
+
+  postId      String   @db.Uuid
+
+  type        AIGenerationType
+
+  status      AIGenerationStatus
+
+  prompt      String   @db.Text
+
+  response    String?  @db.Text
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  post        Post @relation(fields: [postId], references: [id])
+
+  @@map("ai_generation_logs")
+}
+
+model SiteSetting {
+  id               String   @id @default(uuid()) @db.Uuid
+
+  siteName         String
+
+  siteDescription  String? @db.Text
+
+  profileImage     String? @db.Text
+
+  githubUrl        String? @db.Text
+
+  xUrl             String? @db.Text
+
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  @@map("site_settings")
+}
