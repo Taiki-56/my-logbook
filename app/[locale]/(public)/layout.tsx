@@ -5,14 +5,14 @@ type Props = {
   children: React.ReactNode;
 };
 
-const HomeLayout = async ({ children }: Props) => {
+const PublicLayout = async ({ children }: Props) => {
   return (
     <>
       <Header />
-      {children}
+      <main>{children}</main>
       <Footer />
     </>
   );
 };
 
-export default HomeLayout;
+export default PublicLayout;

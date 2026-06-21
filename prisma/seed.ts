@@ -1,17 +1,25 @@
+import "dotenv/config";
+
+import bcrypt from "bcrypt";
 import prisma from "../lib/prisma";
 
 async function main() {
+  const email = process.env.ADMIN_EMAIL!;
+  const password = process.env.ADMIN_PASSWORD!;
+  const passwordHash = await bcrypt.hash(password, 10);
+
   const user = await prisma.user.upsert({
     where: {
-      email: "zvldvuofqt@icloud.com"
+      email
     },
-    update: {},
+    update: {
+      passwordHash
+    },
     create: {
-      email: "zvldvuofqt@icloud.com",
-      passwordHash: "hmyktn4241"
+      email,
+      passwordHash
     }
   });
-
   console.log("Created user:", user);
 }
 
