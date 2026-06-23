@@ -6,7 +6,11 @@ import Credentials from "next-auth/providers/credentials";
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: PrismaAdapter(prisma),
-  session: { strategy: "jwt" },
+  session: {
+    strategy: "jwt",
+    maxAge: 2 * 60 * 60, //* セッション有効期限 = 2時間
+    updateAge: 30 * 60 //* 有効期限を自動延長（ローリングセッション）するための間隔（秒数）を設定
+  },
   providers: [
     Credentials({
       name: "Credentials",
