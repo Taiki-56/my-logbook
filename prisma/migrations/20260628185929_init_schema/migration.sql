@@ -2,9 +2,6 @@
 CREATE TYPE "PostStatus" AS ENUM ('DRAFT', 'PUBLISHED', 'PRIVATE');
 
 -- CreateEnum
-CREATE TYPE "Locale" AS ENUM ('JA', 'EN', 'FR');
-
--- CreateEnum
 CREATE TYPE "AIGenerationType" AS ENUM ('TRANSLATION_EN', 'TRANSLATION_FR', 'TAG_GENERATION', 'SEO_GENERATION', 'EMBEDDING_GENERATION');
 
 -- CreateEnum
@@ -37,11 +34,11 @@ CREATE TABLE "posts" (
 CREATE TABLE "post_translations" (
     "id" UUID NOT NULL,
     "postId" UUID NOT NULL,
-    "locale" "Locale" NOT NULL,
+    "locale" TEXT NOT NULL,
     "title" TEXT NOT NULL,
     "slug" TEXT NOT NULL,
-    "projectData" JSONB NOT NULL,
-    "html" TEXT NOT NULL,
+    "projectData" JSONB,
+    "html" TEXT,
     "seoTitle" TEXT,
     "seoDescription" TEXT,
     "isAiGenerated" BOOLEAN NOT NULL DEFAULT false,
@@ -64,7 +61,7 @@ CREATE TABLE "tags" (
 CREATE TABLE "tag_translations" (
     "id" UUID NOT NULL,
     "tagId" UUID NOT NULL,
-    "locale" "Locale" NOT NULL,
+    "locale" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "slug" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -108,7 +105,7 @@ CREATE TABLE "post_media" (
 CREATE TABLE "post_embeddings" (
     "id" UUID NOT NULL,
     "postTranslationId" UUID NOT NULL,
-    "locale" "Locale" NOT NULL,
+    "locale" TEXT NOT NULL,
     "embeddingModel" TEXT NOT NULL,
     "vector" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -149,37 +146,40 @@ CREATE TABLE "site_settings" (
 CREATE UNIQUE INDEX "users_email_key" ON "users"("email");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "post_translations_slug_key" ON "post_translations"("slug");
-
--- CreateIndex
 CREATE UNIQUE INDEX "post_translations_postId_locale_key" ON "post_translations"("postId", "locale");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "post_translations_locale_slug_key" ON "post_translations"("locale", "slug");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "tag_translations_tagId_locale_key" ON "tag_translations"("tagId", "locale");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "tag_translations_locale_slug_key" ON "tag_translations"("locale", "slug");
 
 -- AddForeignKey
 ALTER TABLE "posts" ADD CONSTRAINT "posts_authorId_fkey" FOREIGN KEY ("authorId") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "post_translations" ADD CONSTRAINT "post_translations_postId_fkey" FOREIGN KEY ("postId") REFERENCES "posts"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "post_translations" ADD CONSTRAINT "post_translations_postId_fkey" FOREIGN KEY ("postId") REFERENCES "posts"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "tag_translations" ADD CONSTRAINT "tag_translations_tagId_fkey" FOREIGN KEY ("tagId") REFERENCES "tags"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "tag_translations" ADD CONSTRAINT "tag_translations_tagId_fkey" FOREIGN KEY ("tagId") REFERENCES "tags"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "post_tags" ADD CONSTRAINT "post_tags_postId_fkey" FOREIGN KEY ("postId") REFERENCES "posts"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "post_tags" ADD CONSTRAINT "post_tags_postId_fkey" FOREIGN KEY ("postId") REFERENCES "posts"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "post_tags" ADD CONSTRAINT "post_tags_tagId_fkey" FOREIGN KEY ("tagId") REFERENCES "tags"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "post_tags" ADD CONSTRAINT "post_tags_tagId_fkey" FOREIGN KEY ("tagId") REFERENCES "tags"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "post_media" ADD CONSTRAINT "post_media_postId_fkey" FOREIGN KEY ("postId") REFERENCES "posts"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "post_media" ADD CONSTRAINT "post_media_postId_fkey" FOREIGN KEY ("postId") REFERENCES "posts"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "post_media" ADD CONSTRAINT "post_media_mediaId_fkey" FOREIGN KEY ("mediaId") REFERENCES "media"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "post_media" ADD CONSTRAINT "post_media_mediaId_fkey" FOREIGN KEY ("mediaId") REFERENCES "media"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "post_embeddings" ADD CONSTRAINT "post_embeddings_postTranslationId_fkey" FOREIGN KEY ("postTranslationId") REFERENCES "post_translations"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "post_embeddings" ADD CONSTRAINT "post_embeddings_postTranslationId_fkey" FOREIGN KEY ("postTranslationId") REFERENCES "post_translations"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "ai_generation_logs" ADD CONSTRAINT "ai_generation_logs_postId_fkey" FOREIGN KEY ("postId") REFERENCES "posts"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "ai_generation_logs" ADD CONSTRAINT "ai_generation_logs_postId_fkey" FOREIGN KEY ("postId") REFERENCES "posts"("id") ON DELETE CASCADE ON UPDATE CASCADE;

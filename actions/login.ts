@@ -13,7 +13,7 @@ export async function loginAction(credentials: CredentialFormValues) {
       redirect: false
     });
 
-    // ログイン成功後にリダイレクト
+    //* redirect if successfully logined
     redirect({ href: "/admin/dashboard", locale: "ja" });
   } catch (error) {
     if (error instanceof AuthError) {
