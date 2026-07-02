@@ -1,9 +1,7 @@
-"use server";
-
-import PostForm from "@/components/PostForm";
+import PostForm from "@/components/admin/PostForm";
 
 const Page = async () => {
-  return <PostForm />;
+  return <PostForm mode="create" />;
 };
 
 export default Page;

@@ -1,1 +1,38 @@
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+/* The belows are for tiptap editor. */
+.tiptap-content h2 {
+  font-size: 2rem;
+  line-height: 1.2;
+  font-weight: 700;
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+}
+
+.tiptap-content h3 {
+  font-size: 1.5rem;
+  line-height: 1.25;
+  font-weight: 700;
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.tiptap-content ul {
+  list-style: disc;
+  margin: 1rem 0;
+  padding-left: 1.5rem;
+}
+
+.tiptap-content ol {
+  list-style: decimal;
+  margin: 1rem 0;
+  padding-left: 1.5rem;
+}
+
+.tiptap-content blockquote {
+  border-left: 4px solid #0058c3;
+  background: #f0f5ff;
+  margin: 1rem 0;
+  padding: 0.75rem 1rem;
+}

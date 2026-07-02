@@ -1,4 +1,4 @@
-import SearchBar from "@/components/SearchBar";
+import SearchBar from "@/components/public/SearchBar";
 import SearchResults from "./parts/SearchResults";
 
 const Page = () => {

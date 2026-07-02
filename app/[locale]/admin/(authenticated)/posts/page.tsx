@@ -1,6 +1,6 @@
 "use client";
 
-import AdminSidebar from "@/components/AdminSidebar";
+import AdminSidebar from "@/components/admin/AdminSidebar";
 import { Link } from "@/i18n/navigation";
 import { ChevronLeft, ChevronRight, MoreVertical, Plus, Search } from "lucide-react";
 import { useTranslations } from "next-intl";
