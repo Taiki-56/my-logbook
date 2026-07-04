@@ -5,7 +5,7 @@
 
 generator client {
   provider = "prisma-client"
-  output   = "../lib/generated/prisma"
+  output   = "../lib/generated"
 }
 
 datasource db {
@@ -18,235 +18,151 @@ enum PostStatus {
   PRIVATE
 }
 
-enum Locale {
-  JA
-  EN
-  FR
-}
-
-enum AIGenerationType {
-  TRANSLATION_EN
-  TRANSLATION_FR
-  TAG_GENERATION
-  SEO_GENERATION
-  EMBEDDING_GENERATION
-}
-
-enum AIGenerationStatus {
-  PENDING
-  SUCCESS
-  FAILED
-}
+//* ==========================================
+//* 1. User & Site Settings
+//* ==========================================
 
 model User {
   id           String   @id @default(uuid()) @db.Uuid
   email        String   @unique
-  passwordHash String
-
+  passwordHash String   //* Credentials(ID/Pass)認証用
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
-
   posts        Post[]
 
   @@map("users")
 }
 
+model SiteSetting {
+  id              String   @id @default(uuid()) @db.Uuid
+  siteName        String
+  siteDescription String?  @db.Text
+  profileImage    String?  @db.Text //* サイト全体の管理者画像として一本化
+  githubUrl       String?  @db.Text
+  xUrl            String?  @db.Text
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@map("site_settings")
+}
+
+//* ==========================================
+//* 2. Post & Content (Blog Core)
+//* ==========================================
+
 model Post {
-  id           String      @id @default(uuid()) @db.Uuid
-
-  authorId     String      @db.Uuid
-
-  status       PostStatus  @default(DRAFT)
-
-  publishedAt  DateTime?
-
-  createdAt    DateTime    @default(now())
-  updatedAt    DateTime    @updatedAt
-
-  author        User                @relation(fields: [authorId], references: [id])
-
-  translations  PostTranslation[]
-
-  postTags      PostTag[]
-
-  postMedia     PostMedia[]
-
-  aiLogs        AIGenerationLog[]
+  id          String        @id @default(uuid()) @db.Uuid
+  authorId    String        @db.Uuid
+  thumbnail   String?       @db.Text
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  
+  //* Relations
+  author      User          @relation(fields: [authorId], references: [id])
+  contents    PostContent[]
+  postTags    PostTag[]
+  postMedia   PostMedia[]
 
   @@map("posts")
 }
 
-model PostTranslation {
-  id              String   @id @default(uuid()) @db.Uuid
+model PostContent {
+  id             String      @id @default(uuid()) @db.Uuid
+  postId         String      @db.Uuid
+  locale         String      //* "ja" | "en" | "fr"
+  status         PostStatus  @default(DRAFT) //* ★ここへ移動！
+  publishedAt    DateTime?
+  title          String
+  slug           String
+  projectData    Json?
+  html           String?     @db.Text
+  seoTitle       String?
+  seoDescription String?     @db.Text
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
 
-  postId          String   @db.Uuid
-
-  locale          Locale
-
-  title           String
-
-  slug            String   @unique
-
-  projectData     Json
-
-  html            String   @db.Text
-
-  seoTitle        String?
-
-  seoDescription  String?  @db.Text
-
-  isAiGenerated   Boolean  @default(false)
-
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
-
-  post            Post @relation(fields: [postId], references: [id])
-
-  embeddings      PostEmbedding[]
+  //* Relations
+  post           Post        @relation(fields: [postId], references: [id], onDelete: Cascade)
 
   @@unique([postId, locale])
-
-  @@map("post_translations")
+  @@unique([locale, slug])
+  @@map("post_contents")
 }
 
+//* ==========================================
+//* 3. Taxonomy (Tags)
+//* ==========================================
+
 model Tag {
-  id          String   @id @default(uuid()) @db.Uuid
-
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  translations TagTranslation[]
-
-  postTags     PostTag[]
+  id        String       @id @default(uuid()) @db.Uuid
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+  
+  //* Relations
+  contents  TagContent[]
+  tags  PostTag[]
 
   @@map("tags")
 }
 
-model TagTranslation {
-  id          String   @id @default(uuid()) @db.Uuid
+model TagContent {
+  id        String   @id @default(uuid()) @db.Uuid
+  tagId     String   @db.Uuid
+  locale    String   //* "ja" | "en" | "fr"
+  name      String   //* 画面表示名 (例: 筋トレ)
+  slug      String   //* URL用 (例: workout)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  tagId       String   @db.Uuid
-
-  locale      Locale
-
-  name        String
-
-  slug        String
-
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  tag         Tag @relation(fields: [tagId], references: [id])
+  //* Relations
+  tag       Tag      @relation(fields: [tagId], references: [id], onDelete: Cascade)
 
   @@unique([tagId, locale])
-
-  @@map("tag_translations")
+  @@unique([locale, slug])
+  @@map("tag_contents")
 }
 
 model PostTag {
   postId String @db.Uuid
   tagId  String @db.Uuid
 
-  post   Post @relation(fields: [postId], references: [id])
+  //* Relations
+  post   Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
+  tag    Tag    @relation(fields: [tagId], references: [id], onDelete: Cascade)
 
-  tag    Tag  @relation(fields: [tagId], references: [id])
-
-  @@id([postId, tagId])
-
+  @@id([postId, tagId]) //* 複合主キー
   @@map("post_tags")
 }
 
+//* ==========================================
+//* 4. Media Management
+//* ==========================================
+
 model Media {
-  id          String   @id @default(uuid()) @db.Uuid
-
-  publicId    String
-
-  url         String   @db.Text
-
-  mimeType    String
-
-  width       Int?
-
-  height      Int?
-
-  fileSize    Int?
-
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  postMedia   PostMedia[]
+  id        String      @id @default(uuid()) @db.Uuid
+  publicId  String      @unique //* クラウドストレージ上の削除キー
+  url       String      @db.Text
+  mimeType  String
+  width     Int?        //* Next.js <Image> の CLS 対策用
+  height    Int?        //* Next.js <Image> の CLS 対策用
+  fileSize  Int?
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  
+  //* Relations
+  postMedia PostMedia[]
 
   @@map("media")
 }
 
 model PostMedia {
-  postId   String @db.Uuid
+  postId  String @db.Uuid
+  mediaId String @db.Uuid
 
-  mediaId  String @db.Uuid
+  //* Relations
+  post    Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
+  media   Media  @relation(fields: [mediaId], references: [id], onDelete: Cascade)
 
-  post     Post  @relation(fields: [postId], references: [id])
-
-  media    Media @relation(fields: [mediaId], references: [id])
-
-  @@id([postId, mediaId])
-
+  @@id([postId, mediaId]) //* 複合主キー
   @@map("post_media")
-}
-
-model PostEmbedding {
-  id                 String   @id @default(uuid()) @db.Uuid
-  postTranslationId  String   @db.Uuid
-
-  locale             Locale
-
-  embeddingModel     String
-
-  vector             String   @db.Text
-
-  createdAt          DateTime @default(now())
-  updatedAt          DateTime @updatedAt
-
-  postTranslation PostTranslation @relation(fields: [postTranslationId], references: [id])
-
-  @@map("post_embeddings")
-}
-
-model AIGenerationLog {
-  id          String   @id @default(uuid()) @db.Uuid
-
-  postId      String   @db.Uuid
-
-  type        AIGenerationType
-
-  status      AIGenerationStatus
-
-  prompt      String   @db.Text
-
-  response    String?  @db.Text
-
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  post        Post @relation(fields: [postId], references: [id])
-
-  @@map("ai_generation_logs")
-}
-
-model SiteSetting {
-  id               String   @id @default(uuid()) @db.Uuid
-
-  siteName         String
-
-  siteDescription  String? @db.Text
-
-  profileImage     String? @db.Text
-
-  githubUrl        String? @db.Text
-
-  xUrl             String? @db.Text
-
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @updatedAt
-
-  @@map("site_settings")
 }

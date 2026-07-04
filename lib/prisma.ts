@@ -1,7 +1,7 @@
 import "dotenv/config";
 
 import { PrismaPg } from "@prisma/adapter-pg";
-import { PrismaClient } from "./generated/prisma/client";
+import { PrismaClient } from "./generated/client";
 
 //* This file creates a Prisma Client and attaches it to the global object
 //* so that only one instance of the client is created in your application.

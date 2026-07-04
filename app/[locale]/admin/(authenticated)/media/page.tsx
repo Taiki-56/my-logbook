@@ -1,6 +1,6 @@
 "use client";
 
-import AdminSidebar from "@/components/AdminSidebar";
+import AdminSidebar from "@/components/admin/AdminSidebar";
 import { FileText, Grid3x3, Image as ImageIcon, List, Search, Upload, Video } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useState } from "react";

@@ -1,4 +1,4 @@
-import AdminHeader from "@/components/AdminHeader";
+import AdminHeader from "@/components/admin/AdminHeader";
 import { redirect } from "@/i18n/navigation";
 import { auth } from "@/lib/auth";
 import { getLocale } from "next-intl/server";

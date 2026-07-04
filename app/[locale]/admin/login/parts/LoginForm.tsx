@@ -6,13 +6,13 @@ import { Lock, Mail } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { loginAction } from "../actions";
+import { loginAction } from "../../../../../actions/login";
 
-export default function LoginForm() {
+const LoginForm = () => {
   const [submitStatus, setSubmitStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
   const t = useTranslations("Admin.login");
 
-  // React Hook Formの初期化
+  //* React Hook Formの初期化
   const {
     register,
     handleSubmit,
@@ -125,4 +125,6 @@ export default function LoginForm() {
       </div>
     </div>
   );
-}
+};
+
+export default LoginForm;
