@@ -24,9 +24,11 @@ import {
   Minus,
   Strikethrough
 } from "lucide-react";
+import uploadImage from "@/actions/uploadImage"; //* 追加
 
 type RichEditorProps = {
   initialContent?: Prisma.InputJsonValue | null;
+  initialHtml?: string | null;
   onChange: (json: JSONContent, html: string) => void;
   //* ※もし呼び出し元のロジック（saveActionなど）も型安全にしたい場合は、
   //* onChange: (json: JSONContent, html: string) => void; にするとさらに強力になります！
@@ -37,6 +39,8 @@ const EMPTY_DOCUMENT: JSONContent = {
   type: "doc",
   content: []
 };
+
+const removeEmptyImageTags = (html: string) => html.replace(/<img(?![^>]*\bsrc=)[^>]*>/gi, "");
 
 const editorExtensions = [
   StarterKit.configure({
@@ -52,11 +56,18 @@ const editorExtensions = [
   TextAlign.configure({ types: ["heading", "paragraph"] })
 ];
 
-const RichEditor = ({ initialContent, onChange }: RichEditorProps) => {
+const RichEditor = ({ initialContent, initialHtml, onChange }: RichEditorProps) => {
+  const initialEditorContent =
+    initialHtml && initialHtml.trim().length > 0
+      ? removeEmptyImageTags(initialHtml)
+      : initialContent
+        ? (initialContent as unknown as JSONContent)
+        : EMPTY_DOCUMENT;
+
   const editor = useEditor({
     extensions: editorExtensions,
-    //* 修正箇所: any を排除し、Tiptapの正式な型へアサーションします
-    content: initialContent ? (initialContent as unknown as JSONContent) : EMPTY_DOCUMENT,
+    //* HTMLを優先して復元し、保存済みの画像URLを編集画面で確実に再描画する
+    content: initialEditorContent,
     immediatelyRender: false,
     onUpdate: ({ editor }) => {
       onChange(editor.getJSON() as JSONContent, editor.getHTML());
@@ -74,12 +85,34 @@ const RichEditor = ({ initialContent, onChange }: RichEditorProps) => {
 
   if (!editor) return null;
 
-  //* 画像挿入ハンドラ（将来的にご自身のMedia Modal展開へ一発置換できる構造）
+  //* 画像挿入ハンドラ（ローカルからのアップロードに対応）
   const addImage = () => {
-    const url = window.prompt("画像のURLを入力してください (例: Supabase StorageのURL)");
-    if (url) {
-      editor.chain().focus().setImage({ src: url }).run();
-    }
+    const input = document.createElement("input");
+    input.type = "file";
+    input.accept = "image/*";
+    input.onchange = async (e) => {
+      const file = (e.target as HTMLInputElement).files?.[0];
+      if (!file) return;
+
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("type", "content-images");
+
+      // TODO: ここでローディング状態を開始するUIを追加するとUXが向上します
+      try {
+        const res = await uploadImage(formData);
+        if (res.success && res.url) {
+          editor.chain().focus().setImage({ src: res.url }).run();
+        } else {
+          alert(`アップロード失敗: ${res.error}`);
+        }
+      } catch (error) {
+        console.error(error);
+        alert("アップロード中にエラーが発生しました。");
+      }
+      // TODO: ローディング状態を終了します
+    };
+    input.click();
   };
 
   //* リンク挿入ハンドラ

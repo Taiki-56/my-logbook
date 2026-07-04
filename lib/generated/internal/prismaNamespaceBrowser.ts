@@ -106,6 +106,7 @@ export type SiteSettingScalarFieldEnum = (typeof SiteSettingScalarFieldEnum)[key
 export const PostScalarFieldEnum = {
   id: 'id',
   authorId: 'authorId',
+  thumbnail: 'thumbnail',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const

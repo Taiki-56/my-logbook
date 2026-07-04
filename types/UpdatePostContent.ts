@@ -1,5 +1,5 @@
-import { PostStatus } from "@/lib/generated/enums";
 import { Prisma } from "@/lib/generated/client";
+import { PostStatus } from "@/lib/generated/enums";
 
 type UpdatePostContent = {
   postId: string;
@@ -9,6 +9,7 @@ type UpdatePostContent = {
   status: PostStatus;
   seoTitle: string;
   seoDescription: string;
+  thumbnail: string;
   projectData?: Prisma.InputJsonValue | null;
   html?: string | null;
 };

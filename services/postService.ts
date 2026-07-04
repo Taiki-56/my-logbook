@@ -12,6 +12,7 @@ const createPost = async (
   return await prisma.post.create({
     data: {
       authorId,
+      thumbnail: formData.thumbnail ? formData.thumbnail : null,
       contents: {
         create: {
           locale: "ja",
@@ -40,6 +41,7 @@ const updatePostContent = async ({
   status,
   seoTitle,
   seoDescription,
+  thumbnail,
   projectData,
   html
 }: UpdatePostContent) => {
@@ -57,7 +59,13 @@ const updatePostContent = async ({
       seoTitle,
       seoDescription,
       projectData: projectData ?? undefined,
-      html: html ?? undefined
+      html: html ?? undefined,
+      post: {
+        update: {
+          //* 空文字なら null（未設定）として保存し、URLがあれば保存する
+          thumbnail: thumbnail === "" ? null : thumbnail
+        }
+      }
     }
   });
 };
@@ -70,6 +78,10 @@ const getPostBySlug = async (slug: string, locale: Locale) => {
         slug,
         locale
       }
+    },
+    //* Get the parent model too for thumbnail
+    include: {
+      post: true
     }
   });
 };

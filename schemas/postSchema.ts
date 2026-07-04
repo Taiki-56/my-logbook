@@ -6,8 +6,13 @@ export const postSchema = z
     title: z.string().min(1, "Title is required"),
     status: z.enum(PostStatus),
     slug: z.string().min(1, "Slug is required"),
-    seoTitle: z.string().max(60).optional(),
-    seoDescription: z.string().max(160).optional()
+    seoTitle: z.string().max(60, "SEO Title must be 60 characters or less").optional(),
+    seoDescription: z.string().max(160, "SEO Description must be 160 characters or less").optional(),
+    tags: z.array(z.string()).optional(),
+    thumbnail: z
+      .union([z.url("Thumbnail must be a valid URL"), z.literal("")])
+      .optional()
+      .nullable()
   })
   .superRefine((data, ctx) => {
     //* Conditional validation: Requires SEO metadata only for PUBLISHED posts

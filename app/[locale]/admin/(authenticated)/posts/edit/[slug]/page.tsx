@@ -19,7 +19,9 @@ const Page = async ({ params }: { params: { slug: string } }) => {
     seoTitle: fetchData.seoTitle,
     seoDescription: fetchData.seoDescription,
     projectData: fetchData.projectData,
-    html: fetchData.html
+    html: fetchData.html,
+
+    thumbnail: fetchData.post?.thumbnail ?? null
   };
 
   return (
