@@ -120,6 +120,7 @@ export const PostContentScalarFieldEnum = {
   locale: 'locale',
   status: 'status',
   publishedAt: 'publishedAt',
+  isFeatured: 'isFeatured',
   title: 'title',
   slug: 'slug',
   projectData: 'projectData',
@@ -135,6 +136,7 @@ export type PostContentScalarFieldEnum = (typeof PostContentScalarFieldEnum)[key
 
 export const TagScalarFieldEnum = {
   id: 'id',
+  slug: 'slug',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const

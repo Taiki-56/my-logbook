@@ -1,14 +1,16 @@
 import PostForm from "@/components/admin/PostForm";
-import { getPostBySlug } from "@/services/postService";
+import { getPostContentBySlug } from "@/services/post";
 import { getLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 
 const Page = async ({ params }: { params: { slug: string } }) => {
   const { slug } = await params;
   const locale = await getLocale();
-  const fetchData = await getPostBySlug(slug, locale);
+  const fetchData = await getPostContentBySlug(slug, locale);
 
   if (!fetchData) notFound();
+
+  const mappedTags = fetchData.post.postTags.map((pt) => pt.tag.slug);
 
   const initialData = {
     postId: fetchData.postId,
@@ -21,7 +23,8 @@ const Page = async ({ params }: { params: { slug: string } }) => {
     projectData: fetchData.projectData,
     html: fetchData.html,
 
-    thumbnail: fetchData.post?.thumbnail ?? null
+    thumbnail: fetchData.post?.thumbnail ?? null,
+    tags: mappedTags
   };
 
   return (

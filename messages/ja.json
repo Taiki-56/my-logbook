@@ -5,7 +5,7 @@
   },
   "Header": {
     "articles": "記事",
-    "about": "について"
+    "about": "プロフィール"
   },
   "Footer": {
     "copyright": "© 2024 Chronicle. Crafted with precision.",
@@ -70,14 +70,6 @@
       ]
     }
   },
-  "Search": {
-    "noResults": {
-      "heading": "結果が見つかりませんでした",
-      "description": "検索条件に一致する記事が見つかりませんでした。スペルを確認するか、より一般的な用語を使用してみてください。",
-      "suggestedTopics": "おすすめのトピック",
-      "viewAll": "すべての記事を見る"
-    }
-  },
   "Posts": {
     "pageTitle": "すべての投稿",
     "searchPrefix": "検索:",
@@ -86,7 +78,14 @@
     "activeFilters": "有効なフィルター",
     "readTime": "分",
     "previousPage": "前へ",
-    "nextPage": "次へ"
+    "nextPage": "次へ",
+    "popularTags": "人気のタグ",
+    "noResults": {
+      "heading": "結果が見つかりませんでした",
+      "description": "検索条件に一致する記事が見つかりませんでした。スペルを確認するか、より一般的な用語を使用してみてください。",
+      "suggestedTopics": "おすすめのトピック",
+      "viewAll": "すべての記事を見る"
+    }
   },
   "Admin": {
     "login": {

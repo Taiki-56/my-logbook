@@ -1,82 +1,34 @@
-"use client";
-
 import AdminSidebar from "@/components/admin/AdminSidebar";
 import { Link } from "@/i18n/navigation";
-import { ChevronLeft, ChevronRight, MoreVertical, Plus, Search } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { getAdminPosts } from "@/services/post";
+import { Languages, MoreVertical, Plus } from "lucide-react";
+import { getTranslations } from "next-intl/server";
 
-export default function PostsPage() {
-  const t = useTranslations("Admin.posts");
+// ステータスに応じたバッジの色を返すヘルパー
+const getStatusColor = (status: string | null) => {
+  if (!status) return "bg-gray-50 text-gray-400 border border-gray-200"; // 未作成
+  switch (status) {
+    case "PUBLISHED":
+      return "bg-green-100 text-green-700 border border-green-200";
+    case "DRAFT":
+      return "bg-yellow-100 text-yellow-700 border border-yellow-200";
+    case "PRIVATE":
+      return "bg-gray-100 text-gray-700 border border-gray-300";
+    default:
+      return "bg-gray-100 text-gray-700 border border-gray-300";
+  }
+};
 
-  // Mock data
-  const posts = [
-    {
-      id: "1",
-      title: "Building Modern Web Applications with Next.js 14",
-      author: "Sarah Chen",
-      status: "published",
-      updatedAt: "2024-01-15 14:30"
-    },
-    {
-      id: "3",
-      title: "Advanced TypeScript Patterns for Enterprise Apps",
-      author: "Alex Rivera",
-      status: "draft",
-      updatedAt: "2024-01-14 09:15"
-    },
-    {
-      id: "4",
-      title: "Docker Best Practices in 2024",
-      author: "Mike Johnson",
-      status: "published",
-      updatedAt: "2024-01-13 16:45"
-    },
-    {
-      id: "5",
-      title: "Understanding React Server Components",
-      author: "Emma Wilson",
-      status: "draft",
-      updatedAt: "2024-01-12 11:20"
-    },
-    {
-      id: "6",
-      title: "GraphQL vs REST: Making the Right Choice",
-      author: "David Lee",
-      status: "archived",
-      updatedAt: "2024-01-10 13:00"
-    }
-  ];
+const Page = async () => {
+  const t = await getTranslations("Admin.posts");
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "published":
-        return "bg-green-100 text-green-700";
-      case "draft":
-        return "bg-yellow-100 text-yellow-700";
-      case "archived":
-        return "bg-gray-100 text-gray-700";
-      default:
-        return "bg-gray-100 text-gray-700";
-    }
-  };
-
-  const getStatusText = (status: string) => {
-    switch (status) {
-      case "published":
-        return t("statusPublished");
-      case "draft":
-        return t("statusDraft");
-      case "archived":
-        return t("statusArchived");
-      default:
-        return status;
-    }
-  };
+  // 🌟 DBから実データを取得
+  const posts = await getAdminPosts();
 
   return (
     <AdminSidebar>
       <div className="min-h-screen bg-white">
-        {/* Header */}
+        {/* Header (検索バーなどはそのまま残します) */}
         <header className="border-b border-[#c1c6d7] bg-white px-8 py-6">
           <div className="flex items-center justify-between mb-6">
             <h1 className="font-['Geist:Bold'] font-bold text-[28px] text-[#1b1c1c]">{t("title")}</h1>
@@ -88,34 +40,7 @@ export default function PostsPage() {
             </Link>
           </div>
 
-          {/* Search and Filters */}
-          <div className="flex items-center gap-4">
-            {/* Search Bar */}
-            <div className="flex-1 relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#414754]" />
-              <input
-                type="text"
-                placeholder={t("searchPlaceholder")}
-                className="w-full h-11 pl-10 pr-4 border border-[#c1c6d7] rounded-lg font-['Geist:Regular'] text-[14px] focus:outline-none focus:border-[#0058c3]"
-              />
-            </div>
-
-            {/* Status Filter */}
-            <select className="h-11 px-4 border border-[#c1c6d7] rounded-lg font-['Geist:Regular'] text-[14px] text-[#414754] focus:outline-none focus:border-[#0058c3] bg-white">
-              <option>{t("allStatuses")}</option>
-              <option>{t("statusPublished")}</option>
-              <option>{t("statusDraft")}</option>
-              <option>{t("statusArchived")}</option>
-            </select>
-
-            {/* Category Filter */}
-            <select className="h-11 px-4 border border-[#c1c6d7] rounded-lg font-['Geist:Regular'] text-[14px] text-[#414754] focus:outline-none focus:border-[#0058c3] bg-white">
-              <option>{t("allCategories")}</option>
-              <option>Technology</option>
-              <option>Tutorial</option>
-              <option>Opinion</option>
-            </select>
-          </div>
+          {/* ... (Search and Filters 中略) ... */}
         </header>
 
         {/* Table */}
@@ -123,40 +48,99 @@ export default function PostsPage() {
           <div className="border border-[#c1c6d7] rounded-xl overflow-hidden">
             {/* Table Header */}
             <div className="grid grid-cols-12 gap-4 px-6 py-4 bg-[#fbf9f8] border-b border-[#c1c6d7] font-['Geist:Medium'] font-medium text-[11px] text-[#414754] tracking-[0.88px]">
-              <div className="col-span-5">{t("tableTitle")}</div>
-              <div className="col-span-2">{t("tableAuthor")}</div>
-              <div className="col-span-2">{t("tableStatus")}</div>
-              <div className="col-span-2">{t("tableUpdatedAt")}</div>
-              <div className="col-span-1 text-right">{t("tableActions")}</div>
+              <div className="col-span-4">{t("tableTitle") || "TITLE"}</div>
+              <div className="col-span-3">言語 & ステータス</div>
+              <div className="col-span-2">{t("tableUpdatedAt") || "UPDATED AT"}</div>
+              <div className="col-span-3 text-right">アクション (翻訳)</div>
             </div>
 
             {/* Table Body */}
             <div className="divide-y divide-[#c1c6d7]">
-              {posts.map((post, idx) => (
+              {posts.map((post) => (
                 <div
-                  key={idx}
+                  key={post.id}
                   className="grid grid-cols-12 gap-4 px-6 py-4 items-center hover:bg-[#fbf9f8] transition-colors">
-                  <div className="col-span-5">
-                    <Link
-                      href={`/admin/posts/edit/${post.id}`}
-                      className="font-['Geist:Medium'] font-medium text-[14px] text-[#1b1c1c] hover:text-[#0058c3] transition-colors">
+                  {/* 1. タイトル (リンクを外してテキストのみ表示) */}
+                  <div className="col-span-4">
+                    <span className="font-['Geist:Medium'] font-medium text-[14px] text-[#1b1c1c] line-clamp-2">
                       {post.title}
-                    </Link>
-                  </div>
-                  <div className="col-span-2 flex items-center gap-2">
-                    <div className="w-6 h-6 bg-[#c1c6d7] rounded-full flex items-center justify-center text-[10px] text-white font-medium">
-                      {post.author.charAt(0)}
-                    </div>
-                    <span className="font-['Geist:Regular'] text-[13px] text-[#414754]">{post.author}</span>
-                  </div>
-                  <div className="col-span-2">
-                    <span
-                      className={`inline-block px-3 py-1 rounded-full font-['Geist:Medium'] text-[11px] ${getStatusColor(post.status)}`}>
-                      {getStatusText(post.status)}
                     </span>
                   </div>
+
+                  {/* 2. 言語とステータスのバッジ (slugがある場合はリンクにする) */}
+                  <div className="col-span-3 flex flex-wrap gap-2">
+                    {/* 日本語 (JA) */}
+                    {post.statuses.ja ? (
+                      <Link href={`/admin/posts/edit/${post.statuses.ja.slug}`}>
+                        <span
+                          className={`inline-flex items-center justify-center px-2 py-0.5 rounded text-[10px] font-bold cursor-pointer hover:opacity-80 transition-opacity ${getStatusColor(post.statuses.ja.status)}`}>
+                          JA ({post.statuses.ja.status})
+                        </span>
+                      </Link>
+                    ) : (
+                      <span
+                        className={`inline-flex items-center justify-center px-2 py-0.5 rounded text-[10px] font-bold ${getStatusColor(null)}`}>
+                        JA (未作成)
+                      </span>
+                    )}
+
+                    {/* 英語 (EN) */}
+                    {post.statuses.en ? (
+                      <Link href={`/admin/posts/edit/${post.statuses.en.slug}`}>
+                        <span
+                          className={`inline-flex items-center justify-center px-2 py-0.5 rounded text-[10px] font-bold cursor-pointer hover:opacity-80 transition-opacity ${getStatusColor(post.statuses.en.status)}`}>
+                          EN ({post.statuses.en.status})
+                        </span>
+                      </Link>
+                    ) : (
+                      <span
+                        className={`inline-flex items-center justify-center px-2 py-0.5 rounded text-[10px] font-bold ${getStatusColor(null)}`}>
+                        EN (未作成)
+                      </span>
+                    )}
+
+                    {/* フランス語 (FR) */}
+                    {post.statuses.fr ? (
+                      <Link href={`/admin/posts/edit/${post.statuses.fr.slug}`}>
+                        <span
+                          className={`inline-flex items-center justify-center px-2 py-0.5 rounded text-[10px] font-bold cursor-pointer hover:opacity-80 transition-opacity ${getStatusColor(post.statuses.fr.status)}`}>
+                          FR ({post.statuses.fr.status})
+                        </span>
+                      </Link>
+                    ) : (
+                      <span
+                        className={`inline-flex items-center justify-center px-2 py-0.5 rounded text-[10px] font-bold ${getStatusColor(null)}`}>
+                        FR (未作成)
+                      </span>
+                    )}
+                  </div>
+
+                  {/* 更新日時 */}
                   <div className="col-span-2 font-['Geist:Regular'] text-[13px] text-[#999]">{post.updatedAt}</div>
-                  <div className="col-span-1 flex justify-end">
+
+                  {/* 3. 翻訳アクションボタン (遷移先を /new に変更し、postId を渡す) */}
+                  <div className="col-span-3 flex items-center justify-end gap-2">
+                    {/* 英語翻訳ボタン */}
+                    {!post.statuses.en && post.statuses.ja && (
+                      <Link
+                        href={`/admin/posts/new?postId=${post.id}&locale=en&autoTranslate=true`}
+                        className="flex items-center gap-1.5 px-3 py-1.5 bg-[#eef4ff] text-[#0058c3] hover:bg-[#d8e2ff] rounded-md transition-colors text-[12px] font-medium border border-[#c6d7ff]">
+                        <Languages className="w-3.5 h-3.5" />
+                        ENへ翻訳
+                      </Link>
+                    )}
+
+                    {/* フランス語翻訳ボタン */}
+                    {!post.statuses.fr && post.statuses.ja && (
+                      <Link
+                        href={`/admin/posts/new?postId=${post.id}&locale=fr&autoTranslate=true`}
+                        className="flex items-center gap-1.5 px-3 py-1.5 bg-[#fcf0f0] text-[#c30000] hover:bg-[#f9dada] rounded-md transition-colors text-[12px] font-medium border border-[#ffc6c6]">
+                        <Languages className="w-3.5 h-3.5" />
+                        FRへ翻訳
+                      </Link>
+                    )}
+
+                    {/* 右端のドットメニュー（今回は一覧から直接親要素を編集する画面がないため、非表示または削除しても良いかもしれません。残す場合は親Postのメタデータ編集モーダルなどを開く用途になります） */}
                     <button className="w-8 h-8 flex items-center justify-center rounded-md hover:bg-[#e2e2e2] transition-colors">
                       <MoreVertical className="w-4 h-4 text-[#414754]" />
                     </button>
@@ -165,32 +149,10 @@ export default function PostsPage() {
               ))}
             </div>
           </div>
-
-          {/* Pagination */}
-          <div className="flex items-center justify-between mt-6">
-            <div className="font-['Geist:Regular'] text-[13px] text-[#414754]">
-              {t("showing")} 1 {t("to")} 5 {t("of")} 24 {t("entries")}
-            </div>
-            <div className="flex items-center gap-2">
-              <button className="w-9 h-9 flex items-center justify-center border border-[#c1c6d7] rounded-md hover:bg-[#fbf9f8] transition-colors">
-                <ChevronLeft className="w-4 h-4 text-[#414754]" />
-              </button>
-              <button className="w-9 h-9 flex items-center justify-center border border-[#c1c6d7] bg-[#1b1c1c] text-white rounded-md font-['Geist:Medium'] text-[13px]">
-                1
-              </button>
-              <button className="w-9 h-9 flex items-center justify-center border border-[#c1c6d7] rounded-md hover:bg-[#fbf9f8] transition-colors font-['Geist:Regular'] text-[13px] text-[#414754]">
-                2
-              </button>
-              <button className="w-9 h-9 flex items-center justify-center border border-[#c1c6d7] rounded-md hover:bg-[#fbf9f8] transition-colors font-['Geist:Regular'] text-[13px] text-[#414754]">
-                3
-              </button>
-              <button className="w-9 h-9 flex items-center justify-center border border-[#c1c6d7] rounded-md hover:bg-[#fbf9f8] transition-colors">
-                <ChevronRight className="w-4 h-4 text-[#414754]" />
-              </button>
-            </div>
-          </div>
         </div>
       </div>
     </AdminSidebar>
   );
-}
+};
+
+export default Page;
