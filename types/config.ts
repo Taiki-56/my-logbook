@@ -1,3 +1,3 @@
 type Locale = "ja" | "en" | "fr";
 
-export default Locale;
+export type { Locale };

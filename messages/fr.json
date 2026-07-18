@@ -70,14 +70,6 @@
       ]
     }
   },
-  "Search": {
-    "noResults": {
-      "heading": "Aucun résultat trouvé",
-      "description": "Nous n'avons trouvé aucun article correspondant à votre recherche. Essayez de vérifier l'orthographe ou d'utiliser des termes plus généraux.",
-      "suggestedTopics": "SUJETS SUGGÉRÉS",
-      "viewAll": "Voir tous les articles"
-    }
-  },
   "Posts": {
     "pageTitle": "Tous les articles",
     "searchPrefix": "Recherche:",
@@ -86,7 +78,14 @@
     "activeFilters": "FILTRES ACTIFS",
     "readTime": "min de lecture",
     "previousPage": "Précédent",
-    "nextPage": "Suivant"
+    "nextPage": "Suivant",
+    "popularTags": "Tags populaires",
+    "noResults": {
+      "heading": "Aucun résultat trouvé",
+      "description": "Nous n'avons trouvé aucun article correspondant à votre recherche. Essayez de vérifier l'orthographe ou d'utiliser des termes plus généraux.",
+      "suggestedTopics": "SUJETS SUGGÉRÉS",
+      "viewAll": "Voir tous les articles"
+    }
   },
   "Admin": {
     "login": {

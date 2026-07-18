@@ -77,7 +77,7 @@ const Header = () => {
         <div className="flex gap-4 items-center">
           {/* Search Icon Button */}
           <Link
-            href={`/search`}
+            href={`/posts`}
             className="flex items-center justify-center">
             <div className="w-4.5 h-4.5 relative">
               <svg

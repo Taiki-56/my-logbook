@@ -1159,6 +1159,7 @@ export const PostContentScalarFieldEnum = {
   locale: 'locale',
   status: 'status',
   publishedAt: 'publishedAt',
+  isFeatured: 'isFeatured',
   title: 'title',
   slug: 'slug',
   projectData: 'projectData',
@@ -1174,6 +1175,7 @@ export type PostContentScalarFieldEnum = (typeof PostContentScalarFieldEnum)[key
 
 export const TagScalarFieldEnum = {
   id: 'id',
+  slug: 'slug',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -1311,6 +1313,13 @@ export type EnumPostStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$Prism
  * Reference to a field of type 'PostStatus[]'
  */
 export type ListEnumPostStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PostStatus[]'>
+    
+
+
+/**
+ * Reference to a field of type 'Boolean'
+ */
+export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
     
 
 

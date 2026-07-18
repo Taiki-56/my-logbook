@@ -1,6 +1,6 @@
 "use client";
 
-import { createPostAction, savePostContentAction } from "@/actions/post";
+import { createPostAction, savePostAction } from "@/actions/post";
 import uploadImage from "@/actions/uploadImage";
 import { Prisma } from "@/lib/generated/client";
 import { PostStatus } from "@/lib/generated/enums";
@@ -9,7 +9,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { JSONContent } from "@tiptap/react";
 import { X } from "lucide-react"; // タグ削除ボタン用のアイコン
 import { useTranslations } from "next-intl";
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import RichEditor from "./RichEditor";
 
@@ -37,13 +37,6 @@ const PostForm = ({ mode, initialData }: PostFormProps) => {
   //* エディタ用State
   const [editorAST, setEditorAST] = useState<Prisma.InputJsonValue | null>(initialData?.projectData ?? null);
   const [editorHtml, setEditorHtml] = useState<string>(initialData?.html ?? "");
-  const editorContentRef = useRef<{
-    json: Prisma.InputJsonValue | null;
-    html: string;
-  }>({
-    json: initialData?.projectData ?? null,
-    html: initialData?.html ?? ""
-  });
 
   //* サムネイル用のアップロード中状態（URL自体はReact Hook Formで管理します）
   const [isUploading, setIsUploading] = useState(false);
@@ -51,29 +44,7 @@ const PostForm = ({ mode, initialData }: PostFormProps) => {
   //* ==========================================
   //* タグ管理用Stateと関数
   //* ==========================================
-  const [tags, setTags] = useState<string[]>(initialData?.tags ?? []);
   const [tagInput, setTagInput] = useState("");
-
-  const handleAddTag = (e?: React.MouseEvent | React.KeyboardEvent) => {
-    e?.preventDefault();
-    const trimmed = tagInput.trim();
-    if (trimmed && !tags.includes(trimmed)) {
-      setTags([...tags, trimmed]);
-    }
-    setTagInput("");
-  };
-
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      handleAddTag();
-    }
-  };
-
-  const removeTag = (tagToRemove: string) => {
-    setTags(tags.filter((tag) => tag !== tagToRemove));
-  };
-  //* ==========================================
 
   const {
     register,
@@ -89,12 +60,45 @@ const PostForm = ({ mode, initialData }: PostFormProps) => {
       slug: initialData?.slug ?? "",
       seoTitle: initialData?.seoTitle ?? "",
       seoDescription: initialData?.seoDescription ?? "",
-      thumbnail: initialData?.thumbnail ?? "" //* 初期データがあればここにセットされる
+      thumbnail: initialData?.thumbnail ?? "", //* 初期データがあればここにセットされる
+      tags: initialData?.tags ?? [] //* 🌟 追加: Zodにタグを追加したので、初期値もReact Hook Formで管理！
     }
   });
 
-  //* 🌟 追加: React Hook Form が持っている現在のサムネイルURLを監視して取得する
+  useEffect(() => {
+    register("tags");
+  }, [register]);
+
+  //* 🌟 追加: React Hook Form が持っている現在のサムネイルURLとタグを監視して取得する
   const currentThumbnail = watch("thumbnail");
+  const tags = watch("tags") || [];
+
+  const handleAddTag = (e?: React.MouseEvent | React.KeyboardEvent) => {
+    e?.preventDefault();
+    const trimmed = tagInput.trim();
+    if (trimmed && !tags.includes(trimmed)) {
+      //* 🌟 修正: React Hook Form に新しいタグ配列を覚えさせる
+      setValue("tags", [...tags, trimmed], { shouldDirty: true });
+    }
+    setTagInput("");
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      handleAddTag();
+    }
+  };
+
+  const removeTag = (tagToRemove: string) => {
+    //* 🌟 修正: React Hook Form のタグ配列から削除する
+    setValue(
+      "tags",
+      tags.filter((tag) => tag !== tagToRemove),
+      { shouldDirty: true }
+    );
+  };
+  //* ==========================================
 
   const seoTitleLength = watch("seoTitle")?.length || 0;
   const seoDescLength = watch("seoDescription")?.length || 0;
@@ -102,10 +106,6 @@ const PostForm = ({ mode, initialData }: PostFormProps) => {
   const handleEditorChange = useCallback((json: JSONContent, html: string) => {
     setEditorAST(json as Prisma.InputJsonValue);
     setEditorHtml(html);
-    editorContentRef.current = {
-      json: json as Prisma.InputJsonValue,
-      html
-    };
   }, []);
 
   const handleThumbnailUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -120,6 +120,8 @@ const PostForm = ({ mode, initialData }: PostFormProps) => {
     try {
       const res = await uploadImage(formData);
       if (res.success && res.url) {
+        //* 🌟 修正: useState ではなく React Hook Form に値をセットする
+        //* shouldValidate: true をつけることで、Zodのエラー表示も即座に消えます
         setValue("thumbnail", res.url, { shouldValidate: true, shouldDirty: true });
       } else {
         alert(`アップロード失敗: ${res.error}`);
@@ -133,24 +135,20 @@ const PostForm = ({ mode, initialData }: PostFormProps) => {
   };
 
   const onSubmit = async (data: PostFormValues) => {
-    const latestEditorAst = editorContentRef.current.json;
-    const latestEditorHtml = editorContentRef.current.html;
-
     //* 1. 公開時における「本文空っぽ」のブロック処理
     if (data.status === "PUBLISHED") {
-      const isEmptyEditor = !latestEditorHtml || latestEditorHtml === "<p></p>" || latestEditorHtml === "";
+      const isEmptyEditor = !editorHtml || editorHtml === "<p></p>" || editorHtml === "";
       if (isEmptyEditor) {
         alert("公開する場合は、必ず本文を執筆してください。");
         return;
       }
     }
 
-    //* 🌟 修正: data の中に既に thumbnail が入っているので直接渡せるようになります
+    //* 🌟 修正: data の中に既に tags が入っているので、手動で合体させる必要がなくなりました！
     const payload = {
       ...data,
-      projectData: latestEditorAst,
-      html: latestEditorHtml || undefined,
-      tags
+      projectData: editorAST,
+      html: editorHtml || undefined
     };
 
     if (mode === "create") {
@@ -163,7 +161,7 @@ const PostForm = ({ mode, initialData }: PostFormProps) => {
     } else {
       if (!initialData?.postId || !initialData?.locale) return;
       try {
-        const res = await savePostContentAction({
+        const res = await savePostAction({
           postId: initialData.postId,
           locale: initialData.locale as "ja" | "en" | "fr",
           ...payload,
@@ -224,7 +222,6 @@ const PostForm = ({ mode, initialData }: PostFormProps) => {
 
           <RichEditor
             initialContent={initialData?.projectData}
-            initialHtml={initialData?.html}
             onChange={handleEditorChange}
           />
         </div>

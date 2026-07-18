@@ -5,18 +5,15 @@ import { auth } from "@/lib/auth";
 import { Prisma } from "@/lib/generated/client";
 import { PostFormValues, postSchema } from "@/schemas/postSchema";
 import { SaveContentInput, saveContentSchema } from "@/schemas/saveContentSchema";
-import { createPost, updatePostContent } from "@/services/postService";
+import { createPost, getPostBySlug, getPublishedPosts, updatePost } from "@/services/post";
+import { PostAction, PostWithRelations } from "@/types/post";
 import { getLocale } from "next-intl/server";
 import { revalidatePath } from "next/cache";
-
-type ActionResult = {
-  success: boolean;
-  error?: string;
-};
+import z from "zod";
 
 //* Create the post with the first language for it
 const createPostAction = async (
-  formData: PostFormValues & { projectData?: Prisma.InputJsonValue | null; html?: string | null }
+  formData: PostFormValues & { projectData?: Prisma.InputJsonValue | null; html?: string | null; tags?: string[] }
 ) => {
   //* server side validation
   const validFormData = postSchema.safeParse(formData);
@@ -46,7 +43,8 @@ const createPostAction = async (
   redirect({ href: `/admin/posts/edit/${savedSlug}`, locale: locale });
 };
 
-const savePostContentAction = async (input: SaveContentInput): Promise<ActionResult> => {
+//* Update the existing post on /edit/[slug] page
+const savePostAction = async (input: SaveContentInput): Promise<PostAction> => {
   //* 1. Guard by Auth.js session
   const session = await auth();
   if (!session?.user?.id) {
@@ -60,10 +58,10 @@ const savePostContentAction = async (input: SaveContentInput): Promise<ActionRes
 
   const validated = saveContentSchema.safeParse(normalizedInput);
   if (!validated.success) {
-    const flattened = validated.error.flatten();
+    const flattened = z.treeifyError(validated.error);
     console.error("Invalid content payload details:", {
-      formErrors: flattened.formErrors,
-      fieldErrors: flattened.fieldErrors,
+      formErrors: flattened.errors,
+      fieldErrors: flattened.properties,
       issues: validated.error.issues
     });
     return { success: false, error: "Invalid content payload" };
@@ -74,11 +72,12 @@ const savePostContentAction = async (input: SaveContentInput): Promise<ActionRes
 
   try {
     //* 3. Call service layer
-    await updatePostContent({
+    await updatePost({
       ...safeData,
       seoTitle: safeData.seoTitle ?? "",
       seoDescription: safeData.seoDescription ?? "",
-      thumbnail: safeData.thumbnail ?? ""
+      thumbnail: safeData.thumbnail ?? "",
+      tags: safeData.tags
     });
   } catch (error) {
     console.error("Failed to update post content:", error);
@@ -96,4 +95,29 @@ const savePostContentAction = async (input: SaveContentInput): Promise<ActionRes
 
   return { success: true };
 };
-export { createPostAction, savePostContentAction };
+
+//* Fetches all posts
+const getPublishedPostsAction = async (): Promise<PostAction<PostWithRelations[]>> => {
+  try {
+    const posts = await getPublishedPosts();
+    return { success: true, data: posts as PostWithRelations[] };
+  } catch (error) {
+    console.error("Failed to get posts: ", error);
+    return { success: false, error: `Failed to get posts: ${error}` };
+  }
+};
+
+const getPostBySlugAction = async (slug: string): Promise<PostAction<PostWithRelations | null>> => {
+  try {
+    const post = await getPostBySlug(slug);
+    if (!post) {
+      return { success: false, error: "Couldn't find a post" };
+    }
+    return { success: true, data: post as PostWithRelations };
+  } catch (error) {
+    console.error(`Failed to fetch a post by slug: ${error}`);
+    return { success: false, error: "Failed to fetch a post" };
+  }
+};
+
+export { createPostAction, getPostBySlugAction, getPublishedPostsAction, savePostAction };

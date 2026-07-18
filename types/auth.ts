@@ -3,4 +3,4 @@ type Credential = {
   passward: string;
 };
 
-export default Credential;
+export type { Credential };

@@ -70,14 +70,6 @@
       ]
     }
   },
-  "Search": {
-    "noResults": {
-      "heading": "No results found",
-      "description": "We couldn't find any articles matching your search. Try checking your spelling or using more general terms.",
-      "suggestedTopics": "SUGGESTED TOPICS",
-      "viewAll": "View all articles"
-    }
-  },
   "Posts": {
     "pageTitle": "All Posts",
     "searchPrefix": "Search:",
@@ -86,7 +78,14 @@
     "activeFilters": "ACTIVE FILTERS",
     "readTime": "min read",
     "previousPage": "Previous",
-    "nextPage": "Next"
+    "nextPage": "Next",
+    "popularTags": "Popular Tags",
+    "noResults": {
+      "heading": "No results found",
+      "description": "We couldn't find any articles matching your search. Try checking your spelling or using more general terms.",
+      "suggestedTopics": "SUGGESTED TOPICS",
+      "viewAll": "View all articles"
+    }
   },
   "Admin": {
     "login": {

@@ -1,298 +1,264 @@
-"use client";
-
-import { useTranslations } from "next-intl";
-import { useSearchParams } from "next/navigation";
+import { getPublishedPostsAction } from "@/actions/post";
+import SearchBar from "@/components/public/SearchBar";
+import { Link } from "@/i18n/navigation"; // 🌟 タグトグル用のリンクを生成するために追加
+import { getTranslations } from "next-intl/server";
 import ActiveFilters from "./parts/ActiveFilters";
 import ArticleCard from "./parts/ArticleCard";
+import EmptyState from "./parts/EmptyState";
 import Pagination from "./parts/Pagination";
 
-// Mock data for articles
-const mockArticles = [
-  {
-    id: 1,
-    date: "2024年3月15日",
-    readTime: 5,
-    title: "次世代の大規模言語モデルがもたらす開発体験の変革",
-    description: "AIツールの進化により、エンジニアリングのアプローチは根本から変わりつつあ",
-    tags: ["AI", "Engineering"],
-    image: "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=400&h=300&fit=crop",
-    slug: "next-gen-llm-development",
-    category: "AI INSIGHTS"
-  },
-  {
-    id: 2,
-    date: "2024年3月10日",
-    readTime: 8,
-    title: "AI駆動のテスト自動化：実践的アプローチ",
-    description: "単体テストやE2Eテストの生成において、機械学習モデルをどのように活用できる",
-    tags: ["AI", "Engineering"],
-    image: "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=400&h=300&fit=crop",
-    slug: "ai-driven-test-automation",
-    category: "ENGINEERING"
-  },
-  {
-    id: 3,
-    date: "2024年3月05日",
-    readTime: 7,
-    title: "分散システムにおけるデータ整合性の担保",
-    description: "マイクロサービス環境でのトランザクション管理とイベント駆動アーキテクチャ",
-    tags: ["Architecture", "Engineering"],
-    image: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=400&h=300&fit=crop",
-    slug: "distributed-systems-consistency",
-    category: "ENGINEERING"
-  },
-  {
-    id: 4,
-    date: "2024年2月28日",
-    readTime: 6,
-    title: "生成AIの倫理的ガイドラインと実装",
-    description: "プロダクション環境でのAI活用における責任ある開発プラクティス",
-    tags: ["AI", "Ethics"],
-    image: "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=400&h=300&fit=crop",
-    slug: "generative-ai-ethics",
-    category: "AI INSIGHTS"
-  },
-  {
-    id: 5,
-    date: "2024年2月20日",
-    readTime: 10,
-    title: "パフォーマンス最適化の実践的アプローチ",
-    description: "WebアプリケーションのCore Web Vitalsを改善するための具体的手法",
-    tags: ["Performance", "WebDev"],
-    image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=400&h=300&fit=crop",
-    slug: "performance-optimization-practices",
-    category: "WEB DEVELOPMENT"
-  },
-  {
-    id: 6,
-    date: "2024年2月15日",
-    readTime: 8,
-    title: "Reactの新しいレンダリングパターン",
-    description: "Server ComponentsとSuspenseを活用した効率的なデータフェッチング",
-    tags: ["React", "WebDev"],
-    image: "https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=400&h=300&fit=crop",
-    slug: "react-new-rendering-patterns",
-    category: "WEB DEVELOPMENT"
-  },
-  {
-    id: 7,
-    date: "2024年2月10日",
-    readTime: 9,
-    title: "セキュアなAPI設計の基本原則",
-    description: "認証、認可、データ検証を含む包括的なAPIセキュリティ戦略",
-    tags: ["Security", "API"],
-    image: "https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?w=400&h=300&fit=crop",
-    slug: "secure-api-design-principles",
-    category: "SECURITY"
-  },
-  {
-    id: 8,
-    date: "2024年2月05日",
-    readTime: 7,
-    title: "クラウドネイティブアーキテクチャの設計",
-    description: "スケーラビリティと可用性を考慮したマイクロサービス設計パターン",
-    tags: ["Cloud", "Architecture"],
-    image: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=400&h=300&fit=crop",
-    slug: "cloud-native-architecture-design",
-    category: "CLOUD"
-  },
-  {
-    id: 9,
-    date: "2024年1月30日",
-    readTime: 11,
-    title: "TypeScriptの高度な型システム活用",
-    description: "ジェネリクス、条件型、テンプレートリテラル型を使った型安全性の向上",
-    tags: ["TypeScript", "WebDev"],
-    image: "https://images.unsplash.com/photo-1516116216624-53e697fedbea?w=400&h=300&fit=crop",
-    slug: "advanced-typescript-type-system",
-    category: "WEB DEVELOPMENT"
-  },
-  {
-    id: 10,
-    date: "2024年1月25日",
-    readTime: 6,
-    title: "CI/CDパイプラインの最適化戦略",
-    description: "ビルド時間の短縮とデプロイメントの信頼性向上のためのベストプラクティス",
-    tags: ["DevOps", "CI/CD"],
-    image: "https://images.unsplash.com/photo-1618401471353-b98afee0b2eb?w=400&h=300&fit=crop",
-    slug: "cicd-pipeline-optimization",
-    category: "DEVOPS"
-  },
-  {
-    id: 11,
-    date: "2024年1月30日",
-    readTime: 11,
-    title: "TypeScriptの高度な型システム活用",
-    description: "ジェネリクス、条件型、テンプレートリテラル型を使った型安全性の向上",
-    tags: ["TypeScript", "WebDev"],
-    image: "https://images.unsplash.com/photo-1516116216624-53e697fedbea?w=400&h=300&fit=crop",
-    slug: "advanced-typescript-type-system",
-    category: "WEB DEVELOPMENT"
-  },
-  {
-    id: 12,
-    date: "2024年1月25日",
-    readTime: 6,
-    title: "CI/CDパイプラインの最適化戦略",
-    description: "ビルド時間の短縮とデプロイメントの信頼性向上のためのベストプラクティス",
-    tags: ["DevOps", "CI/CD"],
-    image: "https://images.unsplash.com/photo-1618401471353-b98afee0b2eb?w=400&h=300&fit=crop",
-    slug: "cicd-pipeline-optimization",
-    category: "DEVOPS"
-  },
-  {
-    id: 13,
-    date: "2024年1月30日",
-    readTime: 11,
-    title: "TypeScriptの高度な型システム活用",
-    description: "ジェネリクス、条件型、テンプレートリテラル型を使った型安全性の向上",
-    tags: ["TypeScript", "WebDev"],
-    image: "https://images.unsplash.com/photo-1516116216624-53e697fedbea?w=400&h=300&fit=crop",
-    slug: "advanced-typescript-type-system",
-    category: "WEB DEVELOPMENT"
-  },
-  {
-    id: 14,
-    date: "2024年1月25日",
-    readTime: 6,
-    title: "CI/CDパイプラインの最適化戦略",
-    description: "ビルド時間の短縮とデプロイメントの信頼性向上のためのベストプラクティス",
-    tags: ["DevOps", "CI/CD"],
-    image: "https://images.unsplash.com/photo-1618401471353-b98afee0b2eb?w=400&h=300&fit=crop",
-    slug: "cicd-pipeline-optimization",
-    category: "DEVOPS"
+const ITEMS_PER_PAGE = 6;
+
+type Props = {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+};
+
+const Page = async (props: Props) => {
+  const t = await getTranslations("Posts");
+  const searchParams = await props.searchParams;
+
+  const searchQueryString = (searchParams.search as string) || "";
+  const searchKeywords = searchQueryString.split(/[\s ]+/).filter(Boolean);
+
+  const activeTags = searchParams.tag
+    ? Array.isArray(searchParams.tag)
+      ? searchParams.tag
+      : [searchParams.tag as string]
+    : [];
+
+  const currentPage = parseInt((searchParams.page as string) || "1", 10);
+
+  const res = await getPublishedPostsAction();
+  if (!res.success || !res.data) {
+    return <div>エラーが発生しました。:{res.error}</div>;
   }
-];
 
-const ITEMS_PER_PAGE = 10;
+  const posts = res.data;
 
-const Page = () => {
-  const t = useTranslations("Posts");
-  const searchParams = useSearchParams();
+  //* 🌟 追加: DBに存在するすべての有効なタグを重複なく自動抽出する
+  const allAvailableTags = Array.from(
+    new Set(
+      posts
+        .flatMap((post) => post.postTags)
+        .map((pt) => (pt.tag as any)?.slug)
+        .filter(Boolean) as string[]
+    )
+  );
 
-  const searchQuery = searchParams.get("search") || undefined;
-  const activeTag = searchParams.get("tag") || undefined;
-  const currentPage = parseInt(searchParams.get("page") || "1");
+  // Filter articles based on search and tag (複数キーワードAND、複数タグOR)
+  const filteredArticles = posts.filter((post) => {
+    const baseContent = post.contents.find((c) => c.locale === "ja") || post.contents[0];
+    if (!baseContent) return false;
 
-  // Filter articles based on search and tag
-  const filteredArticles = mockArticles.filter((article) => {
-    const matchesSearch = searchQuery
-      ? article.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        article.description.toLowerCase().includes(searchQuery.toLowerCase())
-      : true;
-    const matchesTag = activeTag ? article.tags.includes(activeTag) : true;
+    const matchesSearch =
+      searchKeywords.length > 0
+        ? searchKeywords.every(
+            (keyword) =>
+              (baseContent.title?.toLowerCase().includes(keyword.toLowerCase()) ?? false) ||
+              (baseContent.seoDescription?.toLowerCase().includes(keyword.toLowerCase()) ?? false)
+          )
+        : true;
+
+    const matchesTag =
+      activeTags.length > 0
+        ? activeTags.some((activeTag) =>
+            post.postTags.some((pt) => (pt.tag as any).slug === activeTag || pt.tagId === activeTag)
+          )
+        : true;
+
     return matchesSearch && matchesTag;
   });
 
-  // Paginate articles
-  const totalPages = Math.ceil(filteredArticles.length / ITEMS_PER_PAGE);
+  const mappedArticles = filteredArticles.map((post) => {
+    const baseContent = post.contents.find((c) => c.locale === "ja") || post.contents[0];
+
+    return {
+      id: post.id,
+      date: new Date(post.createdAt).toLocaleDateString("ja-JP"),
+      readTime: 5,
+      title: baseContent.title,
+      description: baseContent.seoDescription,
+      tags: post.postTags.map((pt) => {
+        return (pt as any).tag?.name || (pt as any).tag?.slug || "タグ";
+      }),
+      image: post.thumbnail || "",
+      slug: baseContent.slug,
+      category: "未分類"
+    };
+  });
+
+  const totalPages = Math.ceil(mappedArticles.length / ITEMS_PER_PAGE);
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-  const paginatedArticles = filteredArticles.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+  const paginatedArticles = mappedArticles.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+
+  // 複数条件に対応した動的タイトル
+  let dynamicPageTitle = t("pageTitle");
+
+  if (searchKeywords.length > 0 && activeTags.length > 0) {
+    dynamicPageTitle = `「${searchKeywords.join(" ")}」の検索結果 (${activeTags.map((t) => `#${t}`).join(", ")})`;
+  } else if (searchKeywords.length > 0) {
+    dynamicPageTitle = `「${searchKeywords.join(" ")}」の検索結果`;
+  } else if (activeTags.length > 0) {
+    dynamicPageTitle = `${activeTags.map((t) => `#${t}`).join(", ")} の記事`;
+  }
+
+  //* 🌟 追加: タグをトグル（ON/OFF）するためのURLパラメータを生成するヘルパー関数
+  const getTagToggleUrl = (tag: string) => {
+    const params = new URLSearchParams();
+
+    // 既存の検索キーワードは引き継ぐ
+    if (searchQueryString) {
+      params.set("search", searchQueryString);
+    }
+
+    if (activeTags.includes(tag)) {
+      // すでに選択されているタグなら、新パラメータから除外する（OFF）
+      activeTags.filter((t) => t !== tag).forEach((t) => params.append("tag", t));
+    } else {
+      // 選択されていなければ、追加する（ON）
+      activeTags.forEach((t) => params.append("tag", t));
+      params.append("tag", tag);
+    }
+
+    const queryString = params.toString();
+    return queryString ? `/posts?${queryString}` : "/posts";
+  };
 
   return (
-    <div className="max-w-7xl mx-auto">
+    <div className="w-full">
       {/* Desktop Layout */}
-      <div className="hidden lg:flex flex-col items-start px-75 py-16">
-        <div className="max-w-170 w-full flex flex-col gap-16">
-          {/* Header & Active Filters */}
-          <div className="flex flex-col gap-4">
-            <h1 className="font-['Noto_Sans_JP'] font-medium text-5xl text-[#1b1c1c] tracking-[-0.04em] leading-[1.1]">
-              {t("pageTitle")}
+      <div className="hidden lg:flex flex-col items-start px-35">
+        <div className="w-full flex flex-col py-16">
+          <div className="w-full flex flex-col gap-6">
+            <h1 className="font-['Noto_Sans_JP'] font-medium text-4xl text-[#1b1c1c] tracking-[-0.04em] leading-[1.1] transition-all duration-300">
+              {dynamicPageTitle}
             </h1>
+
+            <SearchBar />
+
+            {/* 🌟 追加: デスクトップ用タグフィルターバー */}
+            <div className="w-full flex flex-col gap-2 mt-2">
+              <span className="font-['JetBrains_Mono'] font-bold text-xs text-[#727786] tracking-wider uppercase">
+                {t("popularTags") || "TAGS"}
+              </span>
+              <div className="flex flex-wrap gap-2">
+                {allAvailableTags.map((tag) => {
+                  const isSelected = activeTags.includes(tag);
+                  return (
+                    <Link
+                      key={tag}
+                      href={getTagToggleUrl(tag)}
+                      className={`px-3 py-1 text-[13px] font-['JetBrains_Mono'] rounded-full border transition-all duration-200 hover:-translate-y-px hover:shadow-sm cursor-pointer ${
+                        isSelected
+                          ? "bg-[#d8e2ff] border-[#0058c3] text-[#001a43] font-semibold"
+                          : "bg-white border-[#c1c6d7] text-[#414754] hover:bg-[#f5f3f3]"
+                      }`}>
+                      #{tag}
+                    </Link>
+                  );
+                })}
+              </div>
+            </div>
+
             <ActiveFilters
-              searchQuery={searchQuery}
-              activeTag={activeTag}
+              searchKeywords={searchKeywords}
+              activeTags={activeTags}
             />
           </div>
 
-          {/* Article Grid */}
-          <div className="grid grid-cols-2 gap-8">
-            {paginatedArticles.map((article) => (
-              <ArticleCard
-                key={article.id}
-                article={article}
-                layout="grid"
+          <div className="w-full pt-16">
+            {paginatedArticles.length > 0 ? (
+              <div className="grid grid-cols-2 gap-8">
+                {paginatedArticles.map((article) => (
+                  <ArticleCard
+                    key={article.id}
+                    article={article}
+                    layout="grid"
+                  />
+                ))}
+              </div>
+            ) : (
+              <EmptyState />
+            )}
+          </div>
+
+          {paginatedArticles.length > 0 && totalPages > 1 && (
+            <div className="w-full pt-16">
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
               />
-            ))}
-          </div>
-
-          {/* Pagination */}
-          {totalPages > 1 && (
-            <Pagination
-              currentPage={currentPage}
-              totalPages={totalPages}
-            />
+            </div>
           )}
         </div>
       </div>
 
       {/* Mobile Layout */}
       <div className="lg:hidden flex flex-col gap-8 py-24 px-4">
-        {/* Active Filters */}
-        <div className="flex gap-3 items-center overflow-x-auto">
-          <span className="font-['JetBrains_Mono'] font-medium text-sm text-[#414754] tracking-wider uppercase whitespace-nowrap">
-            {t("activeFilters")}
-          </span>
-          {activeTag && (
-            <div className="bg-[#d8e2ff] border border-[#0058c3] rounded-xl px-3 py-1 flex items-center gap-2 whitespace-nowrap">
-              <svg
-                width="14"
-                height="11"
-                viewBox="0 0 14 11"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg">
-                <path
-                  d="M1 5.5L5 9.5L13 1.5"
-                  stroke="#001a43"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-              <span className="font-['JetBrains_Mono'] font-medium text-sm text-[#001a43]">
-                {t("tagPrefix")} {activeTag}
-              </span>
-              <button className="p-0.5">
-                <svg
-                  width="8"
-                  height="8"
-                  viewBox="0 0 8 8"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg">
-                  <path
-                    d="M7 1L1 7M1 1L7 7"
-                    stroke="#001a43"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-              </button>
+        <div className="flex flex-col gap-6">
+          <h1 className="font-['Noto_Sans_JP'] font-medium text-4xl text-[#1b1c1c] tracking-[-0.04em] leading-[1.1] transition-all duration-300">
+            {dynamicPageTitle}
+          </h1>
+          <SearchBar />
+
+          {/* 🌟 追加: モバイル用タグフィルターバー（横スクロール可能に） */}
+          <div className="flex flex-col gap-2">
+            <span className="font-['JetBrains_Mono'] font-bold text-xs text-[#727786] tracking-wider uppercase">
+              {t("popularTags") || "TAGS"}
+            </span>
+            <div className="flex gap-2 overflow-x-auto pb-2 -mx-4 px-4 scrollbar-none">
+              {allAvailableTags.map((tag) => {
+                const isSelected = activeTags.includes(tag);
+                return (
+                  <Link
+                    key={tag}
+                    href={getTagToggleUrl(tag)}
+                    className={`px-3 py-1 text-[13px] font-['JetBrains_Mono'] rounded-full border shrink-0 ${
+                      isSelected
+                        ? "bg-[#d8e2ff] border-[#0058c3] text-[#001a43] font-semibold"
+                        : "bg-white border-[#c1c6d7] text-[#414754]"
+                    }`}>
+                    #{tag}
+                  </Link>
+                );
+              })}
             </div>
-          )}
-          {activeTag && (
-            <button className="font-['JetBrains_Mono'] font-medium text-sm text-[#5e5e5e] underline whitespace-nowrap">
-              {t("clear")}
-            </button>
-          )}
+          </div>
         </div>
 
-        {/* Article List */}
-        <div className="flex flex-col gap-8">
-          {paginatedArticles.map((article) => (
-            <ArticleCard
-              key={article.id}
-              article={article}
-              layout="horizontal"
-            />
-          ))}
+        {(searchKeywords.length > 0 || activeTags.length > 0) && (
+          <div className="flex flex-col gap-3">
+            <span className="font-['JetBrains_Mono'] font-medium text-sm text-[#414754] tracking-wider uppercase whitespace-nowrap">
+              {t("activeFilters")}
+            </span>
+            <div className="overflow-x-auto pb-2">
+              <ActiveFilters
+                searchKeywords={searchKeywords}
+                activeTags={activeTags}
+              />
+            </div>
+          </div>
+        )}
 
-          {/* Pagination */}
-          {totalPages > 1 && (
-            <Pagination
-              currentPage={currentPage}
-              totalPages={totalPages}
-            />
+        <div className="flex flex-col gap-8 w-full">
+          {paginatedArticles.length > 0 ? (
+            <>
+              {paginatedArticles.map((article) => (
+                <ArticleCard
+                  key={article.id}
+                  article={article}
+                  layout="horizontal"
+                />
+              ))}
+              {totalPages > 1 && (
+                <Pagination
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                />
+              )}
+            </>
+          ) : (
+            <EmptyState />
           )}
         </div>
       </div>

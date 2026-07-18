@@ -1,5 +1,6 @@
 "use client";
 
+import uploadImage from "@/actions/uploadImage"; //* 追加
 import { Prisma } from "@/lib/generated/client";
 import { Color } from "@tiptap/extension-color";
 import Highlight from "@tiptap/extension-highlight";
@@ -24,7 +25,6 @@ import {
   Minus,
   Strikethrough
 } from "lucide-react";
-import uploadImage from "@/actions/uploadImage"; //* 追加
 
 type RichEditorProps = {
   initialContent?: Prisma.InputJsonValue | null;

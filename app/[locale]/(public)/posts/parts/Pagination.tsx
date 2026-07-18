@@ -10,8 +10,8 @@ interface PaginationProps {
 
 const ChevronLeftIcon = () => (
   <svg
-    width="14"
-    height="14"
+    width="13.333"
+    height="13.333"
     viewBox="0 0 14 14"
     fill="none"
     xmlns="http://www.w3.org/2000/svg">
@@ -27,8 +27,8 @@ const ChevronLeftIcon = () => (
 
 const ChevronRightIcon = () => (
   <svg
-    width="14"
-    height="14"
+    width="13.333"
+    height="13.333"
     viewBox="0 0 14 14"
     fill="none"
     xmlns="http://www.w3.org/2000/svg">
@@ -82,7 +82,7 @@ export default function Pagination({ currentPage, totalPages }: PaginationProps)
   return (
     <>
       {/* Desktop Pagination */}
-      <div className="hidden lg:flex border-t border-[#c1c6d7] pt-16 items-center justify-between w-full">
+      <div className="hidden lg:flex border-t border-[#c1c6d7] pt-16.25 items-center justify-between w-full">
         {/* Previous Button */}
         <button
           onClick={() => handlePageChange(currentPage - 1)}
@@ -91,7 +91,9 @@ export default function Pagination({ currentPage, totalPages }: PaginationProps)
             currentPage === 1 ? "opacity-50 cursor-not-allowed" : "hover:opacity-70"
           }`}>
           <ChevronLeftIcon />
-          <span className="font-['Noto_Sans_JP'] font-medium text-sm text-[#414754]">{t("previousPage")}</span>
+          <span className="font-['Noto_Sans_JP'] font-medium text-[14px] leading-[19.6px] text-[#414754]">
+            {t("previousPage")}
+          </span>
         </button>
 
         {/* Page Numbers */}
@@ -126,7 +128,9 @@ export default function Pagination({ currentPage, totalPages }: PaginationProps)
           className={`flex gap-2 items-center ${
             currentPage === totalPages ? "opacity-50 cursor-not-allowed" : "hover:opacity-70"
           }`}>
-          <span className="font-['Noto_Sans_JP'] font-medium text-sm text-[#414754]">{t("nextPage")}</span>
+          <span className="font-['Noto_Sans_JP'] font-medium text-[14px] leading-[19.6px] text-[#414754]">
+            {t("nextPage")}
+          </span>
           <ChevronRightIcon />
         </button>
       </div>

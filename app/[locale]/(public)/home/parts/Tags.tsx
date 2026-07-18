@@ -64,17 +64,10 @@ const Tags = () => {
         {tagsWithMeta.map((tag) => (
           <Link
             key={tag.id}
-            href={`/tags?tag=${tag.slug}`}
-            className="bg-[#fbf9f8] border border-[#c1c6d7] rounded-lg p-2 hover:bg-[#f5f3f3] transition-colors h-16 flex flex-col justify-between"
-          >
-            <p
-              className={`font-['JetBrains_Mono'] font-medium text-[10px] leading-normal ${tag.color}`}
-            >
-              {tag.name}
-            </p>
-            <p className="font-['JetBrains_Mono'] font-normal text-[10px] text-[#707581] leading-normal">
-              {tag.count}
-            </p>
+            href={`/posts?tag=${tag.slug}`}
+            className="bg-[#fbf9f8] border border-[#c1c6d7] rounded-lg p-2 hover:bg-[#f5f3f3] transition-colors h-16 flex flex-col justify-between">
+            <p className={`font-['JetBrains_Mono'] font-medium text-[10px] leading-normal ${tag.color}`}>{tag.name}</p>
+            <p className="font-['JetBrains_Mono'] font-normal text-[10px] text-[#707581] leading-normal">{tag.count}</p>
           </Link>
         ))}
       </div>
@@ -84,9 +77,8 @@ const Tags = () => {
         {tags.map((tag) => (
           <Link
             key={tag.id}
-            href={`/tags?tag=${tag.slug}`}
-            className="bg-[#fbf9f8] border border-[#c1c6d7] rounded-xl px-3.25 py-1 font-['JetBrains_Mono'] font-normal text-[13px] text-[#1b1c1c] leading-[20.8px] hover:bg-[#f5f3f3] transition-colors"
-          >
+            href={`/posts?tag=${tag.slug}`}
+            className="bg-[#fbf9f8] border border-[#c1c6d7] rounded-xl px-3.25 py-1 font-['JetBrains_Mono'] font-normal text-[13px] text-[#1b1c1c] leading-[20.8px] hover:bg-[#f5f3f3] transition-colors">
             {tag.name}
           </Link>
         ))}
