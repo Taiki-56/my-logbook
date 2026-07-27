@@ -11,8 +11,19 @@
 
 export const PostStatus = {
   DRAFT: 'DRAFT',
-  PUBLISHED: 'PUBLISHED',
-  PRIVATE: 'PRIVATE'
+  PUBLISHED: 'PUBLISHED'
 } as const
 
 export type PostStatus = (typeof PostStatus)[keyof typeof PostStatus]
+
+
+export const Category = {
+  TECH: 'TECH',
+  WORK: 'WORK',
+  FITNESS: 'FITNESS',
+  FOOD: 'FOOD',
+  TRAVEL: 'TRAVEL',
+  LIFE: 'LIFE'
+} as const
+
+export type Category = (typeof Category)[keyof typeof Category]

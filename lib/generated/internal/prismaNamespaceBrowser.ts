@@ -52,7 +52,6 @@ export const AnyNull = runtime.AnyNull
 
 export const ModelName = {
   User: 'User',
-  SiteSetting: 'SiteSetting',
   Post: 'Post',
   PostContent: 'PostContent',
   Tag: 'Tag',
@@ -82,6 +81,8 @@ export const UserScalarFieldEnum = {
   id: 'id',
   email: 'email',
   passwordHash: 'passwordHash',
+  currentStreak: 'currentStreak',
+  lastActivityAt: 'lastActivityAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -89,24 +90,10 @@ export const UserScalarFieldEnum = {
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
 
 
-export const SiteSettingScalarFieldEnum = {
-  id: 'id',
-  siteName: 'siteName',
-  siteDescription: 'siteDescription',
-  profileImage: 'profileImage',
-  githubUrl: 'githubUrl',
-  xUrl: 'xUrl',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-} as const
-
-export type SiteSettingScalarFieldEnum = (typeof SiteSettingScalarFieldEnum)[keyof typeof SiteSettingScalarFieldEnum]
-
-
 export const PostScalarFieldEnum = {
   id: 'id',
   authorId: 'authorId',
-  thumbnail: 'thumbnail',
+  category: 'category',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const

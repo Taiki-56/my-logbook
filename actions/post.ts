@@ -5,20 +5,21 @@ import { auth } from "@/lib/auth";
 import { Prisma } from "@/lib/generated/client";
 import { PostFormValues, postSchema } from "@/schemas/postSchema";
 import { SaveContentInput, saveContentSchema } from "@/schemas/saveContentSchema";
-import { createPost, getPostBySlug, getPublishedPosts, updatePost } from "@/services/post";
+import { createPost, createTranslatedPost, getPostBySlug, getPublishedPosts, updatePost } from "@/services/post";
+import { Locale } from "@/types/config";
 import { PostAction, PostWithRelations } from "@/types/post";
 import { getLocale } from "next-intl/server";
 import { revalidatePath } from "next/cache";
 import z from "zod";
 
-//* Create the post with the first language for it
+//* Create the post with the initial language
 const createPostAction = async (
   formData: PostFormValues & { projectData?: Prisma.InputJsonValue | null; html?: string | null; tags?: string[] }
 ) => {
-  //* server side validation
+  //* 1. Server-side validation
   const validFormData = postSchema.safeParse(formData);
   if (!validFormData.success) {
-    return { error: "入力内容にエラーがあります。" };
+    return { error: "Validation failed. Please check your input." };
   }
 
   const locale = await getLocale();
@@ -26,21 +27,70 @@ const createPostAction = async (
   const authorId = session?.user?.id;
 
   if (!authorId) {
-    return { error: "認証されていません。ログインしてください。" };
+    return { error: "Unauthorized. Please log in." };
   }
 
   let newPost;
   try {
-    //*
+    //* Deep copy to remove any undefined values before passing to Prisma
     const pureFormData = JSON.parse(JSON.stringify(formData));
     newPost = await createPost(authorId, pureFormData);
   } catch (error) {
-    console.error("Database error: ", error);
-    return { error: "データベースへの保存に失敗しました。" };
+    console.error("Database error while creating post: ", error);
+    return { error: "Failed to save the post to the database." };
   }
 
   const savedSlug = newPost.contents[0].slug;
   redirect({ href: `/admin/posts/edit/${savedSlug}`, locale: locale });
+};
+
+//* Payload definition for the translation action
+type CreateTranslatedPostInput = {
+  postId: string;
+  targetLang: Locale;
+  translatedData: {
+    title: string;
+    slug: string;
+    html: string;
+    seoTitle: string;
+    seoDescription: string;
+    tags?: string[];
+    thumbnail?: string | null;
+  };
+};
+
+//* Save a newly translated post to the database
+const createTranslatedPostAction = async (input: CreateTranslatedPostInput): Promise<PostAction> => {
+  //* 1. Guard by Auth.js session
+  const session = await auth();
+  if (!session?.user?.id) {
+    return { success: false, error: "Unauthorized" };
+  }
+
+  const { postId, targetLang, translatedData } = input;
+
+  if (!postId || !targetLang || !translatedData) {
+    return { success: false, error: "Missing required fields for translation." };
+  }
+
+  try {
+    //* 2. Call service layer to save translation
+    await createTranslatedPost(postId, targetLang, translatedData);
+  } catch (error) {
+    console.error("Failed to save translated post:", error);
+    return { success: false, error: "Database update failed while saving translation." };
+  }
+
+  try {
+    //* 3. Cache Purge
+    revalidatePath(`/${targetLang}/admin/posts/edit/${translatedData.slug}`);
+    revalidatePath(`/${targetLang}/posts/${translatedData.slug}`);
+  } catch (error) {
+    console.warn("Revalidation failed after saving translation:", error);
+    //* DB update is already successful; treat this as non-fatal.
+  }
+
+  return { success: true };
 };
 
 //* Update the existing post on /edit/[slug] page
@@ -52,8 +102,8 @@ const savePostAction = async (input: SaveContentInput): Promise<PostAction> => {
   }
 
   //* 2. Validate payload via Zod
-  // TipTap JSON can contain undefined fields (e.g. image attrs) that are not valid JSON.
-  // Normalize once before validation so edit mode behaves consistently.
+  //* TipTap JSON can contain undefined fields (e.g. image attrs) that are not valid JSON.
+  //* Normalize once before validation so edit mode behaves consistently.
   const normalizedInput = JSON.parse(JSON.stringify(input)) as SaveContentInput;
 
   const validated = saveContentSchema.safeParse(normalizedInput);
@@ -67,7 +117,7 @@ const savePostAction = async (input: SaveContentInput): Promise<PostAction> => {
     return { success: false, error: "Invalid content payload" };
   }
 
-  // Strip undefined values from nested JSON before persisting to Prisma JSON columns.
+  //* Strip undefined values from nested JSON before persisting to Prisma JSON columns.
   const safeData = JSON.parse(JSON.stringify(validated.data)) as SaveContentInput;
 
   try {
@@ -90,7 +140,7 @@ const savePostAction = async (input: SaveContentInput): Promise<PostAction> => {
     revalidatePath(`/${safeData.locale}/posts/${safeData.slug}`);
   } catch (error) {
     console.warn("Revalidation failed after content update:", error);
-    // DB update is already successful; treat this as non-fatal.
+    //* DB update is already successful; treat this as non-fatal.
   }
 
   return { success: true };
@@ -107,6 +157,7 @@ const getPublishedPostsAction = async (): Promise<PostAction<PostWithRelations[]
   }
 };
 
+//* Fetches a post by its slug
 const getPostBySlugAction = async (slug: string): Promise<PostAction<PostWithRelations | null>> => {
   try {
     const post = await getPostBySlug(slug);
@@ -120,4 +171,4 @@ const getPostBySlugAction = async (slug: string): Promise<PostAction<PostWithRel
   }
 };
 
-export { createPostAction, getPostBySlugAction, getPublishedPostsAction, savePostAction };
+export { createPostAction, createTranslatedPostAction, getPostBySlugAction, getPublishedPostsAction, savePostAction };

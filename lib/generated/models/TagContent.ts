@@ -214,6 +214,7 @@ export type TagContentOrderByWithRelationInput = {
 
 export type TagContentWhereUniqueInput = Prisma.AtLeast<{
   id?: string
+  slug?: string
   tagId_locale?: Prisma.TagContentTagIdLocaleCompoundUniqueInput
   locale_slug?: Prisma.TagContentLocaleSlugCompoundUniqueInput
   AND?: Prisma.TagContentWhereInput | Prisma.TagContentWhereInput[]
@@ -222,11 +223,10 @@ export type TagContentWhereUniqueInput = Prisma.AtLeast<{
   tagId?: Prisma.UuidFilter<"TagContent"> | string
   locale?: Prisma.StringFilter<"TagContent"> | string
   name?: Prisma.StringFilter<"TagContent"> | string
-  slug?: Prisma.StringFilter<"TagContent"> | string
   createdAt?: Prisma.DateTimeFilter<"TagContent"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"TagContent"> | Date | string
   tag?: Prisma.XOR<Prisma.TagScalarRelationFilter, Prisma.TagWhereInput>
-}, "id" | "tagId_locale" | "locale_slug">
+}, "id" | "slug" | "tagId_locale" | "locale_slug">
 
 export type TagContentOrderByWithAggregationInput = {
   id?: Prisma.SortOrder

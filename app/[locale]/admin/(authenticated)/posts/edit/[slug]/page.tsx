@@ -1,13 +1,10 @@
 import PostForm from "@/components/admin/PostForm";
 import { getPostContentBySlug } from "@/services/post";
-import { getLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 
 const Page = async ({ params }: { params: { slug: string } }) => {
   const { slug } = await params;
-  const locale = await getLocale();
-  const fetchData = await getPostContentBySlug(slug, locale);
-
+  const fetchData = await getPostContentBySlug(slug);
   if (!fetchData) notFound();
 
   const mappedTags = fetchData.post.postTags.map((pt) => pt.tag.slug);

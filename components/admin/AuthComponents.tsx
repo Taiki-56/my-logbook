@@ -1,8 +1,10 @@
 import { signOut } from "@/lib/auth";
+import { LogOut } from "lucide-react";
 import { getLocale } from "next-intl/server";
 
 const SignOut = async () => {
   const locale = await getLocale();
+
   return (
     <form
       action={async () => {
@@ -10,9 +12,11 @@ const SignOut = async () => {
         await signOut({
           redirectTo: `/${locale}/admin/login`
         });
-      }}
-      className="w-full">
-      <button className="bg-neutral-700 text-white p-2 rounded-md">Sign Out</button>
+      }}>
+      <button className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-[#414754] bg-white border border-[#c1c6d7] rounded-lg hover:text-[#0058c3] hover:border-[#0058c3] hover:bg-[#fbf9f8] transition-all duration-200 shadow-sm group">
+        <LogOut className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+        <span>Sign Out</span>
+      </button>
     </form>
   );
 };

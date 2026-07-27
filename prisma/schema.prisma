@@ -1,8 +1,6 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-// Get a free hosted Postgres database in seconds: `npx create-db`
-
 generator client {
   provider = "prisma-client"
   output   = "../lib/generated"
@@ -15,35 +13,33 @@ datasource db {
 enum PostStatus {
   DRAFT
   PUBLISHED
-  PRIVATE
+}
+
+enum Category {
+  TECH
+  WORK
+  FITNESS
+  FOOD
+  TRAVEL
+  LIFE
 }
 
 //* ==========================================
-//* 1. User & Site Settings
+//* 1. User
 //* ==========================================
 
 model User {
-  id           String   @id @default(uuid()) @db.Uuid
-  email        String   @unique
-  passwordHash String   //* Credentials(ID/Pass)認証用
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-  posts        Post[]
+  id               String    @id @default(uuid()) @db.Uuid
+  email            String    @unique
+  passwordHash     String    
+  currentStreak    Int       @default(0)
+  lastActivityAt   DateTime? 
+  
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+  posts            Post[]
 
   @@map("users")
-}
-
-model SiteSetting {
-  id              String   @id @default(uuid()) @db.Uuid
-  siteName        String
-  siteDescription String?  @db.Text
-  profileImage    String?  @db.Text //* サイト全体の管理者画像として一本化
-  githubUrl       String?  @db.Text
-  xUrl            String?  @db.Text
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
-
-  @@map("site_settings")
 }
 
 //* ==========================================
@@ -53,7 +49,7 @@ model SiteSetting {
 model Post {
   id          String        @id @default(uuid()) @db.Uuid
   authorId    String        @db.Uuid
-  thumbnail   String?       @db.Text
+  category    Category      
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
   
@@ -69,12 +65,12 @@ model Post {
 model PostContent {
   id             String      @id @default(uuid()) @db.Uuid
   postId         String      @db.Uuid
-  locale         String      //* "ja" | "en" | "fr"
+  locale         String      //* "ja" | "en"
   status         PostStatus  @default(DRAFT) 
   publishedAt    DateTime?
-  isFeatured     Boolean     @default(false) //* To display featured posts on /home page
+  isFeatured     Boolean     @default(false)
   title          String
-  slug           String
+  slug           String      @unique
   projectData    Json?
   html           String?     @db.Text
   seoTitle       String?
@@ -86,7 +82,6 @@ model PostContent {
   post           Post        @relation(fields: [postId], references: [id], onDelete: Cascade)
 
   @@unique([postId, locale])
-  @@unique([locale, slug])
   @@map("post_contents")
 }
 
@@ -96,7 +91,7 @@ model PostContent {
 
 model Tag {
   id        String       @id @default(uuid()) @db.Uuid
-  slug      String       @unique //* 🌟 追加: 将来の共通識別子。今は入力された文字列をそのまま保存します。
+  slug      String       @unique 
   createdAt DateTime     @default(now())
   updatedAt DateTime     @updatedAt
   
@@ -110,9 +105,9 @@ model Tag {
 model TagContent {
   id        String   @id @default(uuid()) @db.Uuid
   tagId     String   @db.Uuid
-  locale    String   //* "ja" | "en" | "fr"
-  name      String   //* 画面表示名 (例: 筋トレ)
-  slug      String   //* URL用 (例: workout)
+  locale    String   //* "ja" | "en"
+  name      String   //* 画面表示名 (例: 筋トレ, Workout)
+  slug      String   @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -132,7 +127,7 @@ model PostTag {
   post   Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
   tag    Tag    @relation(fields: [tagId], references: [id], onDelete: Cascade)
 
-  @@id([postId, tagId]) //* 複合主キー
+  @@id([postId, tagId])
   @@map("post_tags")
 }
 
@@ -142,11 +137,11 @@ model PostTag {
 
 model Media {
   id        String      @id @default(uuid()) @db.Uuid
-  publicId  String      @unique //* クラウドストレージ上の削除キー
+  publicId  String      @unique 
   url       String      @db.Text
   mimeType  String
-  width     Int?        //* Next.js <Image> の CLS 対策用
-  height    Int?        //* Next.js <Image> の CLS 対策用
+  width     Int?        
+  height    Int?        
   fileSize  Int?
   createdAt DateTime    @default(now())
   updatedAt DateTime    @updatedAt
@@ -165,6 +160,6 @@ model PostMedia {
   post    Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
   media   Media  @relation(fields: [mediaId], references: [id], onDelete: Cascade)
 
-  @@id([postId, mediaId]) //* 複合主キー
+  @@id([postId, mediaId]) 
   @@map("post_media")
 }

@@ -9,7 +9,6 @@
  * 🟢 You can import this file directly.
  */
 export type * from './models/User'
-export type * from './models/SiteSetting'
 export type * from './models/Post'
 export type * from './models/PostContent'
 export type * from './models/Tag'

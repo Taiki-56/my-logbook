@@ -1,56 +1,101 @@
 import { Prisma } from "@/lib/generated/client";
 import prisma from "@/lib/prisma";
 import { PostFormValues } from "@/schemas/postSchema";
+import { Locale } from "@/types/config";
 import { AdminDisplayPost, DisplayPost, PostWithRelations, UpdatePost } from "@/types/post";
-import { Locale } from "next-intl";
 
-//* Create initial Post with Japanese
+//* Helper function to generate URL-safe slugs
+//* (e.g., "Next.js" -> "nextjs", "React Router" -> "react-router")
+const slugify = (text: string) => {
+  return text
+    .toString()
+    .toLowerCase()
+    .trim()
+    .replace(/\s+/g, "-")
+    .replace(/[^\w\-]+/g, "")
+    .replace(/\-\-+/g, "-")
+    .replace(/^-+/, "")
+    .replace(/-+$/, "");
+};
+
+//* Helper function to safely resolve and create tags across languages
+const resolveTags = async (tags: string[], locale: string) => {
+  const tagIds = [];
+  for (const tagName of tags) {
+    let safeSlug = slugify(tagName);
+    if (!safeSlug) safeSlug = encodeURIComponent(tagName.toLowerCase());
+
+    //* Find an existing tag by either the parent's canonical slug OR the child's locale-specific slug
+    let tag = await prisma.tag.findFirst({
+      where: {
+        OR: [{ slug: safeSlug }, { contents: { some: { locale, slug: safeSlug } } }]
+      },
+      include: { contents: true }
+    });
+
+    if (!tag) {
+      //* Create a completely new tag (sets the parent's canonical slug and initial localized content)
+      tag = await prisma.tag.create({
+        data: {
+          slug: safeSlug,
+          contents: {
+            create: { locale, name: tagName, slug: safeSlug }
+          }
+        },
+        include: { contents: true }
+      });
+    } else {
+      //* If the tag exists but lacks content for the current locale, append it
+      const hasLocale = tag.contents.some((c) => c.locale === locale);
+      if (!hasLocale) {
+        try {
+          await prisma.tag.update({
+            where: { id: tag.id },
+            data: {
+              contents: {
+                create: { locale, name: tagName, slug: safeSlug }
+              }
+            }
+          });
+        } catch (e) {
+          //* Ignore potential race conditions if created concurrently
+          console.warn("Tag content creation skipped due to concurrency:", e);
+        }
+      }
+    }
+    tagIds.push(tag.id);
+  }
+  return tagIds;
+};
+
+//* Create initial post in the base language (Japanese)
 const createPost = async (
   authorId: string,
-  formData: PostFormValues & { projectData?: Prisma.InputJsonValue | null; html?: string | null; tags?: string[] }
+  payload: PostFormValues & { projectData?: Prisma.InputJsonValue | null; html?: string | null; tags?: string[] }
 ) => {
-  //* 1. タグの準備（存在しなければ作成、あればIDを取得）
-  const tagIds = [];
-  if (formData.tags && formData.tags.length > 0) {
-    for (const tagName of formData.tags) {
-      // 🌟 upsert で既存のタグを探すか、無ければ新規作成する
-      const tag = await prisma.tag.upsert({
-        where: { slug: tagName },
-        update: {}, // 既存の場合は何もしない
-        create: {
-          slug: tagName, // 今は入力された文字列をそのまま共通slugとする
-          //* 将来見据えて、今の言語(ja)の表示用コンテンツも作成しておく
-          contents: {
-            create: {
-              locale: "ja",
-              name: tagName,
-              slug: tagName
-            }
-          }
-        }
-      });
-      tagIds.push(tag.id);
-    }
-  }
+  const { tags, thumbnail, status, title, slug, seoTitle, seoDescription, projectData, html } = payload;
 
-  //* 2. 記事の作成とタグの中間テーブル(postTags)への紐付け
+  //* 1. Safely resolve tags
+  const tagIds = tags && tags.length > 0 ? await resolveTags(tags, "ja") : [];
+
+  //* 2. Create the post and link tags via the junction table (PostTag)
   return await prisma.post.create({
     data: {
       authorId,
-      thumbnail: formData.thumbnail ? formData.thumbnail : null,
+      thumbnail: thumbnail ? thumbnail : null,
       contents: {
         create: {
           locale: "ja",
-          status: formData.status,
-          title: formData.title,
-          slug: formData.slug,
-          seoTitle: formData.seoTitle,
-          seoDescription: formData.seoDescription,
-          projectData: formData.projectData ?? undefined,
-          html: formData.html ?? undefined
+          status,
+          title,
+          slug,
+          seoTitle,
+          seoDescription,
+          projectData: projectData ?? undefined,
+          html: html ?? undefined
         }
       },
-      //* 🌟 ここで中間テーブル(PostTag)にデータを流し込む！
+      //* Insert data into the PostTag junction table
       ...(tagIds.length > 0 && {
         postTags: {
           create: tagIds.map((tagId) => ({
@@ -76,60 +121,80 @@ const createPost = async (
   });
 };
 
-//* Update post content (all fields)
-const updatePost = async ({
-  postId,
-  locale,
-  title,
-  slug,
-  status,
-  seoTitle,
-  seoDescription,
-  thumbnail,
-  projectData,
-  html,
-  tags
-}: UpdatePost & { tags?: string[] }) => {
-  //* 1. タグの更新処理 (tagsが送られてきた場合のみ実行)
+//* Add translated content to an existing post
+const createTranslatedPost = async (
+  postId: string,
+  targetLang: Locale,
+  translatedData: {
+    title: string;
+    slug: string;
+    html: string;
+    seoTitle: string;
+    seoDescription: string;
+    tags?: string[];
+    thumbnail?: string | null;
+  }
+) => {
+  const { title, slug, html, seoTitle, seoDescription, tags, thumbnail } = translatedData;
+
+  //* 1. Update tags securely using the resolver
   if (tags !== undefined) {
-    //* 一旦この記事に紐づく「古いタグの関連付け」をすべて削除（リセット）する
-    await prisma.postTag.deleteMany({
-      where: { postId }
-    });
+    //* Reset old relations
+    await prisma.postTag.deleteMany({ where: { postId } });
 
-    //* 新しいタグを準備して再登録する
     if (tags.length > 0) {
-      const tagIds = [];
-      for (const tagName of tags) {
-        const tag = await prisma.tag.upsert({
-          where: { slug: tagName },
-          update: {},
-          create: {
-            slug: tagName,
-            //* 編集中の言語(locale)に合わせてコンテンツを作成
-            contents: {
-              create: {
-                locale: locale,
-                name: tagName,
-                slug: tagName
-              }
-            }
-          }
-        });
-        tagIds.push(tag.id);
-      }
-
-      //* 中間テーブル(PostTag)に新しいペアを一気に作成
+      const tagIds = await resolveTags(tags, targetLang);
       await prisma.postTag.createMany({
-        data: tagIds.map((tagId) => ({
-          postId,
-          tagId
-        }))
+        data: tagIds.map((tagId) => ({ postId, tagId }))
       });
     }
   }
 
-  //* 2. 記事コンテンツの更新
+  //* 2. Update the parent post's thumbnail if provided
+  if (thumbnail !== undefined) {
+    await prisma.post.update({
+      where: { id: postId },
+      data: {
+        thumbnail: thumbnail === "" ? null : thumbnail
+      }
+    });
+  }
+
+  //* 3. Add PostContent without creating a new parent Post (using upsert for safety)
+  return await prisma.postContent.upsert({
+    where: {
+      postId_locale: { postId, locale: targetLang }
+    },
+    update: { title, slug, html, seoTitle, seoDescription },
+    create: {
+      postId,
+      locale: targetLang,
+      title,
+      slug,
+      html,
+      seoTitle,
+      seoDescription,
+      status: "DRAFT"
+    }
+  });
+};
+
+//* Update an existing post
+const updatePost = async (payload: UpdatePost & { tags?: string[] }) => {
+  const { postId, locale, title, slug, status, seoTitle, seoDescription, thumbnail, projectData, html, tags } = payload;
+
+  //* 1. Update tags (execute only if tags are provided)
+  if (tags !== undefined) {
+    await prisma.postTag.deleteMany({ where: { postId } });
+    if (tags.length > 0) {
+      const tagIds = await resolveTags(tags, locale);
+      await prisma.postTag.createMany({
+        data: tagIds.map((tagId) => ({ postId, tagId }))
+      });
+    }
+  }
+
+  //* 2. Update post content
   return await prisma.postContent.update({
     where: {
       postId_locale: {
@@ -147,7 +212,7 @@ const updatePost = async ({
       html: html ?? undefined,
       post: {
         update: {
-          //* 空文字なら null（未設定）として保存し、URLがあれば保存する
+          //* Save as null if empty, otherwise save the URL
           thumbnail: thumbnail === "" ? null : thumbnail
         }
       }
@@ -155,7 +220,7 @@ const updatePost = async ({
   });
 };
 
-//* Fetches all post to show on /posts page
+//* Fetches all posts to show on /posts page
 const getPublishedPosts = async () => {
   return await prisma.post.findMany({
     include: {
@@ -173,14 +238,9 @@ const getPublishedPosts = async () => {
 };
 
 //* Fetches post data for initial data on /edit/[slug] page
-const getPostContentBySlug = async (slug: string, locale: Locale) => {
+const getPostContentBySlug = async (slug: string) => {
   return await prisma.postContent.findUnique({
-    where: {
-      locale_slug: {
-        slug,
-        locale
-      }
-    },
+    where: { slug },
     //* Get the parent model too for thumbnail and associated tags
     include: {
       post: {
@@ -196,7 +256,7 @@ const getPostContentBySlug = async (slug: string, locale: Locale) => {
   });
 };
 
-//* Fetches the complete post data, including all localized contents, to be displayed on the /posts/[slug] page.
+//* Fetches the complete post data, including all localized contents, to be displayed on the /posts/[slug] page
 const getPostBySlug = async (slug: string) => {
   return await prisma.post.findFirst({
     where: {
@@ -223,7 +283,7 @@ const formatToDisplayPost = (post: PostWithRelations): DisplayPost => {
     id: post.id,
     category: post.postTags[0]?.tag?.slug?.toUpperCase() || "BLOG",
     date: post.createdAt.toLocaleDateString("ja-JP", { month: "short", day: "numeric" }),
-    readTime: "5 min read", // TODO: 実際の実装に合わせて調整
+    readTime: "5 min read", //* TODO: Adjust to actual implementation logic
     title: content?.title || "No Title",
     description: content?.seoDescription || "",
     tags: post.postTags.map((pt) => pt.tag.slug),
@@ -240,7 +300,7 @@ const getFeaturedPosts = async (locale: string): Promise<DisplayPost[]> => {
     orderBy: { createdAt: "desc" },
     take: 3,
     include: {
-      contents: { where: { locale } }, // 取得するcontentsを現在のlocaleに絞る
+      contents: { where: { locale } }, //* Filter contents by the requested locale
       postTags: { include: { tag: true } }
     }
   });
@@ -275,14 +335,14 @@ const getAdminPosts = async (): Promise<AdminDisplayPost[]> => {
   });
 
   return rawPosts.map((post) => {
-    // 各言語のコンテンツを抽出
+    //* Extract localized contents
     const ja = post.contents.find((c) => c.locale === "ja");
     const en = post.contents.find((c) => c.locale === "en");
     const fr = post.contents.find((c) => c.locale === "fr");
 
     return {
       id: post.id,
-      // タイトルは日本語を優先し、なければ他言語、それでもなければ"No Title"
+      //* Prioritize Japanese title, fallback to others, or default to "No Title"
       title: ja?.title || en?.title || fr?.title || "No Title",
       updatedAt: new Date(post.updatedAt).toLocaleString("ja-JP", {
         year: "numeric",
@@ -300,13 +360,39 @@ const getAdminPosts = async (): Promise<AdminDisplayPost[]> => {
   });
 };
 
+const getSourcePost = async (postId: string, sourceLang: Locale) => {
+  return prisma.postContent.findUnique({
+    where: {
+      postId_locale: {
+        postId,
+        locale: sourceLang
+      }
+    },
+    include: {
+      post: {
+        include: {
+          postTags: {
+            include: {
+              tag: {
+                include: { contents: true }
+              }
+            }
+          }
+        }
+      }
+    }
+  });
+};
+
 export {
   createPost,
+  createTranslatedPost,
   getAdminPosts,
   getFeaturedPosts,
   getLatestPosts,
   getPostBySlug,
   getPostContentBySlug,
   getPublishedPosts,
+  getSourcePost,
   updatePost
 };
