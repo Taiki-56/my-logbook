@@ -273,8 +273,8 @@ export type PostContentOrderByWithRelationInput = {
 
 export type PostContentWhereUniqueInput = Prisma.AtLeast<{
   id?: string
+  slug?: string
   postId_locale?: Prisma.PostContentPostIdLocaleCompoundUniqueInput
-  locale_slug?: Prisma.PostContentLocaleSlugCompoundUniqueInput
   AND?: Prisma.PostContentWhereInput | Prisma.PostContentWhereInput[]
   OR?: Prisma.PostContentWhereInput[]
   NOT?: Prisma.PostContentWhereInput | Prisma.PostContentWhereInput[]
@@ -284,7 +284,6 @@ export type PostContentWhereUniqueInput = Prisma.AtLeast<{
   publishedAt?: Prisma.DateTimeNullableFilter<"PostContent"> | Date | string | null
   isFeatured?: Prisma.BoolFilter<"PostContent"> | boolean
   title?: Prisma.StringFilter<"PostContent"> | string
-  slug?: Prisma.StringFilter<"PostContent"> | string
   projectData?: Prisma.JsonNullableFilter<"PostContent">
   html?: Prisma.StringNullableFilter<"PostContent"> | string | null
   seoTitle?: Prisma.StringNullableFilter<"PostContent"> | string | null
@@ -292,7 +291,7 @@ export type PostContentWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"PostContent"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"PostContent"> | Date | string
   post?: Prisma.XOR<Prisma.PostScalarRelationFilter, Prisma.PostWhereInput>
-}, "id" | "postId_locale" | "locale_slug">
+}, "id" | "slug" | "postId_locale">
 
 export type PostContentOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -467,11 +466,6 @@ export type PostContentPostIdLocaleCompoundUniqueInput = {
   locale: string
 }
 
-export type PostContentLocaleSlugCompoundUniqueInput = {
-  locale: string
-  slug: string
-}
-
 export type PostContentCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   postId?: Prisma.SortOrder
@@ -567,12 +561,12 @@ export type EnumPostStatusFieldUpdateOperationsInput = {
   set?: $Enums.PostStatus
 }
 
-export type NullableDateTimeFieldUpdateOperationsInput = {
-  set?: Date | string | null
-}
-
 export type BoolFieldUpdateOperationsInput = {
   set?: boolean
+}
+
+export type NullableStringFieldUpdateOperationsInput = {
+  set?: string | null
 }
 
 export type PostContentCreateWithoutPostInput = {

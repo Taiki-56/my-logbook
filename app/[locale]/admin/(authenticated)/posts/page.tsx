@@ -123,7 +123,7 @@ const Page = async () => {
                     {/* 英語翻訳ボタン */}
                     {!post.statuses.en && post.statuses.ja && (
                       <Link
-                        href={`/admin/posts/new?postId=${post.id}&locale=en&autoTranslate=true`}
+                        href={`/admin/posts/new?postId=${post.id}&targetLang=en`}
                         className="flex items-center gap-1.5 px-3 py-1.5 bg-[#eef4ff] text-[#0058c3] hover:bg-[#d8e2ff] rounded-md transition-colors text-[12px] font-medium border border-[#c6d7ff]">
                         <Languages className="w-3.5 h-3.5" />
                         ENへ翻訳
@@ -133,7 +133,7 @@ const Page = async () => {
                     {/* フランス語翻訳ボタン */}
                     {!post.statuses.fr && post.statuses.ja && (
                       <Link
-                        href={`/admin/posts/new?postId=${post.id}&locale=fr&autoTranslate=true`}
+                        href={`/admin/posts/new?postId=${post.id}&targetLang=fr`}
                         className="flex items-center gap-1.5 px-3 py-1.5 bg-[#fcf0f0] text-[#c30000] hover:bg-[#f9dada] rounded-md transition-colors text-[12px] font-medium border border-[#ffc6c6]">
                         <Languages className="w-3.5 h-3.5" />
                         FRへ翻訳

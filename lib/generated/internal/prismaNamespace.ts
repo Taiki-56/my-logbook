@@ -385,7 +385,6 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 
 export const ModelName = {
   User: 'User',
-  SiteSetting: 'SiteSetting',
   Post: 'Post',
   PostContent: 'PostContent',
   Tag: 'Tag',
@@ -408,7 +407,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "siteSetting" | "post" | "postContent" | "tag" | "tagContent" | "postTag" | "media" | "postMedia"
+    modelProps: "user" | "post" | "postContent" | "tag" | "tagContent" | "postTag" | "media" | "postMedia"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -483,80 +482,6 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.UserCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.UserCountAggregateOutputType> | number
-        }
-      }
-    }
-    SiteSetting: {
-      payload: Prisma.$SiteSettingPayload<ExtArgs>
-      fields: Prisma.SiteSettingFieldRefs
-      operations: {
-        findUnique: {
-          args: Prisma.SiteSettingFindUniqueArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$SiteSettingPayload> | null
-        }
-        findUniqueOrThrow: {
-          args: Prisma.SiteSettingFindUniqueOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$SiteSettingPayload>
-        }
-        findFirst: {
-          args: Prisma.SiteSettingFindFirstArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$SiteSettingPayload> | null
-        }
-        findFirstOrThrow: {
-          args: Prisma.SiteSettingFindFirstOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$SiteSettingPayload>
-        }
-        findMany: {
-          args: Prisma.SiteSettingFindManyArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$SiteSettingPayload>[]
-        }
-        create: {
-          args: Prisma.SiteSettingCreateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$SiteSettingPayload>
-        }
-        createMany: {
-          args: Prisma.SiteSettingCreateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        createManyAndReturn: {
-          args: Prisma.SiteSettingCreateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$SiteSettingPayload>[]
-        }
-        delete: {
-          args: Prisma.SiteSettingDeleteArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$SiteSettingPayload>
-        }
-        update: {
-          args: Prisma.SiteSettingUpdateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$SiteSettingPayload>
-        }
-        deleteMany: {
-          args: Prisma.SiteSettingDeleteManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateMany: {
-          args: Prisma.SiteSettingUpdateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateManyAndReturn: {
-          args: Prisma.SiteSettingUpdateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$SiteSettingPayload>[]
-        }
-        upsert: {
-          args: Prisma.SiteSettingUpsertArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$SiteSettingPayload>
-        }
-        aggregate: {
-          args: Prisma.SiteSettingAggregateArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AggregateSiteSetting>
-        }
-        groupBy: {
-          args: Prisma.SiteSettingGroupByArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.SiteSettingGroupByOutputType>[]
-        }
-        count: {
-          args: Prisma.SiteSettingCountArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.SiteSettingCountAggregateOutputType> | number
         }
       }
     }
@@ -1121,6 +1046,8 @@ export const UserScalarFieldEnum = {
   id: 'id',
   email: 'email',
   passwordHash: 'passwordHash',
+  currentStreak: 'currentStreak',
+  lastActivityAt: 'lastActivityAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -1128,24 +1055,10 @@ export const UserScalarFieldEnum = {
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
 
 
-export const SiteSettingScalarFieldEnum = {
-  id: 'id',
-  siteName: 'siteName',
-  siteDescription: 'siteDescription',
-  profileImage: 'profileImage',
-  githubUrl: 'githubUrl',
-  xUrl: 'xUrl',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-} as const
-
-export type SiteSettingScalarFieldEnum = (typeof SiteSettingScalarFieldEnum)[keyof typeof SiteSettingScalarFieldEnum]
-
-
 export const PostScalarFieldEnum = {
   id: 'id',
   authorId: 'authorId',
-  thumbnail: 'thumbnail',
+  category: 'category',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -1289,6 +1202,20 @@ export type ListStringFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaMod
 
 
 /**
+ * Reference to a field of type 'Int'
+ */
+export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
+    
+
+
+/**
+ * Reference to a field of type 'Int[]'
+ */
+export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
+    
+
+
+/**
  * Reference to a field of type 'DateTime'
  */
 export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime'>
@@ -1299,6 +1226,20 @@ export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel
  * Reference to a field of type 'DateTime[]'
  */
 export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime[]'>
+    
+
+
+/**
+ * Reference to a field of type 'Category'
+ */
+export type EnumCategoryFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Category'>
+    
+
+
+/**
+ * Reference to a field of type 'Category[]'
+ */
+export type ListEnumCategoryFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Category[]'>
     
 
 
@@ -1334,20 +1275,6 @@ export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'J
  * Reference to a field of type 'QueryMode'
  */
 export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
-    
-
-
-/**
- * Reference to a field of type 'Int'
- */
-export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
-    
-
-
-/**
- * Reference to a field of type 'Int[]'
- */
-export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
     
 
 
@@ -1475,7 +1402,6 @@ export type PrismaClientOptions = ({
 }
 export type GlobalOmitConfig = {
   user?: Prisma.UserOmit
-  siteSetting?: Prisma.SiteSettingOmit
   post?: Prisma.PostOmit
   postContent?: Prisma.PostContentOmit
   tag?: Prisma.TagOmit

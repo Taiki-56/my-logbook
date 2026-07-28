@@ -1,20 +1,24 @@
 "use client";
 
-import { createPostAction, savePostAction } from "@/actions/post";
+import { createPostAction, createTranslatedPostAction, savePostAction } from "@/actions/post";
+import { translatePostAction } from "@/actions/translation";
 import uploadImage from "@/actions/uploadImage";
+import { useRouter } from "@/i18n/navigation";
 import { Prisma } from "@/lib/generated/client";
 import { PostStatus } from "@/lib/generated/enums";
 import { PostFormValues, postSchema } from "@/schemas/postSchema";
+import { Locale } from "@/types/config";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { JSONContent } from "@tiptap/react";
-import { X } from "lucide-react"; // タグ削除ボタン用のアイコン
+import { Loader2, X } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import RichEditor from "./RichEditor";
 
 type PostFormProps = {
   mode: "create" | "edit";
+  sourceData?: { postId?: string; targetLang: Locale };
   initialData?: {
     postId: string;
     locale: string;
@@ -30,27 +34,30 @@ type PostFormProps = {
   };
 };
 
-const PostForm = ({ mode, initialData }: PostFormProps) => {
+const PostForm = ({ mode, sourceData, initialData }: PostFormProps) => {
   const t = useTranslations("Admin.editor");
+  const router = useRouter();
+
   const [activeLanguage, setActiveLanguage] = useState<"ja" | "en" | "fr" | string>(initialData?.locale ?? "ja");
 
-  //* エディタ用State
+  //* State to track translation progress
+  const [isTranslating, setIsTranslating] = useState(false);
+
+  //* Editor states
   const [editorAST, setEditorAST] = useState<Prisma.InputJsonValue | null>(initialData?.projectData ?? null);
   const [editorHtml, setEditorHtml] = useState<string>(initialData?.html ?? "");
 
-  //* サムネイル用のアップロード中状態（URL自体はReact Hook Formで管理します）
+  //* Thumbnail upload state
   const [isUploading, setIsUploading] = useState(false);
 
-  //* ==========================================
-  //* タグ管理用Stateと関数
-  //* ==========================================
+  //* Tag management state
   const [tagInput, setTagInput] = useState("");
 
   const {
     register,
     handleSubmit,
     watch,
-    setValue, //* 🌟 追加: プログラムからフォームの値を書き換える関数
+    setValue,
     formState: { errors, isSubmitting }
   } = useForm<PostFormValues>({
     resolver: zodResolver(postSchema),
@@ -60,8 +67,8 @@ const PostForm = ({ mode, initialData }: PostFormProps) => {
       slug: initialData?.slug ?? "",
       seoTitle: initialData?.seoTitle ?? "",
       seoDescription: initialData?.seoDescription ?? "",
-      thumbnail: initialData?.thumbnail ?? "", //* 初期データがあればここにセットされる
-      tags: initialData?.tags ?? [] //* 🌟 追加: Zodにタグを追加したので、初期値もReact Hook Formで管理！
+      thumbnail: initialData?.thumbnail ?? "",
+      tags: initialData?.tags ?? []
     }
   });
 
@@ -69,7 +76,60 @@ const PostForm = ({ mode, initialData }: PostFormProps) => {
     register("tags");
   }, [register]);
 
-  //* 🌟 追加: React Hook Form が持っている現在のサムネイルURLとタグを監視して取得する
+  const hasTranslated = useRef(false);
+
+  //* ==========================================
+  //* Trigger and apply auto-translation
+  //* ==========================================
+  useEffect(() => {
+    const doTranslation = async () => {
+      if (hasTranslated.current) return;
+
+      if (mode === "create" && sourceData?.postId && sourceData?.targetLang) {
+        hasTranslated.current = true;
+        setIsTranslating(true);
+        try {
+          const translated = await translatePostAction(sourceData.targetLang, sourceData.postId);
+
+          //* 1. Set basic fields
+          setValue("title", translated.title, { shouldDirty: true, shouldValidate: true });
+          setValue("seoTitle", translated.seoTitle ?? "", { shouldDirty: true });
+          setValue("seoDescription", translated.seoDescription ?? "", { shouldDirty: true });
+
+          //* 2. Inherit thumbnail
+          if (translated.thumbnail) {
+            setValue("thumbnail", translated.thumbnail, { shouldDirty: true, shouldValidate: true });
+          }
+
+          //* 3. Apply translated slug
+          if (translated.slug) {
+            setValue("slug", translated.slug, { shouldDirty: true, shouldValidate: true });
+          }
+
+          //* 4. Apply translated tags (extracting names from TagContent array)
+          if (translated.tags && Array.isArray(translated.tags)) {
+            const tagNames = translated.tags.map((tag: any) => tag.name);
+            setValue("tags", tagNames, { shouldDirty: true, shouldValidate: true });
+          }
+
+          //* 5. Set HTML content
+          setEditorHtml(translated.html);
+          setEditorAST(null);
+        } catch (error) {
+          console.error("Translation Error:", error);
+          alert("Auto-translation failed. Please enter the content manually or reload the page.");
+        } finally {
+          setIsTranslating(false);
+        }
+      }
+    };
+
+    doTranslation();
+  }, [mode, sourceData, setValue]);
+
+  //* ==========================================
+  //* UI logic below
+  //* ==========================================
   const currentThumbnail = watch("thumbnail");
   const tags = watch("tags") || [];
 
@@ -77,7 +137,6 @@ const PostForm = ({ mode, initialData }: PostFormProps) => {
     e?.preventDefault();
     const trimmed = tagInput.trim();
     if (trimmed && !tags.includes(trimmed)) {
-      //* 🌟 修正: React Hook Form に新しいタグ配列を覚えさせる
       setValue("tags", [...tags, trimmed], { shouldDirty: true });
     }
     setTagInput("");
@@ -91,14 +150,12 @@ const PostForm = ({ mode, initialData }: PostFormProps) => {
   };
 
   const removeTag = (tagToRemove: string) => {
-    //* 🌟 修正: React Hook Form のタグ配列から削除する
     setValue(
       "tags",
       tags.filter((tag) => tag !== tagToRemove),
       { shouldDirty: true }
     );
   };
-  //* ==========================================
 
   const seoTitleLength = watch("seoTitle")?.length || 0;
   const seoDescLength = watch("seoDescription")?.length || 0;
@@ -120,31 +177,27 @@ const PostForm = ({ mode, initialData }: PostFormProps) => {
     try {
       const res = await uploadImage(formData);
       if (res.success && res.url) {
-        //* 🌟 修正: useState ではなく React Hook Form に値をセットする
-        //* shouldValidate: true をつけることで、Zodのエラー表示も即座に消えます
         setValue("thumbnail", res.url, { shouldValidate: true, shouldDirty: true });
       } else {
-        alert(`アップロード失敗: ${res.error}`);
+        alert(`Upload failed: ${res.error}`);
       }
     } catch (error) {
       console.error(error);
-      alert("アップロード中にエラーが発生しました。");
+      alert("An error occurred during upload.");
     } finally {
       setIsUploading(false);
     }
   };
 
   const onSubmit = async (data: PostFormValues) => {
-    //* 1. 公開時における「本文空っぽ」のブロック処理
     if (data.status === "PUBLISHED") {
       const isEmptyEditor = !editorHtml || editorHtml === "<p></p>" || editorHtml === "";
       if (isEmptyEditor) {
-        alert("公開する場合は、必ず本文を執筆してください。");
+        alert("Please write the post content before publishing.");
         return;
       }
     }
 
-    //* 🌟 修正: data の中に既に tags が入っているので、手動で合体させる必要がなくなりました！
     const payload = {
       ...data,
       projectData: editorAST,
@@ -152,13 +205,43 @@ const PostForm = ({ mode, initialData }: PostFormProps) => {
     };
 
     if (mode === "create") {
-      try {
-        const res = await createPostAction(payload);
-        if (res?.error) alert(`サーバー側エラー：\n${res.error}`);
-      } catch (error) {
-        console.error("通信エラー:", error);
+      if (sourceData?.postId && sourceData?.targetLang) {
+        //* Flow A: Save Translated Post
+        try {
+          const res = await createTranslatedPostAction({
+            postId: sourceData.postId,
+            targetLang: sourceData.targetLang,
+            translatedData: {
+              title: payload.title,
+              slug: payload.slug,
+              html: payload.html ?? "",
+              seoTitle: payload.seoTitle ?? "",
+              seoDescription: payload.seoDescription ?? "",
+              tags: payload.tags,
+              thumbnail: payload.thumbnail
+            }
+          });
+          if (!res.success) {
+            alert(`Server Error:\n${res.error}`);
+          } else {
+            alert("Translation saved successfully!");
+            //* Redirect back to the edit page of the translated content
+            router.push(`/admin/posts/edit/${payload.slug}`);
+          }
+        } catch (error) {
+          console.error("Network error:", error);
+        }
+      } else {
+        //* Flow B: Create Brand New Post (Base Language)
+        try {
+          const res = await createPostAction(payload);
+          if (res?.error) alert(`Server Error:\n${res.error}`);
+        } catch (error) {
+          console.error("Network error:", error);
+        }
       }
     } else {
+      //* Flow C: Update Existing Post Content
       if (!initialData?.postId || !initialData?.locale) return;
       try {
         const res = await savePostAction({
@@ -169,59 +252,75 @@ const PostForm = ({ mode, initialData }: PostFormProps) => {
           seoDescription: payload.seoDescription ?? "",
           thumbnail: payload.thumbnail ?? ""
         });
-        if (!res.success) alert(`サーバー側エラー：\n${res.error}`);
+
+        if (!res.success) {
+          alert(`Server Error:\n${res.error}`);
+        } else {
+          alert("Changes saved successfully!");
+        }
       } catch (error) {
-        console.error("通信エラー:", error);
+        console.error("Network error:", error);
       }
     }
   };
 
   return (
-    <div className="min-h-screen bg-[#fbf9f8]">
-      <header className="bg-[#fbf9f8] border-b border-[#c1c6d7] px-6 py-4 flex items-center justify-between">
+    <div className="min-h-screen bg-[#fbf9f8] relative">
+      {/* Loading overlay for translation */}
+      {isTranslating && (
+        <div className="absolute inset-0 z-50 flex items-center justify-center bg-white/70 backdrop-blur-sm">
+          <div className="bg-white px-6 py-4 rounded-lg shadow-lg border border-gray-200 flex flex-col items-center">
+            <Loader2 className="w-8 h-8 text-[#0058c3] animate-spin mb-3" />
+            <p className="text-[#1b1c1c] font-bold">AI is translating the article...</p>
+            <p className="text-sm text-gray-500 mt-1">This may take a few seconds.</p>
+          </div>
+        </div>
+      )}
+
+      {/* <header className="bg-[#fbf9f8] border-b border-[#c1c6d7] px-6 py-4 flex items-center justify-between">
         <h1 className="font-['Liberation_Serif:Bold'] font-bold text-[24px] text-[#1b1c1c]">{t("title")}</h1>
         <div className="flex items-center gap-4">
           <div className="w-8 h-8 bg-[#e9e8e7] border border-[#c1c6d7] rounded-full" />
         </div>
-      </header>
+      </header> */}
 
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="flex gap-6 p-8">
         <div className="flex-1 space-y-4">
-          <div className="flex border border-[#c1c6d7] bg-white rounded p-1.5 gap-2 w-fit shadow-sm">
+          {/* TODO: Enable switching to edit pages of other available locales for this Post. */}
+          {/* <div className="flex border border-[#c1c6d7] bg-white rounded p-1.5 gap-2 w-fit shadow-sm">
             <button
               type="button"
               onClick={() => setActiveLanguage("ja")}
               className={`px-3 py-1 text-xs font-bold rounded ${activeLanguage === "ja" ? "bg-[#1b1c1c] text-white" : "text-gray-500 hover:bg-gray-100"}`}>
-              JA (ベース主言語)
+              JA (Base)
             </button>
             <button
               type="button"
               disabled
               className="px-3 py-1 text-xs font-bold rounded text-gray-300 cursor-not-allowed">
-              EN (自動翻訳枠)
+              EN (Auto-translate)
             </button>
             <button
               type="button"
               disabled
               className="px-3 py-1 text-xs font-bold rounded text-gray-300 cursor-not-allowed">
-              FR (自動翻訳枠)
+              FR (Auto-translate)
             </button>
-          </div>
-
+          </div> */}
           <div className="bg-white border border-[#c1c6d7] rounded p-6 shadow-sm">
             <input
               {...register("title")}
               type="text"
-              placeholder={t("titlePlaceholder") || "記事タイトルを入力..."}
+              placeholder={t("titlePlaceholder") || "Enter post title..."}
               className="w-full text-[28px] font-bold text-[#1b1c1c] outline-none font-['Liberation_Serif:Bold'] placeholder:text-gray-300"
             />
             {errors.title && <p className="text-red-500 text-xs mt-1">{errors.title.message}</p>}
           </div>
-
           <RichEditor
-            initialContent={initialData?.projectData}
+            key={isTranslating ? "translating" : "ready"}
+            initialContent={(editorHtml as any) || initialData?.projectData}
             onChange={handleEditorChange}
           />
         </div>
@@ -243,14 +342,14 @@ const PostForm = ({ mode, initialData }: PostFormProps) => {
             </div>
           </div>
 
-          {/* サムネイルセクション */}
+          {/* Thumbnail Section */}
           <div className="bg-white border border-[#c1c6d7] rounded-lg p-4">
             <h3 className="font-['Geist:Bold'] font-bold text-[11px] text-[#414754] tracking-[0.88px] mb-4">
-              サムネイル
+              Thumbnail
             </h3>
             <div className="w-full h-40 bg-gray-100 rounded border-2 border-dashed border-gray-300 flex items-center justify-center mb-3 overflow-hidden relative group">
               {isUploading ? (
-                <p className="text-sm text-gray-500">アップロード中...</p>
+                <p className="text-sm text-gray-500">Uploading...</p>
               ) : currentThumbnail ? (
                 <>
                   <img
@@ -258,21 +357,20 @@ const PostForm = ({ mode, initialData }: PostFormProps) => {
                     alt="Thumbnail preview"
                     className="w-full h-full object-cover"
                   />
-                  {/* 画像削除ボタン（任意で使えるように追加） */}
                   <button
                     type="button"
                     onClick={() => setValue("thumbnail", "", { shouldValidate: true })}
                     className="absolute top-2 right-2 bg-white/90 p-1.5 rounded-full shadow opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-50 hover:text-red-500"
-                    title="画像を削除">
+                    title="Remove image">
                     <X className="w-4 h-4" />
                   </button>
                 </>
               ) : (
-                <p className="text-sm text-gray-400">プレビュー</p>
+                <p className="text-sm text-gray-400">Preview</p>
               )}
             </div>
             <label className="block w-full text-center px-4 py-2 text-[13px] text-white bg-[#414754] rounded hover:bg-[#1b1c1c] transition-colors cursor-pointer">
-              {currentThumbnail ? "画像を変更" : "画像をアップロード"}
+              {currentThumbnail ? "Change Image" : "Upload Image"}
               <input
                 type="file"
                 accept="image/*"
@@ -296,23 +394,23 @@ const PostForm = ({ mode, initialData }: PostFormProps) => {
             </div>
           </div>
 
-          {/* タグ入力セクション */}
+          {/* Tags Section */}
           <div className="bg-white border border-[#c1c6d7] rounded-lg p-4">
-            <h3 className="font-['Geist:Bold'] font-bold text-[11px] text-[#414754] tracking-[0.88px] mb-4">タグ</h3>
+            <h3 className="font-['Geist:Bold'] font-bold text-[11px] text-[#414754] tracking-[0.88px] mb-4">Tags</h3>
             <div className="flex gap-2 mb-3">
               <input
                 type="text"
                 value={tagInput}
                 onChange={(e) => setTagInput(e.target.value)}
                 onKeyDown={handleKeyDown}
-                placeholder="タグを入力 (Enterで追加)"
+                placeholder="Enter tag (Press Enter)"
                 className="flex-1 px-3 py-2 text-[13px] text-[#1b1c1c] border border-[#c1c6d7] rounded outline-none focus:border-[#0058c3]"
               />
               <button
                 type="button"
                 onClick={handleAddTag}
                 className="px-3 py-2 text-[13px] text-white bg-[#414754] rounded hover:bg-[#1b1c1c] transition-colors whitespace-nowrap">
-                追加
+                Add
               </button>
             </div>
             <div className="flex flex-wrap gap-2">
@@ -365,9 +463,9 @@ const PostForm = ({ mode, initialData }: PostFormProps) => {
           <div className="flex gap-3">
             <button
               type="submit"
-              disabled={isSubmitting}
+              disabled={isSubmitting || isTranslating}
               className="flex-1 px-4 py-2.5 text-[14px] font-medium text-white bg-[#0058c3] rounded hover:bg-[#0046a0] transition-colors disabled:opacity-50 cursor-pointer">
-              {isSubmitting ? "保存中..." : "保存する"}
+              {isSubmitting ? "Saving..." : "Save Post"}
             </button>
           </div>
         </div>
