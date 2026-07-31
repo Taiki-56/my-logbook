@@ -1,0 +1,225 @@
+{
+  "Common": {
+    "siteName": "Chronicle",
+    "minRead": "min"
+  },
+  "Header": {
+    "articles": "Artículos",
+    "about": "Perfil"
+  },
+  "Footer": {
+    "copyright": "© 2024 Chronicle. Creado con precisión.",
+    "privacyPolicy": "Política de privacidad",
+    "termsOfService": "Términos de servicio",
+    "contact": "Contacto"
+  },
+  "SearchBar": {
+    "placeholder": "Buscar artículos, etiquetas, temas..."
+  },
+  "Home": {
+    "title": {
+      "title": "Más allá del camino largo",
+      "subtitle": "Trabajar, aprender y entrenar en el extranjero. Un registro de desafíos desde Francia hasta Canadá."
+    },
+    "featured": {
+      "heading": "FEATURED / Artículos destacados"
+    },
+    "latest": {
+      "heading": "LATEST / Últimos artículos"
+    },
+    "tags": {
+      "heading": "TAGS / Etiquetas"
+    },
+    "newsletter": {
+      "title": "Boletín",
+      "description": "Recibe los últimos artículos técnicos, experiencias de vida en Canadá y actualizaciones de mis proyectos personales una vez al mes.",
+      "emailPlaceholder": "Correo electrónico",
+      "subscribeButton": "Suscribirse"
+    }
+  },
+  "About": {
+    "profile": {
+      "name": "Alex Mercer",
+      "jobTitle": "Ingeniero de Software"
+    },
+    "coreFocus": {
+      "heading": "Áreas de interés principales",
+      "focuses": ["Machine Learning", "Arquitectura de Sistemas", "React & Node", "Hipertrofia muscular"]
+    },
+    "biography": {
+      "heading": "Conectando código y cultura.",
+      "paragraph1": "Actualmente con sede entre Toronto y Tokio, diseño y construyo sistemas de software de alto rendimiento. Con un profundo interés en cómo la inteligencia artificial puede ampliar las capacidades humanas, me enfoco en arquitecturas escalables e interfaces de usuario minimalistas y precisas.",
+      "paragraph2": "La disciplina requerida para diseñar sistemas distribuidos robustos es paralela a mi dedicación al culturismo. Ambos exigen consistencia, progreso gradual y una atención meticulosa a los detalles. Ya sea optimizando redes neuronales o estructurando ciclos de entrenamiento, la filosofía subyacente es la misma: la práctica intencional produce resultados exponenciales."
+    },
+    "trajectory": {
+      "heading": "Trayectoria profesional",
+      "current": "Actualidad",
+      "timeline": [
+        {
+          "period": "2022 - Actualidad",
+          "title": "Ingeniero Senior de IA",
+          "company": "Nexus Labs, Tokio (Remoto)",
+          "description": "Lidero el desarrollo de frameworks de orquestación de LLM y la optimización de pipelines de inferencia para clientes corporativos."
+        },
+        {
+          "period": "2019 - 2022",
+          "title": "Desarrollador Full Stack",
+          "company": "Vanguard Tech, Toronto",
+          "description": "Diseño y escalado de arquitectura de microservicios que procesa más de 10 millones de solicitudes al día. También a cargo de la tutoría de ingenieros junior."
+        }
+      ]
+    }
+  },
+  "Posts": {
+    "pageTitle": "Todas las publicaciones",
+    "searchPrefix": "Búsqueda:",
+    "tagPrefix": "Etiqueta:",
+    "clear": "Limpiar",
+    "activeFilters": "Filtros activos",
+    "readTime": "minutos",
+    "previousPage": "Anterior",
+    "nextPage": "Siguiente",
+    "popularTags": "Etiquetas populares",
+    "noResults": {
+      "heading": "No se encontraron resultados",
+      "description": "No se encontraron artículos que coincidan con los criterios de búsqueda. Comprueba la ortografía o intenta usar términos más generales.",
+      "suggestedTopics": "Temas sugeridos",
+      "viewAll": "Ver todos los artículos"
+    }
+  },
+  "Admin": {
+    "login": {
+      "title": "BlogAdmin",
+      "subtitle": "Inicia sesión en tu cuenta",
+      "emailLabel": "Correo electrónico",
+      "emailPlaceholder": "tu@ejemplo.com",
+      "passwordLabel": "Contraseña",
+      "passwordPlaceholder": "••••••••",
+      "forgotPassword": "¿Olvidaste tu contraseña?",
+      "signInButton": "Iniciar sesión"
+    },
+    "sidebar": {
+      "version": "v2.4.0",
+      "newPost": "Nueva publicación",
+      "dashboard": "Panel",
+      "posts": "Publicaciones",
+      "media": "Medios",
+      "settings": "Configuración",
+      "support": "Soporte"
+    },
+    "dashboard": {
+      "title": "Panel de CMS",
+      "overview": "Resumen",
+      "metricsSubtitle": "Tu registro de actividad y estado de traducción",
+      "lastDays": "Últimos 30 días",
+      "totalPosts": "Total de registros",
+      "draftPosts": "Borradores",
+      "translationRate": "Tasa de traducción",
+      "currentStreak": "Racha actual",
+      "vsLastMonth": "vs el mes pasado",
+      "recentActivity": "Actividad reciente",
+      "viewAll": "Ver todo",
+      "postTitle": "Título",
+      "category": "Categoría",
+      "language": "Idioma",
+      "time": "Última actualización",
+      "status": "Estado",
+      "translationHealth": "Estado de traducción",
+      "needsTranslation": "Pendiente de traducción",
+      "translateNow": "Traducir ahora",
+      "categoryDistribution": "Distribución de registros",
+      "tech": "Ingeniería",
+      "fitness": "Culturismo y Fitness",
+      "food": "Cocina y Repostería",
+      "travel": "Vida en el extranjero y Viajes"
+    },
+    "posts": {
+      "title": "Gestión de artículos",
+      "createPost": "Crear publicación",
+      "searchPlaceholder": "Buscar artículos por título o autor...",
+      "allStatuses": "Todos los estados",
+      "allCategories": "Todas las categorías",
+      "tableTitle": "Título",
+      "tableAuthor": "Autor",
+      "tableStatus": "Estado",
+      "tableUpdatedAt": "Última actualización",
+      "tableActions": "Acciones",
+      "statusPublished": "Publicado",
+      "statusDraft": "Borrador",
+      "statusArchived": "Archivado",
+      "showing": "Mostrando",
+      "to": "a",
+      "of": "de",
+      "entries": "entradas"
+    },
+    "editor": {
+      "title": "Editor de publicaciones",
+      "editTitle": "Editar publicación",
+      "languageTabs": {
+        "japanese": "Japonés (JA)",
+        "english": "Inglés (EN)",
+        "french": "Francés (FR)"
+      },
+      "autoSyncing": "Sincronización automática activada",
+      "titlePlaceholder": "Escribe un título...",
+      "contentPlaceholder": "Escribe el contenido...",
+      "aiAssistant": "Asistente de IA",
+      "translateToEnglish": "Traducir al inglés",
+      "translateToFrench": "Traducir al francés",
+      "generateSEO": "Generar metadatos SEO",
+      "suggestTags": "Sugerir etiquetas",
+      "publishSettings": "Configuración de publicación",
+      "status": "Estado",
+      "draft": "Borrador",
+      "published": "Publicado",
+      "scheduled": "Programado",
+      "visibility": "Visibilidad",
+      "public": "Público",
+      "private": "Privado",
+      "schedule": "Programar",
+      "seoMetadata": "Metadatos SEO",
+      "metaTitle": "Metatítulo",
+      "metaTitlePlaceholder": "Escribe un metatítulo...",
+      "metaDescription": "Metadescripción",
+      "metaDescriptionPlaceholder": "Escribe una metadescripción...",
+      "tagsCategories": "Etiquetas y Categorías",
+      "tagsPlaceholder": "Añade etiquetas y presiona Enter...",
+      "saveDraft": "Guardar borrador",
+      "publish": "Publicar",
+      "imageBlock": "Bloque de imagen - Clic para editar",
+      "paragraph": "Párrafo"
+    },
+    "media": {
+      "title": "Biblioteca de medios",
+      "subtitle": "Gestiona tus activos, imágenes y documentos.",
+      "uploadAssets": "Subir activos",
+      "grid": "Cuadrícula",
+      "list": "Lista",
+      "allTypes": "Todos los tipos",
+      "images": "Imágenes",
+      "documents": "Documentos",
+      "video": "Vídeos",
+      "sortBy": "Ordenar por:",
+      "dateAddedNewest": "Fecha añadida (más reciente)",
+      "searchPlaceholder": "placeholder"
+    },
+    "settings": {
+      "title": "Configuración",
+      "subtitle": "Gestiona la configuración del sitio e integraciones externas.",
+      "siteLogo": "Logotipo del sitio",
+      "logoInstructions": "Sube una imagen cuadrada. El tamaño recomendado es 256x256 píxeles. Solo en formato JPEG o PNG.",
+      "removeLogo": "Eliminar logotipo",
+      "siteName": "Nombre del sitio",
+      "description": "Descripción",
+      "descriptionHelp": "Esta descripción puede aparecer en etiquetas meta y resultados de búsqueda.",
+      "socialProfiles": "Perfiles sociales",
+      "githubUrl": "URL DE GITHUB",
+      "twitterUrl": "URL DE X (TWITTER)",
+      "cancel": "Cancelar",
+      "saveChanges": "Guardar cambios"
+    },
+    "header": {
+      "searchPlaceholder": "Buscar..."
+    }
+  }
+}
