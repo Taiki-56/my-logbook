@@ -113,6 +113,20 @@ const Page = async () => {
                         FR (未作成)
                       </span>
                     )}
+                    {/* スペイン語 (ES) */}
+                    {post.statuses.es ? (
+                      <Link href={`/admin/posts/edit/${post.statuses.es.slug}`}>
+                        <span
+                          className={`inline-flex items-center justify-center px-2 py-0.5 rounded text-[10px] font-bold cursor-pointer hover:opacity-80 transition-opacity ${getStatusColor(post.statuses.es.status)}`}>
+                          ES ({post.statuses.es.status})
+                        </span>
+                      </Link>
+                    ) : (
+                      <span
+                        className={`inline-flex items-center justify-center px-2 py-0.5 rounded text-[10px] font-bold ${getStatusColor(null)}`}>
+                        ES (未作成)
+                      </span>
+                    )}
                   </div>
 
                   {/* 更新日時 */}
@@ -137,6 +151,16 @@ const Page = async () => {
                         className="flex items-center gap-1.5 px-3 py-1.5 bg-[#fcf0f0] text-[#c30000] hover:bg-[#f9dada] rounded-md transition-colors text-[12px] font-medium border border-[#ffc6c6]">
                         <Languages className="w-3.5 h-3.5" />
                         FRへ翻訳
+                      </Link>
+                    )}
+
+                    {/* スペイン語翻訳ボタン */}
+                    {!post.statuses.es && post.statuses.ja && (
+                      <Link
+                        href={`/admin/posts/new?postId=${post.id}&targetLang=es`}
+                        className="flex items-center gap-1.5 px-3 py-1.5 bg-[#fcf0f0] text-[#c30000] hover:bg-[#f9dada] rounded-md transition-colors text-[12px] font-medium border border-[#ffc6c6]">
+                        <Languages className="w-3.5 h-3.5" />
+                        ESへ翻訳
                       </Link>
                     )}
 

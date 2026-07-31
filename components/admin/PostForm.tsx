@@ -1,11 +1,11 @@
 "use client";
 
+import { uploadImageAction } from "@/actions/media";
 import { createPostAction, createTranslatedPostAction, savePostAction } from "@/actions/post";
 import { translatePostAction } from "@/actions/translation";
-import uploadImage from "@/actions/uploadImage";
 import { useRouter } from "@/i18n/navigation";
 import { Prisma } from "@/lib/generated/client";
-import { PostStatus } from "@/lib/generated/enums";
+import { Category, PostStatus } from "@/lib/generated/enums";
 import { PostFormValues, postSchema } from "@/schemas/postSchema";
 import { Locale } from "@/types/config";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -21,10 +21,12 @@ type PostFormProps = {
   sourceData?: { postId?: string; targetLang: Locale };
   initialData?: {
     postId: string;
-    locale: string;
+    locale: Locale;
     title: string;
     slug: string;
     status: PostStatus;
+    category?: Category;
+    isFeatured?: boolean;
     seoTitle: string | null;
     seoDescription: string | null;
     projectData: Prisma.InputJsonValue | null;
@@ -37,8 +39,6 @@ type PostFormProps = {
 const PostForm = ({ mode, sourceData, initialData }: PostFormProps) => {
   const t = useTranslations("Admin.editor");
   const router = useRouter();
-
-  const [activeLanguage, setActiveLanguage] = useState<"ja" | "en" | "fr" | string>(initialData?.locale ?? "ja");
 
   //* State to track translation progress
   const [isTranslating, setIsTranslating] = useState(false);
@@ -64,6 +64,8 @@ const PostForm = ({ mode, sourceData, initialData }: PostFormProps) => {
     defaultValues: {
       title: initialData?.title ?? "",
       status: initialData?.status ?? "DRAFT",
+      category: initialData?.category,
+      isFeatured: initialData?.isFeatured ?? false,
       slug: initialData?.slug ?? "",
       seoTitle: initialData?.seoTitle ?? "",
       seoDescription: initialData?.seoDescription ?? "",
@@ -108,7 +110,7 @@ const PostForm = ({ mode, sourceData, initialData }: PostFormProps) => {
 
           //* 4. Apply translated tags (extracting names from TagContent array)
           if (translated.tags && Array.isArray(translated.tags)) {
-            const tagNames = translated.tags.map((tag: any) => tag.name);
+            const tagNames = translated.tags.map((tag: { name: string }) => tag.name);
             setValue("tags", tagNames, { shouldDirty: true, shouldValidate: true });
           }
 
@@ -175,7 +177,7 @@ const PostForm = ({ mode, sourceData, initialData }: PostFormProps) => {
     formData.append("type", "thumbnails");
 
     try {
-      const res = await uploadImage(formData);
+      const res = await uploadImageAction(formData);
       if (res.success && res.url) {
         setValue("thumbnail", res.url, { shouldValidate: true, shouldDirty: true });
       } else {
@@ -218,7 +220,8 @@ const PostForm = ({ mode, sourceData, initialData }: PostFormProps) => {
               seoTitle: payload.seoTitle ?? "",
               seoDescription: payload.seoDescription ?? "",
               tags: payload.tags,
-              thumbnail: payload.thumbnail
+              thumbnail: payload.thumbnail,
+              isFeatured: payload.isFeatured
             }
           });
           if (!res.success) {
@@ -246,7 +249,7 @@ const PostForm = ({ mode, sourceData, initialData }: PostFormProps) => {
       try {
         const res = await savePostAction({
           postId: initialData.postId,
-          locale: initialData.locale as "ja" | "en" | "fr",
+          locale: initialData.locale,
           ...payload,
           seoTitle: payload.seoTitle ?? "",
           seoDescription: payload.seoDescription ?? "",
@@ -265,8 +268,8 @@ const PostForm = ({ mode, sourceData, initialData }: PostFormProps) => {
   };
 
   return (
-    <div className="min-h-screen bg-[#fbf9f8] relative">
-      {/* Loading overlay for translation */}
+    <div className="h-full bg-[#fbf9f8] relative overflow-hidden flex flex-col">
+      {/* Loading overlay */}
       {isTranslating && (
         <div className="absolute inset-0 z-50 flex items-center justify-center bg-white/70 backdrop-blur-sm">
           <div className="bg-white px-6 py-4 rounded-lg shadow-lg border border-gray-200 flex flex-col items-center">
@@ -277,73 +280,81 @@ const PostForm = ({ mode, sourceData, initialData }: PostFormProps) => {
         </div>
       )}
 
-      {/* <header className="bg-[#fbf9f8] border-b border-[#c1c6d7] px-6 py-4 flex items-center justify-between">
-        <h1 className="font-['Liberation_Serif:Bold'] font-bold text-[24px] text-[#1b1c1c]">{t("title")}</h1>
-        <div className="flex items-center gap-4">
-          <div className="w-8 h-8 bg-[#e9e8e7] border border-[#c1c6d7] rounded-full" />
-        </div>
-      </header> */}
-
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="flex gap-6 p-8">
-        <div className="flex-1 space-y-4">
-          {/* TODO: Enable switching to edit pages of other available locales for this Post. */}
-          {/* <div className="flex border border-[#c1c6d7] bg-white rounded p-1.5 gap-2 w-fit shadow-sm">
-            <button
-              type="button"
-              onClick={() => setActiveLanguage("ja")}
-              className={`px-3 py-1 text-xs font-bold rounded ${activeLanguage === "ja" ? "bg-[#1b1c1c] text-white" : "text-gray-500 hover:bg-gray-100"}`}>
-              JA (Base)
-            </button>
-            <button
-              type="button"
-              disabled
-              className="px-3 py-1 text-xs font-bold rounded text-gray-300 cursor-not-allowed">
-              EN (Auto-translate)
-            </button>
-            <button
-              type="button"
-              disabled
-              className="px-3 py-1 text-xs font-bold rounded text-gray-300 cursor-not-allowed">
-              FR (Auto-translate)
-            </button>
-          </div> */}
-          <div className="bg-white border border-[#c1c6d7] rounded p-6 shadow-sm">
-            <input
-              {...register("title")}
-              type="text"
-              placeholder={t("titlePlaceholder") || "Enter post title..."}
-              className="w-full text-[28px] font-bold text-[#1b1c1c] outline-none font-['Liberation_Serif:Bold'] placeholder:text-gray-300"
-            />
-            {errors.title && <p className="text-red-500 text-xs mt-1">{errors.title.message}</p>}
-          </div>
+        className="flex gap-6 p-6 flex-1 min-h-0 items-stretch">
+        <div className="flex-1 min-w-0 h-full">
           <RichEditor
             key={isTranslating ? "translating" : "ready"}
-            initialContent={(editorHtml as any) || initialData?.projectData}
+            initialContent={editorHtml || (initialData?.projectData as JSONContent | undefined)}
             onChange={handleEditorChange}
+            titleSlot={
+              <div>
+                <input
+                  {...register("title")}
+                  type="text"
+                  placeholder={t("titlePlaceholder") || "Enter post title..."}
+                  className="w-full text-[28px] font-bold text-[#1b1c1c] outline-none font-['Liberation_Serif:Bold'] placeholder:text-gray-300"
+                />
+                {errors.title && <p className="text-red-500 text-xs mt-1">{errors.title.message}</p>}
+              </div>
+            }
           />
         </div>
 
-        <div className="w-[320px] space-y-6">
-          <div className="bg-white border border-[#c1c6d7] rounded-lg p-4">
-            <h3 className="font-['Geist:Bold'] font-bold text-[11px] text-[#414754] tracking-[0.88px] mb-4">
+        {/* 🌟 右側：サイドバーペイン (ここだけが独立して縦スクロール可能) */}
+        <div className="w-[320px] h-full overflow-y-auto shrink-0 pr-2 space-y-6">
+          <div className="bg-white border border-[#c1c6d7] rounded-lg p-4 shadow-sm">
+            <h3 className="font-['Geist:Bold'] font-bold text-[11px] text-[#414754] tracking-[0.88px] mb-4 uppercase">
               {t("publishSettings")}
             </h3>
-            <div>
-              <label className="block text-[11px] text-[#414754] tracking-[0.88px] mb-2">{t("status")}</label>
-              <select
-                {...register("status")}
-                className="w-full px-3 py-2 text-[13px] text-[#1b1c1c] border border-[#c1c6d7] rounded bg-white">
-                <option value="DRAFT">{t("draft")}</option>
-                <option value="PUBLISHED">{t("published")}</option>
-                <option value="PRIVATE">{t("scheduled")}</option>
-              </select>
+
+            <div className="space-y-4">
+              <div>
+                <label className="block text-[11px] text-[#414754] tracking-[0.88px] mb-2">{t("status")}</label>
+                <select
+                  {...register("status")}
+                  className="w-full px-3 py-2 text-[13px] text-[#1b1c1c] border border-[#c1c6d7] rounded bg-white">
+                  <option value="DRAFT">{t("draft")}</option>
+                  <option value="PUBLISHED">{t("published")}</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-[11px] text-[#414754] tracking-[0.88px] mb-2">Category</label>
+                <select
+                  {...register("category")}
+                  className="w-full px-3 py-2 text-[13px] text-[#1b1c1c] border border-[#c1c6d7] rounded bg-white">
+                  <option
+                    value=""
+                    disabled>
+                    Select a category
+                  </option>
+                  <option value="TECH">Technology</option>
+                  <option value="WORK">Work & Career</option>
+                  <option value="FITNESS">Fitness</option>
+                  <option value="FOOD">Food</option>
+                  <option value="TRAVEL">Travel</option>
+                  <option value="LIFE">Life & Others</option>
+                </select>
+                {errors.category && <p className="text-red-500 text-xs mt-1">{errors.category.message}</p>}
+              </div>
+
+              <div className="pt-2 border-t border-[#f0f0f0]">
+                <label className="flex items-center gap-2 cursor-pointer group">
+                  <input
+                    type="checkbox"
+                    {...register("isFeatured")}
+                    className="w-4 h-4 text-[#0058c3] border-[#c1c6d7] rounded focus:ring-0 cursor-pointer"
+                  />
+                  <span className="text-[13px] text-[#414754] group-hover:text-[#1b1c1c] transition-colors">
+                    Feature on homepage
+                  </span>
+                </label>
+              </div>
             </div>
           </div>
-
-          {/* Thumbnail Section */}
-          <div className="bg-white border border-[#c1c6d7] rounded-lg p-4">
+          <div className="bg-white border border-[#c1c6d7] rounded-lg p-4 shadow-sm">
             <h3 className="font-['Geist:Bold'] font-bold text-[11px] text-[#414754] tracking-[0.88px] mb-4">
               Thumbnail
             </h3>
@@ -380,8 +391,7 @@ const PostForm = ({ mode, sourceData, initialData }: PostFormProps) => {
             </label>
             {errors.thumbnail && <p className="text-red-500 text-xs mt-1">{errors.thumbnail.message}</p>}
           </div>
-
-          <div className="bg-white border border-[#c1c6d7] rounded-lg p-4">
+          <div className="bg-white border border-[#c1c6d7] rounded-lg p-4 shadow-sm">
             <h3 className="font-['Geist:Bold'] font-bold text-[11px] text-[#414754] tracking-[0.88px] mb-4">Slug</h3>
             <div>
               <input
@@ -393,9 +403,7 @@ const PostForm = ({ mode, sourceData, initialData }: PostFormProps) => {
               {errors.slug && <p className="text-red-500 text-xs mt-1">{errors.slug.message}</p>}
             </div>
           </div>
-
-          {/* Tags Section */}
-          <div className="bg-white border border-[#c1c6d7] rounded-lg p-4">
+          <div className="bg-white border border-[#c1c6d7] rounded-lg p-4 shadow-sm">
             <h3 className="font-['Geist:Bold'] font-bold text-[11px] text-[#414754] tracking-[0.88px] mb-4">Tags</h3>
             <div className="flex gap-2 mb-3">
               <input
@@ -429,8 +437,7 @@ const PostForm = ({ mode, sourceData, initialData }: PostFormProps) => {
               ))}
             </div>
           </div>
-
-          <div className="bg-white border border-[#c1c6d7] rounded-lg p-4">
+          <div className="bg-white border border-[#c1c6d7] rounded-lg p-4 shadow-sm">
             <h3 className="font-['Geist:Bold'] font-bold text-[11px] text-[#414754] tracking-[0.88px] mb-4">
               {t("seoMetadata")}
             </h3>
@@ -459,12 +466,12 @@ const PostForm = ({ mode, sourceData, initialData }: PostFormProps) => {
               </div>
             </div>
           </div>
-
-          <div className="flex gap-3">
+          {/* 🌟 Saveボタンもサイドバーのスクロール終端に配置 */}
+          <div className="sticky bottom-0 bg-[#fbf9f8] pt-3 pb-7 z-10 w-full mt-2">
             <button
               type="submit"
               disabled={isSubmitting || isTranslating}
-              className="flex-1 px-4 py-2.5 text-[14px] font-medium text-white bg-[#0058c3] rounded hover:bg-[#0046a0] transition-colors disabled:opacity-50 cursor-pointer">
+              className="w-full px-4 py-3 text-[14px] font-bold text-white bg-[#0058c3] rounded hover:bg-[#0046a0] transition-colors disabled:opacity-50 cursor-pointer shadow-sm">
               {isSubmitting ? "Saving..." : "Save Post"}
             </button>
           </div>

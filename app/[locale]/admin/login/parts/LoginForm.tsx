@@ -6,7 +6,7 @@ import { Lock, Mail } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { loginAction } from "../../../../../actions/login";
+import loginAction from "../../../../../actions/login";
 
 const LoginForm = () => {
   const [submitStatus, setSubmitStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");

@@ -3,8 +3,8 @@
 import { redirect } from "@/i18n/navigation";
 import { auth } from "@/lib/auth";
 import { Prisma } from "@/lib/generated/client";
-import { PostFormValues, postSchema } from "@/schemas/postSchema";
-import { SaveContentInput, saveContentSchema } from "@/schemas/saveContentSchema";
+import { PostFormValues, SaveContentInput, postSchema, saveContentSchema } from "@/schemas/postSchema";
+import { getDashboardStats } from "@/services/dashboard";
 import { createPost, createTranslatedPost, getPostBySlug, getPublishedPosts, updatePost } from "@/services/post";
 import { Locale } from "@/types/config";
 import { PostAction, PostWithRelations } from "@/types/post";
@@ -56,6 +56,7 @@ type CreateTranslatedPostInput = {
     seoDescription: string;
     tags?: string[];
     thumbnail?: string | null;
+    isFeatured?: boolean; // 🌟 追加
   };
 };
 
@@ -102,8 +103,6 @@ const savePostAction = async (input: SaveContentInput): Promise<PostAction> => {
   }
 
   //* 2. Validate payload via Zod
-  //* TipTap JSON can contain undefined fields (e.g. image attrs) that are not valid JSON.
-  //* Normalize once before validation so edit mode behaves consistently.
   const normalizedInput = JSON.parse(JSON.stringify(input)) as SaveContentInput;
 
   const validated = saveContentSchema.safeParse(normalizedInput);
@@ -117,7 +116,6 @@ const savePostAction = async (input: SaveContentInput): Promise<PostAction> => {
     return { success: false, error: "Invalid content payload" };
   }
 
-  //* Strip undefined values from nested JSON before persisting to Prisma JSON columns.
   const safeData = JSON.parse(JSON.stringify(validated.data)) as SaveContentInput;
 
   try {
@@ -140,17 +138,16 @@ const savePostAction = async (input: SaveContentInput): Promise<PostAction> => {
     revalidatePath(`/${safeData.locale}/posts/${safeData.slug}`);
   } catch (error) {
     console.warn("Revalidation failed after content update:", error);
-    //* DB update is already successful; treat this as non-fatal.
   }
 
   return { success: true };
 };
 
 //* Fetches all posts
-const getPublishedPostsAction = async (): Promise<PostAction<PostWithRelations[]>> => {
+const getPublishedPostsAction = async (locale: Locale): Promise<PostAction<PostWithRelations[]>> => {
   try {
-    const posts = await getPublishedPosts();
-    return { success: true, data: posts as PostWithRelations[] };
+    const posts = await getPublishedPosts(locale);
+    return { success: true, data: posts };
   } catch (error) {
     console.error("Failed to get posts: ", error);
     return { success: false, error: `Failed to get posts: ${error}` };
@@ -171,4 +168,26 @@ const getPostBySlugAction = async (slug: string): Promise<PostAction<PostWithRel
   }
 };
 
-export { createPostAction, createTranslatedPostAction, getPostBySlugAction, getPublishedPostsAction, savePostAction };
+const getDashboardStatsAction = async () => {
+  const session = await auth();
+  if (!session?.user?.id) {
+    return { success: false, error: "Unauthorized" };
+  }
+
+  try {
+    const statsData = await getDashboardStats(session.user.id);
+    return { success: true, data: statsData };
+  } catch (error) {
+    console.error("Failed to fetch dashboard stats:", error);
+    return { success: false, error: "Failed to fetch dashboard stats" };
+  }
+};
+
+export {
+  createPostAction,
+  createTranslatedPostAction,
+  getDashboardStatsAction,
+  getPostBySlugAction,
+  getPublishedPostsAction,
+  savePostAction
+};

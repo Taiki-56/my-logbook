@@ -51,7 +51,8 @@ const translatePostAction = async (targetLang: Locale, postId: string): Promise<
       html: sourcePost.html || "",
       seoTitle: sourcePost.seoTitle,
       seoDescription: sourcePost.seoDescription,
-      slug: sourcePost.slug
+      slug: sourcePost.slug,
+      tags: []
     };
 
     const translatedData = await translatePost(targetLang, sourceData);
@@ -70,7 +71,7 @@ const translatePostAction = async (targetLang: Locale, postId: string): Promise<
       ...translatedData,
       html: unescapedHtml,
       thumbnail,
-      tags: translatedTags as any // 型エラー回避。PostForm側で tag.name として適切に展開されます
+      tags: translatedTags
     };
   } catch (error) {
     console.error("Action Error:", error);

@@ -3,7 +3,7 @@ import SignOut from "./AuthComponents";
 
 const AdminHeader = () => {
   return (
-    <header className="border-b border-[#c1c6d7] bg-white sticky top-0 z-10">
+    <header className="border-b border-[#c1c6d7] bg-white sticky top-0 z-10 shrink-0">
       <div className="px-8 py-4 flex items-center justify-between">
         <Link
           href={"/admin/dashboard"}

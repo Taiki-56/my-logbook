@@ -25,7 +25,8 @@ const Header = () => {
     const flags: Record<string, string> = {
       ja: "🇯🇵",
       en: "🇬🇧",
-      fr: "🇫🇷"
+      fr: "🇫🇷",
+      es: "🇪🇸"
     };
     return flags[localeCode] || "🌐";
   };
@@ -107,7 +108,8 @@ const Header = () => {
               {[
                 { code: "ja", label: "🇯🇵 日本語" },
                 { code: "en", label: "🇬🇧 English" },
-                { code: "fr", label: "🇫🇷 Français" }
+                { code: "fr", label: "🇫🇷 Français" },
+                { code: "es", label: "🇪🇸 Español" }
               ].map(({ code, label }) => (
                 <DropdownMenuItem
                   key={code}

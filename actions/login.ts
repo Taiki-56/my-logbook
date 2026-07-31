@@ -5,7 +5,7 @@ import { signIn } from "@/lib/auth";
 import { CredentialFormValues } from "@/schemas/credentialSchema";
 import { AuthError } from "next-auth";
 
-export async function loginAction(credentials: CredentialFormValues) {
+const loginAction = async (credentials: CredentialFormValues) => {
   try {
     await signIn("credentials", {
       email: credentials.email,
@@ -13,6 +13,7 @@ export async function loginAction(credentials: CredentialFormValues) {
       redirect: false
     });
 
+    //* todo 現在のLocaleにできない？
     //* redirect if successfully logined
     redirect({ href: "/admin/dashboard", locale: "ja" });
   } catch (error) {
@@ -21,4 +22,6 @@ export async function loginAction(credentials: CredentialFormValues) {
     }
     throw error;
   }
-}
+};
+
+export default loginAction;

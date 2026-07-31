@@ -1,11 +1,10 @@
 import { Prisma } from "@/lib/generated/client";
+import { Category } from "@/lib/generated/enums";
 import prisma from "@/lib/prisma";
 import { PostFormValues } from "@/schemas/postSchema";
 import { Locale } from "@/types/config";
 import { AdminDisplayPost, DisplayPost, PostWithRelations, UpdatePost } from "@/types/post";
 
-//* Helper function to generate URL-safe slugs
-//* (e.g., "Next.js" -> "nextjs", "React Router" -> "react-router")
 const slugify = (text: string) => {
   return text
     .toString()
@@ -18,14 +17,12 @@ const slugify = (text: string) => {
     .replace(/-+$/, "");
 };
 
-//* Helper function to safely resolve and create tags across languages
-const resolveTags = async (tags: string[], locale: string) => {
+const resolveTags = async (tags: string[], locale: Locale) => {
   const tagIds = [];
   for (const tagName of tags) {
     let safeSlug = slugify(tagName);
     if (!safeSlug) safeSlug = encodeURIComponent(tagName.toLowerCase());
 
-    //* Find an existing tag by either the parent's canonical slug OR the child's locale-specific slug
     let tag = await prisma.tag.findFirst({
       where: {
         OR: [{ slug: safeSlug }, { contents: { some: { locale, slug: safeSlug } } }]
@@ -34,31 +31,22 @@ const resolveTags = async (tags: string[], locale: string) => {
     });
 
     if (!tag) {
-      //* Create a completely new tag (sets the parent's canonical slug and initial localized content)
       tag = await prisma.tag.create({
         data: {
           slug: safeSlug,
-          contents: {
-            create: { locale, name: tagName, slug: safeSlug }
-          }
+          contents: { create: { locale, name: tagName, slug: safeSlug } }
         },
         include: { contents: true }
       });
     } else {
-      //* If the tag exists but lacks content for the current locale, append it
       const hasLocale = tag.contents.some((c) => c.locale === locale);
       if (!hasLocale) {
         try {
           await prisma.tag.update({
             where: { id: tag.id },
-            data: {
-              contents: {
-                create: { locale, name: tagName, slug: safeSlug }
-              }
-            }
+            data: { contents: { create: { locale, name: tagName, slug: safeSlug } } }
           });
         } catch (e) {
-          //* Ignore potential race conditions if created concurrently
           console.warn("Tag content creation skipped due to concurrency:", e);
         }
       }
@@ -68,25 +56,73 @@ const resolveTags = async (tags: string[], locale: string) => {
   return tagIds;
 };
 
-//* Create initial post in the base language (Japanese)
+const updateStreak = async (authorId: string) => {
+  const user = await prisma.user.findUnique({
+    where: { id: authorId },
+    select: { currentStreak: true, lastActivityAt: true }
+  });
+
+  if (!user) return;
+
+  const now = new Date();
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+
+  const lastActive = user.lastActivityAt ? new Date(user.lastActivityAt) : null;
+  const lastActiveDay = lastActive
+    ? new Date(lastActive.getFullYear(), lastActive.getMonth(), lastActive.getDate())
+    : null;
+
+  // すでに今日アクティビティが記録されている場合は何もしない
+  if (lastActiveDay && lastActiveDay.getTime() === today.getTime()) {
+    return;
+  }
+
+  let newStreak = user.currentStreak;
+
+  if (!lastActiveDay) {
+    // 初めてのアクティビティ
+    newStreak = 1;
+  } else {
+    const diffTime = today.getTime() - lastActiveDay.getTime();
+    const diffDays = Math.round(diffTime / (1000 * 60 * 60 * 24));
+
+    if (diffDays === 1) {
+      // 前日も活動していればストリーク継続
+      newStreak += 1;
+    } else if (diffDays > 1) {
+      // 2日以上空いていたら1からリセット
+      newStreak = 1;
+    }
+    // diffDays === 0 の場合は同日なので上の early return で弾かれます
+  }
+
+  await prisma.user.update({
+    where: { id: authorId },
+    data: {
+      currentStreak: newStreak,
+      lastActivityAt: now
+    }
+  });
+};
+
 const createPost = async (
   authorId: string,
   payload: PostFormValues & { projectData?: Prisma.InputJsonValue | null; html?: string | null; tags?: string[] }
 ) => {
-  const { tags, thumbnail, status, title, slug, seoTitle, seoDescription, projectData, html } = payload;
-
-  //* 1. Safely resolve tags
+  const { tags, thumbnail, status, title, slug, seoTitle, seoDescription, projectData, html, isFeatured, category } =
+    payload;
   const tagIds = tags && tags.length > 0 ? await resolveTags(tags, "ja") : [];
 
-  //* 2. Create the post and link tags via the junction table (PostTag)
-  return await prisma.post.create({
+  const post = await prisma.post.create({
     data: {
       authorId,
+      category,
       thumbnail: thumbnail ? thumbnail : null,
       contents: {
         create: {
           locale: "ja",
           status,
+          isFeatured,
           title,
           slug,
           seoTitle,
@@ -95,33 +131,22 @@ const createPost = async (
           html: html ?? undefined
         }
       },
-      //* Insert data into the PostTag junction table
       ...(tagIds.length > 0 && {
         postTags: {
-          create: tagIds.map((tagId) => ({
-            tag: {
-              connect: { id: tagId }
-            }
-          }))
+          create: tagIds.map((tagId) => ({ tag: { connect: { id: tagId } } }))
         }
       })
     },
     include: {
       contents: true,
-      postTags: {
-        include: {
-          tag: {
-            include: {
-              contents: true
-            }
-          }
-        }
-      }
+      postTags: { include: { tag: { include: { contents: true } } } }
     }
   });
+  await updateStreak(authorId);
+
+  return post;
 };
 
-//* Add translated content to an existing post
 const createTranslatedPost = async (
   postId: string,
   targetLang: Locale,
@@ -133,15 +158,13 @@ const createTranslatedPost = async (
     seoDescription: string;
     tags?: string[];
     thumbnail?: string | null;
+    isFeatured?: boolean;
   }
 ) => {
-  const { title, slug, html, seoTitle, seoDescription, tags, thumbnail } = translatedData;
+  const { title, slug, html, seoTitle, seoDescription, tags, thumbnail, isFeatured } = translatedData;
 
-  //* 1. Update tags securely using the resolver
   if (tags !== undefined) {
-    //* Reset old relations
     await prisma.postTag.deleteMany({ where: { postId } });
-
     if (tags.length > 0) {
       const tagIds = await resolveTags(tags, targetLang);
       await prisma.postTag.createMany({
@@ -150,22 +173,17 @@ const createTranslatedPost = async (
     }
   }
 
-  //* 2. Update the parent post's thumbnail if provided
+  // 🌟 サムネイルがある場合は親Postを更新
   if (thumbnail !== undefined) {
     await prisma.post.update({
       where: { id: postId },
-      data: {
-        thumbnail: thumbnail === "" ? null : thumbnail
-      }
+      data: { thumbnail: thumbnail === "" ? null : thumbnail }
     });
   }
 
-  //* 3. Add PostContent without creating a new parent Post (using upsert for safety)
-  return await prisma.postContent.upsert({
-    where: {
-      postId_locale: { postId, locale: targetLang }
-    },
-    update: { title, slug, html, seoTitle, seoDescription },
+  const updated = await prisma.postContent.upsert({
+    where: { postId_locale: { postId, locale: targetLang } },
+    update: { title, slug, html, seoTitle, seoDescription, isFeatured },
     create: {
       postId,
       locale: targetLang,
@@ -174,16 +192,36 @@ const createTranslatedPost = async (
       html,
       seoTitle,
       seoDescription,
-      status: "DRAFT"
+      status: "DRAFT",
+      isFeatured: isFeatured ?? false
     }
   });
+
+  const post = await prisma.post.findUnique({ where: { id: postId }, select: { authorId: true } });
+  if (post?.authorId) {
+    await updateStreak(post.authorId);
+  }
+
+  return updated;
 };
 
-//* Update an existing post
-const updatePost = async (payload: UpdatePost & { tags?: string[] }) => {
-  const { postId, locale, title, slug, status, seoTitle, seoDescription, thumbnail, projectData, html, tags } = payload;
+const updatePost = async (payload: UpdatePost & { tags?: string[]; category: Category; isFeatured?: boolean }) => {
+  const {
+    postId,
+    locale,
+    title,
+    slug,
+    status,
+    seoTitle,
+    seoDescription,
+    thumbnail,
+    projectData,
+    html,
+    tags,
+    category,
+    isFeatured
+  } = payload;
 
-  //* 1. Update tags (execute only if tags are provided)
   if (tags !== undefined) {
     await prisma.postTag.deleteMany({ where: { postId } });
     if (tags.length > 0) {
@@ -194,25 +232,20 @@ const updatePost = async (payload: UpdatePost & { tags?: string[] }) => {
     }
   }
 
-  //* 2. Update post content
   return await prisma.postContent.update({
-    where: {
-      postId_locale: {
-        postId,
-        locale
-      }
-    },
+    where: { postId_locale: { postId, locale } },
     data: {
       title,
       slug,
       status,
       seoTitle,
       seoDescription,
+      isFeatured,
       projectData: projectData ?? undefined,
       html: html ?? undefined,
       post: {
         update: {
-          //* Save as null if empty, otherwise save the URL
+          category,
           thumbnail: thumbnail === "" ? null : thumbnail
         }
       }
@@ -220,34 +253,44 @@ const updatePost = async (payload: UpdatePost & { tags?: string[] }) => {
   });
 };
 
-//* Fetches all posts to show on /posts page
-const getPublishedPosts = async () => {
+const getPublishedPosts = async (locale: Locale) => {
   return await prisma.post.findMany({
-    include: {
-      contents: true,
-      postTags: {
-        include: {
-          tag: true
+    where: {
+      contents: {
+        some: {
+          locale: locale,
+          status: "PUBLISHED"
         }
       }
     },
-    orderBy: {
-      updatedAt: "desc"
-    }
+    include: {
+      // 🌟 条件2: Includeする中身も、指定された言語のコンテンツ「だけ」に絞り込む
+      contents: {
+        where: {
+          locale: locale
+        }
+      },
+      postTags: {
+        include: {
+          tag: {
+            include: { contents: true }
+          }
+        }
+      }
+    },
+    orderBy: { updatedAt: "desc" }
   });
 };
 
-//* Fetches post data for initial data on /edit/[slug] page
 const getPostContentBySlug = async (slug: string) => {
   return await prisma.postContent.findUnique({
     where: { slug },
-    //* Get the parent model too for thumbnail and associated tags
     include: {
       post: {
         include: {
           postTags: {
             include: {
-              tag: true
+              tag: { include: { contents: true } }
             }
           }
         }
@@ -256,21 +299,14 @@ const getPostContentBySlug = async (slug: string) => {
   });
 };
 
-//* Fetches the complete post data, including all localized contents, to be displayed on the /posts/[slug] page
 const getPostBySlug = async (slug: string) => {
   return await prisma.post.findFirst({
-    where: {
-      contents: {
-        some: {
-          slug //* Find the parent Post that contains at least one content matching this slug
-        }
-      }
-    },
+    where: { contents: { some: { slug } } },
     include: {
-      contents: true, //* Include contents for all available languages
+      contents: true,
       postTags: {
         include: {
-          tag: true //* Include associated tag details
+          tag: { include: { contents: true } }
         }
       }
     }
@@ -279,20 +315,24 @@ const getPostBySlug = async (slug: string) => {
 
 const formatToDisplayPost = (post: PostWithRelations): DisplayPost => {
   const content = post.contents[0];
+
   return {
     id: post.id,
     category: post.postTags[0]?.tag?.slug?.toUpperCase() || "BLOG",
     date: post.createdAt.toLocaleDateString("ja-JP", { month: "short", day: "numeric" }),
-    readTime: "5 min read", //* TODO: Adjust to actual implementation logic
+    readTime: "5 min read",
     title: content?.title || "No Title",
     description: content?.seoDescription || "",
-    tags: post.postTags.map((pt) => pt.tag.slug),
+    tags: post.postTags.map((pt) => {
+      const tagContent = pt.tag.contents?.[0];
+      return tagContent?.name || decodeURIComponent(pt.tag.slug);
+    }),
     thumbnail: post.thumbnail || "",
     slug: content?.slug || ""
   };
 };
 
-const getFeaturedPosts = async (locale: string): Promise<DisplayPost[]> => {
+const getFeaturedPosts = async (locale: Locale): Promise<DisplayPost[]> => {
   const rawPosts = await prisma.post.findMany({
     where: {
       contents: { some: { locale, status: "PUBLISHED", isFeatured: true } }
@@ -300,50 +340,59 @@ const getFeaturedPosts = async (locale: string): Promise<DisplayPost[]> => {
     orderBy: { createdAt: "desc" },
     take: 3,
     include: {
-      contents: { where: { locale } }, //* Filter contents by the requested locale
-      postTags: { include: { tag: true } }
+      contents: { where: { locale } },
+      postTags: {
+        include: {
+          tag: {
+            include: {
+              contents: { where: { locale } }
+            }
+          }
+        }
+      }
     }
   });
-
   return rawPosts.map(formatToDisplayPost);
 };
 
 const getLatestPosts = async (locale: Locale): Promise<DisplayPost[]> => {
   const rawPosts = await prisma.post.findMany({
     where: {
-      contents: {
-        some: { locale, status: "PUBLISHED" }
-      }
+      contents: { some: { locale, status: "PUBLISHED" } }
     },
     orderBy: { createdAt: "desc" },
     take: 3,
     include: {
       contents: { where: { locale } },
-      postTags: { include: { tag: true } }
+      postTags: {
+        include: {
+          tag: {
+            include: {
+              contents: { where: { locale } }
+            }
+          }
+        }
+      }
     }
   });
-
   return rawPosts.map(formatToDisplayPost);
 };
 
 const getAdminPosts = async (): Promise<AdminDisplayPost[]> => {
   const rawPosts = await prisma.post.findMany({
-    include: {
-      contents: true
-    },
+    include: { contents: true },
     orderBy: { updatedAt: "desc" }
   });
 
   return rawPosts.map((post) => {
-    //* Extract localized contents
     const ja = post.contents.find((c) => c.locale === "ja");
     const en = post.contents.find((c) => c.locale === "en");
     const fr = post.contents.find((c) => c.locale === "fr");
+    const es = post.contents.find((c) => c.locale === "es");
 
     return {
       id: post.id,
-      //* Prioritize Japanese title, fallback to others, or default to "No Title"
-      title: ja?.title || en?.title || fr?.title || "No Title",
+      title: ja?.title || en?.title || fr?.title || es?.title || "No Title",
       updatedAt: new Date(post.updatedAt).toLocaleString("ja-JP", {
         year: "numeric",
         month: "2-digit",
@@ -354,7 +403,8 @@ const getAdminPosts = async (): Promise<AdminDisplayPost[]> => {
       statuses: {
         ja: ja ? { status: ja.status, slug: ja.slug } : null,
         en: en ? { status: en.status, slug: en.slug } : null,
-        fr: fr ? { status: fr.status, slug: fr.slug } : null
+        fr: fr ? { status: fr.status, slug: fr.slug } : null,
+        es: es ? { status: es.status, slug: es.slug } : null
       }
     };
   });
@@ -362,22 +412,11 @@ const getAdminPosts = async (): Promise<AdminDisplayPost[]> => {
 
 const getSourcePost = async (postId: string, sourceLang: Locale) => {
   return prisma.postContent.findUnique({
-    where: {
-      postId_locale: {
-        postId,
-        locale: sourceLang
-      }
-    },
+    where: { postId_locale: { postId, locale: sourceLang } },
     include: {
       post: {
         include: {
-          postTags: {
-            include: {
-              tag: {
-                include: { contents: true }
-              }
-            }
-          }
+          postTags: { include: { tag: { include: { contents: true } } } }
         }
       }
     }
