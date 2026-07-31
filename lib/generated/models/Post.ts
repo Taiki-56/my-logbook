@@ -30,6 +30,7 @@ export type PostMinAggregateOutputType = {
   category: $Enums.Category | null
   createdAt: Date | null
   updatedAt: Date | null
+  thumbnail: string | null
 }
 
 export type PostMaxAggregateOutputType = {
@@ -38,6 +39,7 @@ export type PostMaxAggregateOutputType = {
   category: $Enums.Category | null
   createdAt: Date | null
   updatedAt: Date | null
+  thumbnail: string | null
 }
 
 export type PostCountAggregateOutputType = {
@@ -46,6 +48,7 @@ export type PostCountAggregateOutputType = {
   category: number
   createdAt: number
   updatedAt: number
+  thumbnail: number
   _all: number
 }
 
@@ -56,6 +59,7 @@ export type PostMinAggregateInputType = {
   category?: true
   createdAt?: true
   updatedAt?: true
+  thumbnail?: true
 }
 
 export type PostMaxAggregateInputType = {
@@ -64,6 +68,7 @@ export type PostMaxAggregateInputType = {
   category?: true
   createdAt?: true
   updatedAt?: true
+  thumbnail?: true
 }
 
 export type PostCountAggregateInputType = {
@@ -72,6 +77,7 @@ export type PostCountAggregateInputType = {
   category?: true
   createdAt?: true
   updatedAt?: true
+  thumbnail?: true
   _all?: true
 }
 
@@ -153,6 +159,7 @@ export type PostGroupByOutputType = {
   category: $Enums.Category
   createdAt: Date
   updatedAt: Date
+  thumbnail: string | null
   _count: PostCountAggregateOutputType | null
   _min: PostMinAggregateOutputType | null
   _max: PostMaxAggregateOutputType | null
@@ -182,6 +189,7 @@ export type PostWhereInput = {
   category?: Prisma.EnumCategoryFilter<"Post"> | $Enums.Category
   createdAt?: Prisma.DateTimeFilter<"Post"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Post"> | Date | string
+  thumbnail?: Prisma.StringNullableFilter<"Post"> | string | null
   author?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   contents?: Prisma.PostContentListRelationFilter
   postTags?: Prisma.PostTagListRelationFilter
@@ -194,6 +202,7 @@ export type PostOrderByWithRelationInput = {
   category?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  thumbnail?: Prisma.SortOrderInput | Prisma.SortOrder
   author?: Prisma.UserOrderByWithRelationInput
   contents?: Prisma.PostContentOrderByRelationAggregateInput
   postTags?: Prisma.PostTagOrderByRelationAggregateInput
@@ -209,6 +218,7 @@ export type PostWhereUniqueInput = Prisma.AtLeast<{
   category?: Prisma.EnumCategoryFilter<"Post"> | $Enums.Category
   createdAt?: Prisma.DateTimeFilter<"Post"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Post"> | Date | string
+  thumbnail?: Prisma.StringNullableFilter<"Post"> | string | null
   author?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   contents?: Prisma.PostContentListRelationFilter
   postTags?: Prisma.PostTagListRelationFilter
@@ -221,6 +231,7 @@ export type PostOrderByWithAggregationInput = {
   category?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  thumbnail?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.PostCountOrderByAggregateInput
   _max?: Prisma.PostMaxOrderByAggregateInput
   _min?: Prisma.PostMinOrderByAggregateInput
@@ -235,6 +246,7 @@ export type PostScalarWhereWithAggregatesInput = {
   category?: Prisma.EnumCategoryWithAggregatesFilter<"Post"> | $Enums.Category
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Post"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Post"> | Date | string
+  thumbnail?: Prisma.StringNullableWithAggregatesFilter<"Post"> | string | null
 }
 
 export type PostCreateInput = {
@@ -242,6 +254,7 @@ export type PostCreateInput = {
   category: $Enums.Category
   createdAt?: Date | string
   updatedAt?: Date | string
+  thumbnail?: string | null
   author: Prisma.UserCreateNestedOneWithoutPostsInput
   contents?: Prisma.PostContentCreateNestedManyWithoutPostInput
   postTags?: Prisma.PostTagCreateNestedManyWithoutPostInput
@@ -254,6 +267,7 @@ export type PostUncheckedCreateInput = {
   category: $Enums.Category
   createdAt?: Date | string
   updatedAt?: Date | string
+  thumbnail?: string | null
   contents?: Prisma.PostContentUncheckedCreateNestedManyWithoutPostInput
   postTags?: Prisma.PostTagUncheckedCreateNestedManyWithoutPostInput
   postMedia?: Prisma.PostMediaUncheckedCreateNestedManyWithoutPostInput
@@ -264,6 +278,7 @@ export type PostUpdateInput = {
   category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  thumbnail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   author?: Prisma.UserUpdateOneRequiredWithoutPostsNestedInput
   contents?: Prisma.PostContentUpdateManyWithoutPostNestedInput
   postTags?: Prisma.PostTagUpdateManyWithoutPostNestedInput
@@ -276,6 +291,7 @@ export type PostUncheckedUpdateInput = {
   category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  thumbnail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contents?: Prisma.PostContentUncheckedUpdateManyWithoutPostNestedInput
   postTags?: Prisma.PostTagUncheckedUpdateManyWithoutPostNestedInput
   postMedia?: Prisma.PostMediaUncheckedUpdateManyWithoutPostNestedInput
@@ -287,6 +303,7 @@ export type PostCreateManyInput = {
   category: $Enums.Category
   createdAt?: Date | string
   updatedAt?: Date | string
+  thumbnail?: string | null
 }
 
 export type PostUpdateManyMutationInput = {
@@ -294,6 +311,7 @@ export type PostUpdateManyMutationInput = {
   category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  thumbnail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type PostUncheckedUpdateManyInput = {
@@ -302,6 +320,7 @@ export type PostUncheckedUpdateManyInput = {
   category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  thumbnail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type PostListRelationFilter = {
@@ -320,6 +339,7 @@ export type PostCountOrderByAggregateInput = {
   category?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  thumbnail?: Prisma.SortOrder
 }
 
 export type PostMaxOrderByAggregateInput = {
@@ -328,6 +348,7 @@ export type PostMaxOrderByAggregateInput = {
   category?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  thumbnail?: Prisma.SortOrder
 }
 
 export type PostMinOrderByAggregateInput = {
@@ -336,6 +357,7 @@ export type PostMinOrderByAggregateInput = {
   category?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  thumbnail?: Prisma.SortOrder
 }
 
 export type PostScalarRelationFilter = {
@@ -389,6 +411,10 @@ export type EnumCategoryFieldUpdateOperationsInput = {
   set?: $Enums.Category
 }
 
+export type NullableStringFieldUpdateOperationsInput = {
+  set?: string | null
+}
+
 export type PostCreateNestedOneWithoutContentsInput = {
   create?: Prisma.XOR<Prisma.PostCreateWithoutContentsInput, Prisma.PostUncheckedCreateWithoutContentsInput>
   connectOrCreate?: Prisma.PostCreateOrConnectWithoutContentsInput
@@ -436,6 +462,7 @@ export type PostCreateWithoutAuthorInput = {
   category: $Enums.Category
   createdAt?: Date | string
   updatedAt?: Date | string
+  thumbnail?: string | null
   contents?: Prisma.PostContentCreateNestedManyWithoutPostInput
   postTags?: Prisma.PostTagCreateNestedManyWithoutPostInput
   postMedia?: Prisma.PostMediaCreateNestedManyWithoutPostInput
@@ -446,6 +473,7 @@ export type PostUncheckedCreateWithoutAuthorInput = {
   category: $Enums.Category
   createdAt?: Date | string
   updatedAt?: Date | string
+  thumbnail?: string | null
   contents?: Prisma.PostContentUncheckedCreateNestedManyWithoutPostInput
   postTags?: Prisma.PostTagUncheckedCreateNestedManyWithoutPostInput
   postMedia?: Prisma.PostMediaUncheckedCreateNestedManyWithoutPostInput
@@ -486,6 +514,7 @@ export type PostScalarWhereInput = {
   category?: Prisma.EnumCategoryFilter<"Post"> | $Enums.Category
   createdAt?: Prisma.DateTimeFilter<"Post"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Post"> | Date | string
+  thumbnail?: Prisma.StringNullableFilter<"Post"> | string | null
 }
 
 export type PostCreateWithoutContentsInput = {
@@ -493,6 +522,7 @@ export type PostCreateWithoutContentsInput = {
   category: $Enums.Category
   createdAt?: Date | string
   updatedAt?: Date | string
+  thumbnail?: string | null
   author: Prisma.UserCreateNestedOneWithoutPostsInput
   postTags?: Prisma.PostTagCreateNestedManyWithoutPostInput
   postMedia?: Prisma.PostMediaCreateNestedManyWithoutPostInput
@@ -504,6 +534,7 @@ export type PostUncheckedCreateWithoutContentsInput = {
   category: $Enums.Category
   createdAt?: Date | string
   updatedAt?: Date | string
+  thumbnail?: string | null
   postTags?: Prisma.PostTagUncheckedCreateNestedManyWithoutPostInput
   postMedia?: Prisma.PostMediaUncheckedCreateNestedManyWithoutPostInput
 }
@@ -529,6 +560,7 @@ export type PostUpdateWithoutContentsInput = {
   category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  thumbnail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   author?: Prisma.UserUpdateOneRequiredWithoutPostsNestedInput
   postTags?: Prisma.PostTagUpdateManyWithoutPostNestedInput
   postMedia?: Prisma.PostMediaUpdateManyWithoutPostNestedInput
@@ -540,6 +572,7 @@ export type PostUncheckedUpdateWithoutContentsInput = {
   category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  thumbnail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   postTags?: Prisma.PostTagUncheckedUpdateManyWithoutPostNestedInput
   postMedia?: Prisma.PostMediaUncheckedUpdateManyWithoutPostNestedInput
 }
@@ -549,6 +582,7 @@ export type PostCreateWithoutPostTagsInput = {
   category: $Enums.Category
   createdAt?: Date | string
   updatedAt?: Date | string
+  thumbnail?: string | null
   author: Prisma.UserCreateNestedOneWithoutPostsInput
   contents?: Prisma.PostContentCreateNestedManyWithoutPostInput
   postMedia?: Prisma.PostMediaCreateNestedManyWithoutPostInput
@@ -560,6 +594,7 @@ export type PostUncheckedCreateWithoutPostTagsInput = {
   category: $Enums.Category
   createdAt?: Date | string
   updatedAt?: Date | string
+  thumbnail?: string | null
   contents?: Prisma.PostContentUncheckedCreateNestedManyWithoutPostInput
   postMedia?: Prisma.PostMediaUncheckedCreateNestedManyWithoutPostInput
 }
@@ -585,6 +620,7 @@ export type PostUpdateWithoutPostTagsInput = {
   category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  thumbnail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   author?: Prisma.UserUpdateOneRequiredWithoutPostsNestedInput
   contents?: Prisma.PostContentUpdateManyWithoutPostNestedInput
   postMedia?: Prisma.PostMediaUpdateManyWithoutPostNestedInput
@@ -596,6 +632,7 @@ export type PostUncheckedUpdateWithoutPostTagsInput = {
   category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  thumbnail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contents?: Prisma.PostContentUncheckedUpdateManyWithoutPostNestedInput
   postMedia?: Prisma.PostMediaUncheckedUpdateManyWithoutPostNestedInput
 }
@@ -605,6 +642,7 @@ export type PostCreateWithoutPostMediaInput = {
   category: $Enums.Category
   createdAt?: Date | string
   updatedAt?: Date | string
+  thumbnail?: string | null
   author: Prisma.UserCreateNestedOneWithoutPostsInput
   contents?: Prisma.PostContentCreateNestedManyWithoutPostInput
   postTags?: Prisma.PostTagCreateNestedManyWithoutPostInput
@@ -616,6 +654,7 @@ export type PostUncheckedCreateWithoutPostMediaInput = {
   category: $Enums.Category
   createdAt?: Date | string
   updatedAt?: Date | string
+  thumbnail?: string | null
   contents?: Prisma.PostContentUncheckedCreateNestedManyWithoutPostInput
   postTags?: Prisma.PostTagUncheckedCreateNestedManyWithoutPostInput
 }
@@ -641,6 +680,7 @@ export type PostUpdateWithoutPostMediaInput = {
   category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  thumbnail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   author?: Prisma.UserUpdateOneRequiredWithoutPostsNestedInput
   contents?: Prisma.PostContentUpdateManyWithoutPostNestedInput
   postTags?: Prisma.PostTagUpdateManyWithoutPostNestedInput
@@ -652,6 +692,7 @@ export type PostUncheckedUpdateWithoutPostMediaInput = {
   category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  thumbnail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contents?: Prisma.PostContentUncheckedUpdateManyWithoutPostNestedInput
   postTags?: Prisma.PostTagUncheckedUpdateManyWithoutPostNestedInput
 }
@@ -661,6 +702,7 @@ export type PostCreateManyAuthorInput = {
   category: $Enums.Category
   createdAt?: Date | string
   updatedAt?: Date | string
+  thumbnail?: string | null
 }
 
 export type PostUpdateWithoutAuthorInput = {
@@ -668,6 +710,7 @@ export type PostUpdateWithoutAuthorInput = {
   category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  thumbnail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contents?: Prisma.PostContentUpdateManyWithoutPostNestedInput
   postTags?: Prisma.PostTagUpdateManyWithoutPostNestedInput
   postMedia?: Prisma.PostMediaUpdateManyWithoutPostNestedInput
@@ -678,6 +721,7 @@ export type PostUncheckedUpdateWithoutAuthorInput = {
   category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  thumbnail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contents?: Prisma.PostContentUncheckedUpdateManyWithoutPostNestedInput
   postTags?: Prisma.PostTagUncheckedUpdateManyWithoutPostNestedInput
   postMedia?: Prisma.PostMediaUncheckedUpdateManyWithoutPostNestedInput
@@ -688,6 +732,7 @@ export type PostUncheckedUpdateManyWithoutAuthorInput = {
   category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  thumbnail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 
@@ -745,6 +790,7 @@ export type PostSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   category?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  thumbnail?: boolean
   author?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   contents?: boolean | Prisma.Post$contentsArgs<ExtArgs>
   postTags?: boolean | Prisma.Post$postTagsArgs<ExtArgs>
@@ -758,6 +804,7 @@ export type PostSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   category?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  thumbnail?: boolean
   author?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["post"]>
 
@@ -767,6 +814,7 @@ export type PostSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   category?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  thumbnail?: boolean
   author?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["post"]>
 
@@ -776,9 +824,10 @@ export type PostSelectScalar = {
   category?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  thumbnail?: boolean
 }
 
-export type PostOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "authorId" | "category" | "createdAt" | "updatedAt", ExtArgs["result"]["post"]>
+export type PostOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "authorId" | "category" | "createdAt" | "updatedAt" | "thumbnail", ExtArgs["result"]["post"]>
 export type PostInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   author?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   contents?: boolean | Prisma.Post$contentsArgs<ExtArgs>
@@ -807,6 +856,7 @@ export type $PostPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     category: $Enums.Category
     createdAt: Date
     updatedAt: Date
+    thumbnail: string | null
   }, ExtArgs["result"]["post"]>
   composites: {}
 }
@@ -1239,6 +1289,7 @@ export interface PostFieldRefs {
   readonly category: Prisma.FieldRef<"Post", 'Category'>
   readonly createdAt: Prisma.FieldRef<"Post", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Post", 'DateTime'>
+  readonly thumbnail: Prisma.FieldRef<"Post", 'String'>
 }
     
 

@@ -16,10 +16,10 @@ const AdminLayout = async ({ children }: Props) => {
   }
 
   return (
-    <>
+    <div className="h-screen flex flex-col overflow-hidden">
       <AdminHeader />
-      <main>{children}</main>
-    </>
+      <main className="flex-1 overflow-hidden relative">{children}</main>
+    </div>
   );
 };
 

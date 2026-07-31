@@ -4,6 +4,7 @@ type TranslatedPost = {
   seoTitle: string | null;
   seoDescription: string | null;
   slug: string;
+  tags: { name: string }[];
 };
 
 type TranslatedTag = {
@@ -14,7 +15,6 @@ type TranslatedTag = {
 
 type TranslatedPostResponse = TranslatedPost & {
   thumbnail?: string | null;
-  tags: { name: string }[];
 };
 
 export type { TranslatedPost, TranslatedPostResponse, TranslatedTag };

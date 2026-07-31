@@ -1,109 +1,3 @@
-// import { useTranslations } from "next-intl";
-
-// type Props = {
-//   params: Promise<{
-//     locale: string;
-//     slug: string;
-//   }>;
-// };
-
-// const Page = async (props: Props) => {
-//   const t = useTranslations("Home.title");
-//   return <h1>{t("title")}</h1>;
-// };
-
-// export default Page;
-
-// import { getPostBySlugAction } from "@/actions/postAction";
-// import Image from "next/image";
-// import { notFound } from "next/navigation";
-
-// //* Next.js 15 用の params の型定義 (Promiseでラップします)
-// type Props = {
-//   params: Promise<{
-//     locale: string;
-//     slug: string;
-//   }>;
-// };
-
-// const Page = async (props: Props) => {
-//   //* 1. パラメータを await で取得
-//   const params = await props.params;
-//   const { locale, slug } = params;
-
-//   //* 2. slugを使ってデータベースから親(Post)ごと取得！
-//   const res = await getPostBySlugAction(slug);
-
-//   //* 記事が見つからなければ 404 Not Found ページへ飛ばす
-//   if (!res.success || !res.data) {
-//     notFound();
-//   }
-
-//   const post = res.data;
-
-//   //* 3. 【超重要】表示する言語を決定する
-//   //* URLの locale と一致する記事を探す。なければ主言語(ja)、それでも無ければ一番最初のもの。
-//   const displayContent =
-//     post.contents.find((c) => c.locale === locale) || post.contents.find((c) => c.locale === "ja") || post.contents[0];
-
-//   //* 本文(html)がない場合などのフォールバック
-//   if (!displayContent) {
-//     notFound();
-//   }
-
-//   const defaultImage = "https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?w=1200&h=600&fit=crop";
-
-//   return (
-//     <article className="max-w-3xl mx-auto px-4 py-16">
-//       {/* 記事ヘッダー */}
-//       <header className="mb-10 text-center">
-//         {/* タグ */}
-//         <div className="flex justify-center gap-2 mb-4 flex-wrap">
-//           {post.postTags.map((pt) => (
-//             <span
-//               key={pt.tagId}
-//               className="bg-[#f0f5ff] text-[#0058c3] px-3 py-1 rounded-full text-sm font-medium">
-//               {/* ※Tagモデルの構造に合わせて .name か .slug を表示してください */}
-//               {(pt as any).tag?.name || (pt as any).tag?.slug || "タグ"}
-//             </span>
-//           ))}
-//         </div>
-
-//         {/* タイトル */}
-//         <h1 className="text-4xl md:text-5xl font-bold font-['Noto_Sans_JP'] text-[#1b1c1c] leading-tight mb-6">
-//           {displayContent.title}
-//         </h1>
-
-//         {/* メタ情報 */}
-//         <div className="flex justify-center items-center gap-4 text-[#5e5e5e] font-['JetBrains_Mono']">
-//           <time dateTime={post.createdAt.toISOString()}>{new Date(post.createdAt).toLocaleDateString("ja-JP")}</time>
-//           <span>·</span>
-//           <span>5 min read</span>
-//         </div>
-//       </header>
-
-//       {/* サムネイル画像 */}
-//       <div className="relative w-full aspect-video rounded-xl overflow-hidden mb-12 shadow-lg">
-//         <Image
-//           src={post.thumbnail || defaultImage}
-//           alt={displayContent.title}
-//           fill
-//           className="object-cover"
-//           priority
-//         />
-//       </div>
-
-//       {/* 本文エリア */}
-//       {/* Tiptapなどで生成したHTMLを安全にレンダリングします */}
-//       <div
-//         className="prose prose-lg max-w-none font-['Noto_Sans_JP'] text-[#414754]"
-//         dangerouslySetInnerHTML={{ __html: displayContent.html || "<p>本文がありません。</p>" }}
-//       />
-//     </article>
-//   );
-// };
-// export default Page;
-
 import { getPostBySlugAction } from "@/actions/post";
 import { Link } from "@/i18n/navigation";
 import Image from "next/image";
@@ -289,10 +183,12 @@ const Page = async (props: Props) => {
               </h3>
               <div className="flex flex-wrap gap-2.5">
                 {post.postTags.map((pt) => {
-                  const tagName = (pt as any).tag?.name || (pt as any).tag?.slug || "タグ";
+                  const tagContent = pt.tag.contents?.[0];
+                  const tagName = tagContent?.name || decodeURIComponent(pt.tag.slug);
+
                   return (
                     <Link
-                      href={"/search"}
+                      href={`/posts?tag=${pt.tag.slug}`}
                       key={pt.tagId}
                       className="bg-[#f5f3f3] hover:bg-[#e4e2e2] transition-colors border border-[#c1c6d7] text-[#414754] px-3 pt-1 pb-1.5 rounded text-[13px] font-medium cursor-pointer flex items-center">
                       <span className="text-[#0058c3] mr-1">#</span> {tagName}
@@ -302,7 +198,6 @@ const Page = async (props: Props) => {
                 {post.postTags.length === 0 && <span className="text-sm text-gray-400">タグがありません</span>}
               </div>
             </div>
-
             {/* 🌟 ウィジェット3: もくじ（PCでのみスクロールに追従します） */}
             <div className="bg-white rounded-2xl shadow-[0_2px_8px_rgba(0,0,0,0.04)] border border-[#e4e2e2] p-6 lg:p-7 sticky top-8 hidden lg:block">
               <h3 className="font-['JetBrains_Mono'] font-bold text-[13px] tracking-widest uppercase text-[#414754] mb-6 border-b border-gray-100 pb-3 flex items-center gap-2">

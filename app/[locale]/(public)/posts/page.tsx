@@ -1,7 +1,8 @@
 import { getPublishedPostsAction } from "@/actions/post";
 import SearchBar from "@/components/public/SearchBar";
-import { Link } from "@/i18n/navigation"; // 🌟 タグトグル用のリンクを生成するために追加
-import { getTranslations } from "next-intl/server";
+import { Link } from "@/i18n/navigation";
+import { isValidLocale } from "@/types/config";
+import { getLocale, getTranslations } from "next-intl/server";
 import ActiveFilters from "./parts/ActiveFilters";
 import ArticleCard from "./parts/ArticleCard";
 import EmptyState from "./parts/EmptyState";
@@ -16,7 +17,12 @@ type Props = {
 const Page = async (props: Props) => {
   const t = await getTranslations("Posts");
   const searchParams = await props.searchParams;
+  const locale = await getLocale();
 
+  if (!isValidLocale(locale)) {
+    // 🌟 サポート外の言語URLだった場合のエラーハンドリング（またはデフォルト言語へのフォールバック）
+    return <div>サポートされていない言語です。</div>;
+  }
   const searchQueryString = (searchParams.search as string) || "";
   const searchKeywords = searchQueryString.split(/[\s ]+/).filter(Boolean);
 
@@ -28,24 +34,30 @@ const Page = async (props: Props) => {
 
   const currentPage = parseInt((searchParams.page as string) || "1", 10);
 
-  const res = await getPublishedPostsAction();
+  const res = await getPublishedPostsAction(locale);
   if (!res.success || !res.data) {
     return <div>エラーが発生しました。:{res.error}</div>;
   }
 
   const posts = res.data;
+  //* 🌟 修正1: slug（URL用）と name（表示用）を両方保持する Map を作成
+  const uniqueTagsMap = new Map<string, string>();
+  posts
+    .flatMap((post) => post.postTags)
+    .forEach((pt) => {
+      const slug = pt.tag.slug;
+      const tagContent = pt.tag.contents?.[0];
+      const name = tagContent?.name || decodeURIComponent(slug); // nameがない場合はデコードしたslugをフォールバック
 
-  //* 🌟 追加: DBに存在するすべての有効なタグを重複なく自動抽出する
-  const allAvailableTags = Array.from(
-    new Set(
-      posts
-        .flatMap((post) => post.postTags)
-        .map((pt) => (pt.tag as any)?.slug)
-        .filter(Boolean) as string[]
-    )
-  );
+      if (slug && !uniqueTagsMap.has(slug)) {
+        uniqueTagsMap.set(slug, name);
+      }
+    });
 
-  // Filter articles based on search and tag (複数キーワードAND、複数タグOR)
+  //* 配列に変換 [{ slug: "kin-tore", name: "筋トレ" }, ...]
+  const allAvailableTags = Array.from(uniqueTagsMap.entries()).map(([slug, name]) => ({ slug, name }));
+
+  // Filter articles based on search and tag
   const filteredArticles = posts.filter((post) => {
     const baseContent = post.contents.find((c) => c.locale === "ja") || post.contents[0];
     if (!baseContent) return false;
@@ -62,7 +74,7 @@ const Page = async (props: Props) => {
     const matchesTag =
       activeTags.length > 0
         ? activeTags.some((activeTag) =>
-            post.postTags.some((pt) => (pt.tag as any).slug === activeTag || pt.tagId === activeTag)
+            post.postTags.some((pt) => pt.tag.slug === activeTag || pt.tagId === activeTag)
           )
         : true;
 
@@ -78,9 +90,13 @@ const Page = async (props: Props) => {
       readTime: 5,
       title: baseContent.title,
       description: baseContent.seoDescription,
+
+      //* 🌟 修正2: 記事カードに渡すタグも contents[0].name またはデコード済みの文字列にする
       tags: post.postTags.map((pt) => {
-        return (pt as any).tag?.name || (pt as any).tag?.slug || "タグ";
+        const tagContent = pt.tag.contents?.[0];
+        return tagContent?.name || decodeURIComponent(pt.tag.slug) || "タグ";
       }),
+
       image: post.thumbnail || "",
       slug: baseContent.slug,
       category: "未分類"
@@ -91,33 +107,37 @@ const Page = async (props: Props) => {
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
   const paginatedArticles = mappedArticles.slice(startIndex, startIndex + ITEMS_PER_PAGE);
 
-  // 複数条件に対応した動的タイトル
   let dynamicPageTitle = t("pageTitle");
 
+  //* タイトルの動的生成時も、slug から name を逆引きして綺麗に表示する
+  const getActiveTagNames = () => {
+    return activeTags.map((slug) => uniqueTagsMap.get(slug) || decodeURIComponent(slug));
+  };
+
   if (searchKeywords.length > 0 && activeTags.length > 0) {
-    dynamicPageTitle = `「${searchKeywords.join(" ")}」の検索結果 (${activeTags.map((t) => `#${t}`).join(", ")})`;
+    dynamicPageTitle = `「${searchKeywords.join(" ")}」の検索結果 (${getActiveTagNames()
+      .map((t) => `#${t}`)
+      .join(", ")})`;
   } else if (searchKeywords.length > 0) {
     dynamicPageTitle = `「${searchKeywords.join(" ")}」の検索結果`;
   } else if (activeTags.length > 0) {
-    dynamicPageTitle = `${activeTags.map((t) => `#${t}`).join(", ")} の記事`;
+    dynamicPageTitle = `${getActiveTagNames()
+      .map((t) => `#${t}`)
+      .join(", ")} の記事`;
   }
 
-  //* 🌟 追加: タグをトグル（ON/OFF）するためのURLパラメータを生成するヘルパー関数
-  const getTagToggleUrl = (tag: string) => {
+  const getTagToggleUrl = (tagSlug: string) => {
     const params = new URLSearchParams();
 
-    // 既存の検索キーワードは引き継ぐ
     if (searchQueryString) {
       params.set("search", searchQueryString);
     }
 
-    if (activeTags.includes(tag)) {
-      // すでに選択されているタグなら、新パラメータから除外する（OFF）
-      activeTags.filter((t) => t !== tag).forEach((t) => params.append("tag", t));
+    if (activeTags.includes(tagSlug)) {
+      activeTags.filter((t) => t !== tagSlug).forEach((t) => params.append("tag", t));
     } else {
-      // 選択されていなければ、追加する（ON）
       activeTags.forEach((t) => params.append("tag", t));
-      params.append("tag", tag);
+      params.append("tag", tagSlug);
     }
 
     const queryString = params.toString();
@@ -136,24 +156,24 @@ const Page = async (props: Props) => {
 
             <SearchBar />
 
-            {/* 🌟 追加: デスクトップ用タグフィルターバー */}
             <div className="w-full flex flex-col gap-2 mt-2">
               <span className="font-['JetBrains_Mono'] font-bold text-xs text-[#727786] tracking-wider uppercase">
                 {t("popularTags") || "TAGS"}
               </span>
               <div className="flex flex-wrap gap-2">
-                {allAvailableTags.map((tag) => {
-                  const isSelected = activeTags.includes(tag);
+                {/* 🌟 修正3: hrefにはslugを、画面表示にはnameを使う */}
+                {allAvailableTags.map(({ slug, name }) => {
+                  const isSelected = activeTags.includes(slug);
                   return (
                     <Link
-                      key={tag}
-                      href={getTagToggleUrl(tag)}
+                      key={slug}
+                      href={getTagToggleUrl(slug)}
                       className={`px-3 py-1 text-[13px] font-['JetBrains_Mono'] rounded-full border transition-all duration-200 hover:-translate-y-px hover:shadow-sm cursor-pointer ${
                         isSelected
                           ? "bg-[#d8e2ff] border-[#0058c3] text-[#001a43] font-semibold"
                           : "bg-white border-[#c1c6d7] text-[#414754] hover:bg-[#f5f3f3]"
                       }`}>
-                      #{tag}
+                      #{name}
                     </Link>
                   );
                 })}
@@ -201,24 +221,24 @@ const Page = async (props: Props) => {
           </h1>
           <SearchBar />
 
-          {/* 🌟 追加: モバイル用タグフィルターバー（横スクロール可能に） */}
           <div className="flex flex-col gap-2">
             <span className="font-['JetBrains_Mono'] font-bold text-xs text-[#727786] tracking-wider uppercase">
               {t("popularTags") || "TAGS"}
             </span>
             <div className="flex gap-2 overflow-x-auto pb-2 -mx-4 px-4 scrollbar-none">
-              {allAvailableTags.map((tag) => {
-                const isSelected = activeTags.includes(tag);
+              {/* 🌟 修正4: モバイルレイアウトも同様に表示をnameに */}
+              {allAvailableTags.map(({ slug, name }) => {
+                const isSelected = activeTags.includes(slug);
                 return (
                   <Link
-                    key={tag}
-                    href={getTagToggleUrl(tag)}
+                    key={slug}
+                    href={getTagToggleUrl(slug)}
                     className={`px-3 py-1 text-[13px] font-['JetBrains_Mono'] rounded-full border shrink-0 ${
                       isSelected
                         ? "bg-[#d8e2ff] border-[#0058c3] text-[#001a43] font-semibold"
                         : "bg-white border-[#c1c6d7] text-[#414754]"
                     }`}>
-                    #{tag}
+                    #{name}
                   </Link>
                 );
               })}

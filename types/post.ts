@@ -1,5 +1,6 @@
 import { Prisma } from "@/lib/generated/client";
-import { PostStatus } from "@/lib/generated/enums";
+import { Category, PostStatus } from "@/lib/generated/enums";
+import { Locale } from "./config";
 
 type DisplayPost = {
   id: string;
@@ -29,7 +30,7 @@ type PostForm = {
 
 type UpdatePost = {
   postId: string;
-  locale: string;
+  locale: Locale;
   title: string;
   slug: string;
   status: PostStatus;
@@ -45,7 +46,11 @@ type PostWithRelations = Prisma.PostGetPayload<{
     contents: true;
     postTags: {
       include: {
-        tag: true;
+        tag: {
+          include: {
+            contents: true;
+          };
+        };
       };
     };
   };
@@ -65,8 +70,99 @@ type AdminDisplayPost = {
     ja: { status: string; slug: string } | null;
     en: { status: string; slug: string } | null;
     fr: { status: string; slug: string } | null;
+    es: { status: string; slug: string } | null;
   };
   updatedAt: string;
 };
 
-export type { AdminDisplayPost, DisplayPost, PostAction, PostForm, PostWithRelations, UpdatePost };
+type CreatePostPayload = {
+  title: string;
+  status: PostStatus;
+  category: Category;
+  isFeatured?: boolean;
+  slug: string;
+  html?: string;
+  projectData?: Prisma.InputJsonValue;
+  seoTitle?: string;
+  seoDescription?: string;
+  tags?: string[];
+  thumbnail?: string | null;
+};
+
+type CreateTranslatedPostInput = {
+  postId: string;
+  targetLang: string;
+  translatedData: {
+    title: string;
+    slug: string;
+    html: string;
+    seoTitle: string;
+    seoDescription: string;
+    tags?: string[];
+    thumbnail?: string | null;
+    isFeatured?: boolean;
+  };
+};
+
+type SavePostPayload = {
+  postId: string;
+  locale: Locale;
+  title: string;
+  status: PostStatus;
+  category: Category;
+  isFeatured?: boolean;
+  slug: string;
+  html?: string;
+  projectData?: Prisma.InputJsonValue;
+  seoTitle?: string;
+  seoDescription?: string;
+  tags?: string[];
+  thumbnail?: string | null;
+};
+
+type TagContent = {
+  locale: Locale;
+  name: string;
+};
+
+type Tag = {
+  slug: string;
+  contents?: TagContent[];
+};
+
+type PostTag = {
+  tagId: string;
+  tag: Tag;
+};
+
+type PostContent = {
+  locale: Locale;
+  title: string;
+  seoDescription: string | null;
+  slug: string;
+};
+
+type PublishedPost = {
+  id: string;
+  createdAt: Date | string;
+  thumbnail?: string | null;
+  contents: PostContent[];
+  postTags: PostTag[];
+};
+
+export type {
+  AdminDisplayPost,
+  CreatePostPayload,
+  CreateTranslatedPostInput,
+  DisplayPost,
+  PostAction,
+  PostContent,
+  PostForm,
+  PostTag,
+  PostWithRelations,
+  PublishedPost,
+  SavePostPayload,
+  Tag,
+  TagContent,
+  UpdatePost
+};

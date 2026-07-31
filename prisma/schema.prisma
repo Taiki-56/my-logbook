@@ -52,6 +52,7 @@ model Post {
   category    Category      
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
+  thumbnail String?
   
   //* Relations
   author      User          @relation(fields: [authorId], references: [id])

@@ -277,7 +277,8 @@ export default function ArticleCard({ article, layout = "grid" }: ArticleCardPro
                 key={index}
                 onClick={(e) => handleTagClick(e, tag)}
                 className="bg-[#f5f3f3] border border-[#c1c6d7] text-[#414754] px-2.25 pt-0.5 pb-[3.8px] font-['JetBrains_Mono'] font-normal text-[13px] leading-[20.8px] rounded-xs cursor-pointer transition-all duration-200 ease-out hover:bg-white hover:shadow-sm hover:border-[#a0a6b5] hover:-translate-y-px hover:text-[#0058c3]">
-                {tag}
+                {/* 🌟 ここを {tag} から {decodeURIComponent(tag)} に変更 */}
+                {decodeURIComponent(tag)}
               </button>
             ))}
           </div>
