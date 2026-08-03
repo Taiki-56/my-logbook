@@ -65,7 +65,19 @@ const Latest = ({ posts }: Props) => {
             </div>
 
             <div className="flex-1 flex flex-col gap-1">
+              <h3 className="font-['Noto_Sans_JP'] font-bold text-[13px] lg:text-lg text-black lg:text-[#1b1c1c] leading-normal lg:leading-7 line-clamp-2">
+                {post.title}
+              </h3>
+
+              <p className="font-['Noto_Sans_JP'] font-normal text-[11px] lg:text-sm text-[#707581] lg:text-[#414754] leading-normal lg:leading-5 line-clamp-2">
+                {post.description}
+              </p>
+
               <div className="flex gap-1 lg:gap-2 items-center">
+                <span className="font-['JetBrains_Mono'] font-medium text-sm text-[#0058c3] uppercase leading-[19.6px]">
+                  {post.category}
+                </span>
+
                 <span className="font-['Noto_Sans_JP'] lg:font-['JetBrains_Mono'] font-normal text-[11px] lg:text-[13px] text-[#707581] lg:text-[#414754] leading-normal lg:leading-[20.8px]">
                   {post.date}
                 </span>
@@ -77,15 +89,6 @@ const Latest = ({ posts }: Props) => {
                   </span>
                 </div>
               </div>
-
-              <h3 className="font-['Noto_Sans_JP'] font-bold text-[13px] lg:text-lg text-black lg:text-[#1b1c1c] leading-normal lg:leading-7 line-clamp-2">
-                {post.title}
-              </h3>
-
-              <p className="font-['Noto_Sans_JP'] font-normal text-[11px] lg:text-sm text-[#707581] lg:text-[#414754] leading-normal lg:leading-5 line-clamp-2">
-                {post.description}
-              </p>
-
               <div className="hidden lg:flex gap-2 pt-1">
                 {post.tags.map((tag) => (
                   <span

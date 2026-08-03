@@ -7,12 +7,6 @@
     "articles": "Articles",
     "about": "About"
   },
-  "Footer": {
-    "copyright": "© 2024 Chronicle. Crafted with precision.",
-    "privacyPolicy": "Privacy Policy",
-    "termsOfService": "Terms of Service",
-    "contact": "Contact"
-  },
   "SearchBar": {
     "placeholder": "Search articles, tags, topics..."
   },
@@ -22,7 +16,8 @@
       "subtitle": "Working, learning, and training abroad. A chronicle of challenges from France to Canada."
     },
     "featured": {
-      "heading": "FEATURED"
+      "heading": "FEATURED",
+      "viewAll": "View all featured posts"
     },
     "latest": {
       "heading": "LATEST"
@@ -85,7 +80,8 @@
       "description": "We couldn't find any articles matching your search. Try checking your spelling or using more general terms.",
       "suggestedTopics": "SUGGESTED TOPICS",
       "viewAll": "View all articles"
-    }
+    },
+    "featuredPosts": "Featured Posts"
   },
   "Admin": {
     "login": {

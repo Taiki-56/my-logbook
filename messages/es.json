@@ -7,12 +7,6 @@
     "articles": "Artículos",
     "about": "Perfil"
   },
-  "Footer": {
-    "copyright": "© 2024 Chronicle. Creado con precisión.",
-    "privacyPolicy": "Política de privacidad",
-    "termsOfService": "Términos de servicio",
-    "contact": "Contacto"
-  },
   "SearchBar": {
     "placeholder": "Buscar artículos, etiquetas, temas..."
   },
@@ -22,7 +16,8 @@
       "subtitle": "Trabajar, aprender y entrenar en el extranjero. Un registro de desafíos desde Francia hasta Canadá."
     },
     "featured": {
-      "heading": "FEATURED / Artículos destacados"
+      "heading": "FEATURED / Artículos destacados",
+      "viewAll": "Ver todos los artículos destacados"
     },
     "latest": {
       "heading": "LATEST / Últimos artículos"
@@ -85,7 +80,8 @@
       "description": "No se encontraron artículos que coincidan con los criterios de búsqueda. Comprueba la ortografía o intenta usar términos más generales.",
       "suggestedTopics": "Temas sugeridos",
       "viewAll": "Ver todos los artículos"
-    }
+    },
+    "featuredPosts": "Artículos destacados"
   },
   "Admin": {
     "login": {

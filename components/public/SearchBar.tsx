@@ -1,86 +1,28 @@
-// "use client";
-
-// import { useRouter } from "@/i18n/navigation";
-// import { useTranslations } from "next-intl";
-// import { useState } from "react";
-
-// const SearchBar = () => {
-//   const t = useTranslations("SearchBar");
-//   const router = useRouter();
-//   const [searchInput, setSearchInput] = useState("");
-//   const iconUrl = "https://www.figma.com/api/mcp/asset/71923882-07b6-474b-a082-726651459ec8";
-
-//   //* search
-//   const handleSearch = () => {
-//     if (searchInput.trim()) {
-//       //* 🌟 修正: /search ではなく、/posts 自身にクエリパラメータを渡す
-//       router.push(`/posts?search=${encodeURIComponent(searchInput)}`);
-//     } else {
-//       router.push("/posts");
-//     }
-//   };
-
-//   //* call handleSearch when user push enter button
-//   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-//     if (e.key === "Enter") {
-//       handleSearch();
-//     }
-//   };
-
-//   return (
-//     <div className="relative w-full max-w-2xl mx-auto">
-//       <div className="bg-[#f5f3f3] border border-[#c1c6d7] border-solid rounded flex items-center pl-12.25 pr-4.25 pt-4.75 pb-4.25">
-//         <input
-//           type="text"
-//           placeholder={t("placeholder") || "記事を検索..."}
-//           value={searchInput}
-//           onChange={(e) => setSearchInput(e.target.value)}
-//           onKeyDown={handleKeyDown}
-//           className="flex-1 bg-transparent outline-none text-[#6b7280] text-base leading-normal"
-//         />
-//       </div>
-//       <div
-//         className="absolute left-4 top-1/2 -translate-y-1/2 cursor-pointer"
-//         onClick={handleSearch}>
-//         <img
-//           alt="search"
-//           className="w-4.5 h-4.5"
-//           src={iconUrl}
-//         />
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default SearchBar;
-
 "use client";
 
 import { useRouter } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
-import { useSearchParams } from "next/navigation"; // 🌟 追加
+import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 
 const SearchBar = () => {
   const t = useTranslations("SearchBar");
   const router = useRouter();
-  const searchParams = useSearchParams(); // 🌟 追加
+  const searchParams = useSearchParams();
 
-  // 🌟 変更: 初期値としてURLの検索キーワードをセットしておく
   const [searchInput, setSearchInput] = useState(searchParams.get("search") || "");
-  const iconUrl = "https://www.figma.com/api/mcp/asset/71923882-07b6-474b-a082-726651459ec8";
 
   const handleSearch = () => {
-    //* 🌟 変更: 今のURLパラメータ（タグなど）を保持したまま、searchを上書きする
     const params = new URLSearchParams(searchParams.toString());
 
     if (searchInput.trim()) {
       params.set("search", searchInput.trim());
     } else {
-      params.delete("search"); // 空欄で検索した場合は search パラメータを消す
+      params.delete("search");
     }
 
-    router.push(`/posts?${params.toString()}`);
+    const queryString = params.toString();
+    router.push(queryString ? `/posts?${queryString}` : "/posts");
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -91,24 +33,35 @@ const SearchBar = () => {
 
   return (
     <div className="relative w-full max-w-2xl mx-auto">
-      <div className="bg-[#f5f3f3] border border-[#c1c6d7] border-solid rounded flex items-center pl-12.25 pr-4.25 pt-4.75 pb-4.25">
+      <div className="bg-[#f5f3f3] border border-[#c1c6d7] border-solid rounded flex items-center pl-12 pr-4.5 py-4">
         <input
           type="text"
           placeholder={t("placeholder") || "記事を検索..."}
           value={searchInput}
           onChange={(e) => setSearchInput(e.target.value)}
           onKeyDown={handleKeyDown}
-          className="flex-1 bg-transparent outline-none text-[#6b7280] text-base leading-normal"
+          className="flex-1 bg-transparent outline-none text-[#1b1c1c] placeholder:text-[#6b7280] text-base leading-normal"
         />
       </div>
+
+      {/* 🌟 外部imgの代わりにSVGアイコンを直接配置して確実かつ綺麗に表示 */}
       <div
-        className="absolute left-4 top-1/2 -translate-y-1/2 cursor-pointer"
-        onClick={handleSearch}>
-        <img
-          alt="search"
-          className="w-4.5 h-4.5"
-          src={iconUrl}
-        />
+        className="absolute left-4 top-1/2 -translate-y-1/2 cursor-pointer flex items-center justify-center p-1"
+        onClick={handleSearch}
+        role="button"
+        aria-label="検索">
+        <svg
+          width="18"
+          height="18"
+          viewBox="0 0 18 18"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          className="w-4.5 h-4.5 text-[#414754]">
+          <path
+            d="M12.5 11H11.71L11.43 10.73C12.41 9.59 13 8.11 13 6.5C13 2.91 10.09 0 6.5 0C2.91 0 0 2.91 0 6.5C0 10.09 2.91 13 6.5 13C8.11 13 9.59 12.41 10.73 11.43L11 11.71V12.5L16 17.49L17.49 16L12.5 11ZM6.5 11C4.01 11 2 8.99 2 6.5C2 4.01 4.01 2 6.5 2C8.99 2 11 4.01 11 6.5C11 8.99 8.99 11 6.5 11Z"
+            fill="#414754"
+          />
+        </svg>
       </div>
     </div>
   );

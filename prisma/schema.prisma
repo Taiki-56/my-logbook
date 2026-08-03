@@ -52,7 +52,7 @@ model Post {
   category    Category      
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
-  thumbnail String?
+  thumbnail   String?
   
   //* Relations
   author      User          @relation(fields: [authorId], references: [id])
@@ -108,7 +108,7 @@ model TagContent {
   tagId     String   @db.Uuid
   locale    String   //* "ja" | "en"
   name      String   //* 画面表示名 (例: 筋トレ, Workout)
-  slug      String   @unique
+  // 🌟 削除: slug String @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -116,7 +116,7 @@ model TagContent {
   tag       Tag      @relation(fields: [tagId], references: [id], onDelete: Cascade)
 
   @@unique([tagId, locale])
-  @@unique([locale, slug])
+  // 🌟 削除: @@unique([locale, slug])
   @@map("tag_contents")
 }
 
