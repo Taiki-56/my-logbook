@@ -7,7 +7,8 @@ import { TranslatedPost, TranslatedTag } from "@/types/translation";
 import { GoogleGenAI } from "@google/genai";
 
 const ai = new GoogleGenAI({});
-const getPromptLanguage = (lang: Locale) => ({ ja: "Japanese", en: "English", fr: "French" })[lang] || lang;
+const getPromptLanguage = (lang: Locale) =>
+  ({ ja: "Japanese", en: "English", fr: "French", es: "Spanish" })[lang] || lang;
 
 const translatePost = async (targetLang: Locale, sourceData: TranslatedPost): Promise<TranslatedPost> => {
   const lang = getPromptLanguage(targetLang);

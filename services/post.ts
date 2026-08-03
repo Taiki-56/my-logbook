@@ -1,58 +1,66 @@
+import slugify from "@/helpers/slugify";
 import { Prisma } from "@/lib/generated/client";
 import { Category } from "@/lib/generated/enums";
 import prisma from "@/lib/prisma";
 import { PostFormValues } from "@/schemas/postSchema";
 import { Locale } from "@/types/config";
-import { AdminDisplayPost, DisplayPost, PostWithRelations, UpdatePost } from "@/types/post";
-
-const slugify = (text: string) => {
-  return text
-    .toString()
-    .toLowerCase()
-    .trim()
-    .replace(/\s+/g, "-")
-    .replace(/[^\w\-]+/g, "")
-    .replace(/\-\-+/g, "-")
-    .replace(/^-+/, "")
-    .replace(/-+$/, "");
-};
+import { AdminDisplayPost, DisplayPost, PopularTagView, PostWithRelations, UpdatePost } from "@/types/post";
 
 const resolveTags = async (tags: string[], locale: Locale) => {
   const tagIds = [];
-  for (const tagName of tags) {
-    let safeSlug = slugify(tagName);
-    if (!safeSlug) safeSlug = encodeURIComponent(tagName.toLowerCase());
 
+  for (const tagName of tags) {
+    // 1. まず、既存のタグがあるか「表示名(name)」で検索
+    // （※英語のslugで直接入力された場合も考慮して、slugでも検索できるようにしておきます）
     let tag = await prisma.tag.findFirst({
       where: {
-        OR: [{ slug: safeSlug }, { contents: { some: { locale, slug: safeSlug } } }]
+        OR: [{ slug: tagName.toLowerCase() }, { contents: { some: { locale, name: tagName } } }]
       },
       include: { contents: true }
     });
 
+    // 2. タグが存在しない場合は新規作成
     if (!tag) {
+      // 英語の場合は "Next.js" -> "nextjs" になる。日本語の場合は空文字になる。
+      let safeSlug = slugify(tagName);
+
+      // 日本語のタグなどで safeSlug が空文字になった場合は、一時的なIDを割り当てる
+      // （※本来はここで「tag-xxxx」になります。後から管理画面で正しい英単語に修正する運用を想定）
+      if (!safeSlug) {
+        safeSlug = `tag-${Math.random().toString(36).substring(2, 8)}`;
+      }
+
+      // 万が一、生成したslugが既に存在する場合の衝突回避
+      const existingSlug = await prisma.tag.findUnique({ where: { slug: safeSlug } });
+      if (existingSlug) {
+        safeSlug = `${safeSlug}-${Math.random().toString(36).substring(2, 5)}`;
+      }
+
       tag = await prisma.tag.create({
         data: {
           slug: safeSlug,
-          contents: { create: { locale, name: tagName, slug: safeSlug } }
+          contents: { create: { locale, name: tagName } }
         },
         include: { contents: true }
       });
     } else {
+      // 3. タグは存在するが、現在の言語(locale)の表示名がない場合は追加
       const hasLocale = tag.contents.some((c) => c.locale === locale);
       if (!hasLocale) {
         try {
           await prisma.tag.update({
             where: { id: tag.id },
-            data: { contents: { create: { locale, name: tagName, slug: safeSlug } } }
+            data: { contents: { create: { locale, name: tagName } } }
           });
         } catch (e) {
           console.warn("Tag content creation skipped due to concurrency:", e);
         }
       }
     }
+
     tagIds.push(tag.id);
   }
+
   return tagIds;
 };
 
@@ -264,7 +272,6 @@ const getPublishedPosts = async (locale: Locale) => {
       }
     },
     include: {
-      // 🌟 条件2: Includeする中身も、指定された言語のコンテンツ「だけ」に絞り込む
       contents: {
         where: {
           locale: locale
@@ -318,7 +325,7 @@ const formatToDisplayPost = (post: PostWithRelations): DisplayPost => {
 
   return {
     id: post.id,
-    category: post.postTags[0]?.tag?.slug?.toUpperCase() || "BLOG",
+    category: post.category,
     date: post.createdAt.toLocaleDateString("ja-JP", { month: "short", day: "numeric" }),
     readTime: "5 min read",
     title: content?.title || "No Title",
@@ -332,13 +339,13 @@ const formatToDisplayPost = (post: PostWithRelations): DisplayPost => {
   };
 };
 
-const getFeaturedPosts = async (locale: Locale): Promise<DisplayPost[]> => {
+const getFeaturedPosts = async (locale: Locale, limit?: number): Promise<DisplayPost[]> => {
   const rawPosts = await prisma.post.findMany({
     where: {
       contents: { some: { locale, status: "PUBLISHED", isFeatured: true } }
     },
     orderBy: { createdAt: "desc" },
-    take: 3,
+    ...(limit ? { take: limit } : {}),
     include: {
       contents: { where: { locale } },
       postTags: {
@@ -423,12 +430,35 @@ const getSourcePost = async (postId: string, sourceLang: Locale) => {
   });
 };
 
+const getPopularTags = async (locale: Locale, limit: number): Promise<PopularTagView[]> => {
+  const tagsData = await prisma.tag.findMany({
+    where: {
+      contents: { some: { locale } }
+    },
+    take: limit,
+    orderBy: {
+      tags: { _count: "desc" }
+    },
+    include: {
+      contents: { where: { locale } },
+      _count: { select: { tags: true } }
+    }
+  });
+
+  return tagsData.map((tag) => ({
+    name: tag.contents[0]?.name || tag.slug,
+    slug: tag.slug,
+    count: tag._count.tags
+  }));
+};
+
 export {
   createPost,
   createTranslatedPost,
   getAdminPosts,
   getFeaturedPosts,
   getLatestPosts,
+  getPopularTags,
   getPostBySlug,
   getPostContentBySlug,
   getPublishedPosts,

@@ -7,12 +7,6 @@
     "articles": "記事",
     "about": "プロフィール"
   },
-  "Footer": {
-    "copyright": "© 2024 Chronicle. Crafted with precision.",
-    "privacyPolicy": "プライバシーポリシー",
-    "termsOfService": "利用規約",
-    "contact": "お問い合わせ"
-  },
   "SearchBar": {
     "placeholder": "記事、タグ、トピックを検索..."
   },
@@ -22,7 +16,8 @@
       "subtitle": "海外で働き、学び、鍛える。フランスからカナダへ続く挑戦の記録。"
     },
     "featured": {
-      "heading": "FEATURED / 注目の記事"
+      "heading": "FEATURED / 注目の記事",
+      "viewAll": "すべての注目の記事を見る"
     },
     "latest": {
       "heading": "LATEST / 最新の記事"
@@ -85,7 +80,8 @@
       "description": "検索条件に一致する記事が見つかりませんでした。スペルを確認するか、より一般的な用語を使用してみてください。",
       "suggestedTopics": "おすすめのトピック",
       "viewAll": "すべての記事を見る"
-    }
+    },
+    "featuredPosts": "注目の記事"
   },
   "Admin": {
     "login": {

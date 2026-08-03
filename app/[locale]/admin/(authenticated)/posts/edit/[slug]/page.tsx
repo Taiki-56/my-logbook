@@ -1,33 +1,42 @@
 import PostForm from "@/components/admin/PostForm";
 import { getPostContentBySlug } from "@/services/post";
+import { isValidLocale } from "@/types/config";
 import { notFound } from "next/navigation";
 
-const Page = async ({ params }: { params: { slug: string } }) => {
-  const { slug } = await params;
+const Page = async ({ params }: { params: Promise<{ slug: string }> | { slug: string } }) => {
+  const resolvedParams = await params;
+  const { slug } = resolvedParams;
+
   const fetchData = await getPostContentBySlug(slug);
   if (!fetchData) notFound();
 
-  // 🌟 修正: エンコードされたslugではなく、ローカライズされたタグの「名前」をフォームの初期値として渡す
-  const mappedTags = fetchData.post.postTags.map((pt) => {
-    // 現在編集しようとしている言語(locale)に合致するタグ情報を探す
-    const localizedContent = pt.tag.contents?.find((c) => c.locale === fetchData.locale);
-    return localizedContent?.name || pt.tag.contents[0].name;
-  });
+  //* Todo ここの文言を修正する
+  if (!isValidLocale(fetchData.locale)) {
+    return <div>サポートされていない言語です。</div>;
+  }
+
+  const mappedTags = fetchData.post.postTags
+    .map((pt) => {
+      const tagContent = pt.tag.contents.find((c) => c.locale === fetchData.locale);
+
+      return tagContent?.name || decodeURIComponent(pt.tag.slug);
+    })
+    .filter((tag): tag is string => Boolean(tag));
 
   const initialData = {
     postId: fetchData.postId,
     locale: fetchData.locale,
     title: fetchData.title,
     slug: fetchData.slug,
-    status: fetchData.status, // Enumの型エラーが出る場合はasで対応
-    category: fetchData.post.category, // ※必要であればcategoryも追加
+    status: fetchData.status,
+    category: fetchData.post.category,
     isFeatured: fetchData.isFeatured,
     seoTitle: fetchData.seoTitle,
     seoDescription: fetchData.seoDescription,
     projectData: fetchData.projectData,
     html: fetchData.html,
     thumbnail: fetchData.post?.thumbnail ?? null,
-    tags: mappedTags // 🌟 綺麗な日本語（または英語等）のタグ名が渡るようになります
+    tags: mappedTags
   };
 
   return (

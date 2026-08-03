@@ -135,6 +135,12 @@ type PostTag = {
   tag: Tag;
 };
 
+type PopularTagView = {
+  name: string;
+  slug: string;
+  count: number;
+};
+
 type PostContent = {
   locale: Locale;
   title: string;
@@ -155,6 +161,7 @@ export type {
   CreatePostPayload,
   CreateTranslatedPostInput,
   DisplayPost,
+  PopularTagView,
   PostAction,
   PostContent,
   PostForm,

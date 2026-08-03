@@ -137,7 +137,6 @@ export const TagContentScalarFieldEnum = {
   tagId: 'tagId',
   locale: 'locale',
   name: 'name',
-  slug: 'slug',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const

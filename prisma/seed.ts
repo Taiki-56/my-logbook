@@ -142,7 +142,64 @@ const projectDataFood = {
   ]
 };
 
-async function main() {
+const projectDataWork = {
+  type: "doc",
+  content: [
+    { type: "heading", content: [{ text: "モダンなチーム開発のあり方", type: "text" }] },
+    {
+      type: "paragraph",
+      content: [
+        {
+          text: "非同期コミュニケーションを前提としたフルリモート環境での、生産性向上の工夫についてまとめました。",
+          type: "text"
+        }
+      ]
+    }
+  ]
+};
+
+const projectDataTravel = {
+  type: "doc",
+  content: [
+    { type: "heading", content: [{ text: "ワーケーションという選択肢", type: "text" }] },
+    {
+      type: "paragraph",
+      content: [{ text: "場所にとらわれない働き方を実践するため、1週間の地方滞在を試してみた記録です。", type: "text" }]
+    }
+  ]
+};
+
+const projectDataLife = {
+  type: "doc",
+  content: [
+    { type: "heading", content: [{ text: "デジタルデトックスの実践", type: "text" }] },
+    {
+      type: "paragraph",
+      content: [
+        {
+          text: "週末の数時間だけデバイスを手放すことで、驚くほど頭がクリアになり、月曜からのパフォーマンスが向上します。",
+          type: "text"
+        }
+      ]
+    }
+  ]
+};
+
+const main = async () => {
+  console.log("🧹 Cleaning up existing data...");
+
+  // 外部キー制約（リレーション）のエラーを防ぐため、子テーブルから順番に削除します
+  await prisma.postContent.deleteMany();
+  await prisma.postTag.deleteMany();
+  await prisma.post.deleteMany();
+
+  // 🌟 TagContent の削除コメントアウトを解除しました
+  await prisma.tagContent.deleteMany();
+  await prisma.tag.deleteMany();
+  await prisma.user.deleteMany();
+
+  console.log("✨ Database cleared!");
+
   const email = process.env.ADMIN_EMAIL!;
   const password = process.env.ADMIN_PASSWORD!;
   const passwordHash = await bcrypt.hash(password, 10);
@@ -162,11 +219,13 @@ async function main() {
   console.log("Created user:", user);
 
   console.log("Seeding tags...");
+
+  // 🌟 子タグ(TagContent)の生成から `slug` を削除しました
   const techTag = await prisma.tag.create({
     data: {
       slug: "nextjs",
       contents: {
-        create: [{ locale: "ja", name: "Next.js", slug: "nextjs" }]
+        create: [{ locale: "ja", name: "Next.js" }]
       }
     }
   });
@@ -175,7 +234,7 @@ async function main() {
     data: {
       slug: "ramen",
       contents: {
-        create: [{ locale: "ja", name: "ラーメン", slug: "ramen" }]
+        create: [{ locale: "ja", name: "ラーメン" }]
       }
     }
   });
@@ -184,14 +243,41 @@ async function main() {
     data: {
       slug: "workout",
       contents: {
-        create: [{ locale: "ja", name: "筋トレ", slug: "workout" }]
+        create: [{ locale: "ja", name: "筋トレ" }]
+      }
+    }
+  });
+
+  const workTag = await prisma.tag.create({
+    data: {
+      slug: "career",
+      contents: {
+        create: [{ locale: "ja", name: "キャリア" }]
+      }
+    }
+  });
+
+  const travelTag = await prisma.tag.create({
+    data: {
+      slug: "trip",
+      contents: {
+        create: [{ locale: "ja", name: "旅行" }]
+      }
+    }
+  });
+
+  const lifeTag = await prisma.tag.create({
+    data: {
+      slug: "minimalism",
+      contents: {
+        create: [{ locale: "ja", name: "ミニマリズム" }]
       }
     }
   });
 
   console.log("Seeding posts...");
 
-  // TECH カテゴリー
+  // TECH カテゴリー (Featured 1)
   await prisma.post.create({
     data: {
       authorId: user.id,
@@ -216,7 +302,7 @@ async function main() {
     }
   });
 
-  // FOOD カテゴリー
+  // FOOD カテゴリー (Featured にはしない)
   await prisma.post.create({
     data: {
       authorId: user.id,
@@ -241,7 +327,7 @@ async function main() {
     }
   });
 
-  // FITNESS カテゴリー
+  // FITNESS カテゴリー (Featured 2)
   await prisma.post.create({
     data: {
       authorId: user.id,
@@ -252,7 +338,7 @@ async function main() {
           locale: "ja",
           title: "初心者向け！自宅でできる効果的な自重トレーニングメニュー",
           slug: "home-workout-for-beginners-guide",
-          status: "DRAFT", // テスト用にステータスをドラフトに設定
+          status: "PUBLISHED",
           seoTitle: "自宅で簡単！初心者向け筋トレ",
           seoDescription: "特別な器具がなくても大丈夫。自宅の省スペースで今日から始められるメニューです。",
           html: "<p>本文はprojectDataのエディタで管理しています。</p>",
@@ -266,8 +352,83 @@ async function main() {
     }
   });
 
+  // WORK カテゴリー (Featured 3)
+  await prisma.post.create({
+    data: {
+      authorId: user.id,
+      category: "WORK",
+      thumbnail: null,
+      contents: {
+        create: {
+          locale: "ja",
+          title: "非同期コミュニケーションで劇的に変わるチームの生産性",
+          slug: "async-communication-productivity",
+          status: "PUBLISHED",
+          seoTitle: "非同期コミュニケーションのメリット",
+          seoDescription: "リモートワーク時代において、同期的な会議を減らし生産性を高めるためのアプローチ。",
+          html: "<p>本文はprojectDataのエディタで管理しています。</p>",
+          projectData: projectDataWork,
+          isFeatured: true
+        }
+      },
+      postTags: {
+        create: [{ tagId: workTag.id }]
+      }
+    }
+  });
+
+  // TRAVEL カテゴリー (Featured 4)
+  await prisma.post.create({
+    data: {
+      authorId: user.id,
+      category: "TRAVEL",
+      thumbnail: null,
+      contents: {
+        create: {
+          locale: "ja",
+          title: "PC1台で旅に出る：1週間のワーケーション実践記",
+          slug: "one-week-workation-experience",
+          status: "PUBLISHED",
+          seoTitle: "ワーケーションのリアルな体験談",
+          seoDescription: "新しい環境に身を置くことで得られるインスピレーションと、旅先での仕事術について。",
+          html: "<p>本文はprojectDataのエディタで管理しています。</p>",
+          projectData: projectDataTravel,
+          isFeatured: true
+        }
+      },
+      postTags: {
+        create: [{ tagId: travelTag.id }]
+      }
+    }
+  });
+
+  // LIFE カテゴリー (Featured 5)
+  await prisma.post.create({
+    data: {
+      authorId: user.id,
+      category: "LIFE",
+      thumbnail: null,
+      contents: {
+        create: {
+          locale: "ja",
+          title: "週末のデジタルデトックスがもたらす圧倒的なクリア感",
+          slug: "weekend-digital-detox",
+          status: "PUBLISHED",
+          seoTitle: "デジタルデトックスの効果と実践方法",
+          seoDescription: "情報過多の現代において、意図的にオフラインの時間を作ることで得られるメリット。",
+          html: "<p>本文はprojectDataのエディタで管理しています。</p>",
+          projectData: projectDataLife,
+          isFeatured: true
+        }
+      },
+      postTags: {
+        create: [{ tagId: lifeTag.id }]
+      }
+    }
+  });
+
   console.log("Seeding finished successfully!");
-}
+};
 
 main()
   .catch((e) => {

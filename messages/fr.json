@@ -7,12 +7,6 @@
     "articles": "Articles",
     "about": "À propos"
   },
-  "Footer": {
-    "copyright": "© 2024 Chronicle. Conçu avec précision.",
-    "privacyPolicy": "Politique de confidentialité",
-    "termsOfService": "Conditions d'utilisation",
-    "contact": "Contact"
-  },
   "SearchBar": {
     "placeholder": "Rechercher des articles, des tags, des sujets..."
   },
@@ -22,7 +16,8 @@
       "subtitle": "Travailler, apprendre et s'entraîner à l'étranger. Une chronique des défis de la France au Canada."
     },
     "featured": {
-      "heading": "À LA UNE"
+      "heading": "À LA UNE",
+      "viewAll": "Voir tous les articles en vedette"
     },
     "latest": {
       "heading": "DERNIERS ARTICLES"
@@ -85,7 +80,8 @@
       "description": "Nous n'avons trouvé aucun article correspondant à votre recherche. Essayez de vérifier l'orthographe ou d'utiliser des termes plus généraux.",
       "suggestedTopics": "SUJETS SUGGÉRÉS",
       "viewAll": "Voir tous les articles"
-    }
+    },
+    "featuredPosts": "Articles en vedette"
   },
   "Admin": {
     "login": {

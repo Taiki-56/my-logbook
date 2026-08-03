@@ -3,6 +3,7 @@
 import { uploadImageAction } from "@/actions/media";
 import { createPostAction, createTranslatedPostAction, savePostAction } from "@/actions/post";
 import { translatePostAction } from "@/actions/translation";
+import formatSlug from "@/helpers/formatSlug";
 import { useRouter } from "@/i18n/navigation";
 import { Prisma } from "@/lib/generated/client";
 import { Category, PostStatus } from "@/lib/generated/enums";
@@ -105,10 +106,10 @@ const PostForm = ({ mode, sourceData, initialData }: PostFormProps) => {
 
           //* 3. Apply translated slug
           if (translated.slug) {
-            setValue("slug", translated.slug, { shouldDirty: true, shouldValidate: true });
+            setValue("slug", formatSlug(translated.slug), { shouldDirty: true, shouldValidate: true });
           }
 
-          //* 4. Apply translated tags (extracting names from TagContent array)
+          //* 4. Apply translated tags (extracting names)
           if (translated.tags && Array.isArray(translated.tags)) {
             const tagNames = translated.tags.map((tag: { name: string }) => tag.name);
             setValue("tags", tagNames, { shouldDirty: true, shouldValidate: true });
@@ -200,8 +201,11 @@ const PostForm = ({ mode, sourceData, initialData }: PostFormProps) => {
       }
     }
 
+    const safeSlug = formatSlug(data.slug);
+
     const payload = {
       ...data,
+      slug: safeSlug,
       projectData: editorAST,
       html: editorHtml || undefined
     };
@@ -399,6 +403,10 @@ const PostForm = ({ mode, sourceData, initialData }: PostFormProps) => {
                 type="text"
                 placeholder="your-url-slug"
                 className="w-full px-3 py-2 text-[13px] text-[#1b1c1c] border border-[#c1c6d7] rounded"
+                onBlur={(e) => {
+                  register("slug").onBlur(e);
+                  setValue("slug", formatSlug(e.target.value), { shouldValidate: true, shouldDirty: true });
+                }}
               />
               {errors.slug && <p className="text-red-500 text-xs mt-1">{errors.slug.message}</p>}
             </div>

@@ -1,17 +1,31 @@
 import { getPublishedPostsAction } from "@/actions/post";
 import SearchBar from "@/components/public/SearchBar";
 import { Link } from "@/i18n/navigation";
+import { getFeaturedPosts } from "@/services/post";
 import { isValidLocale } from "@/types/config";
 import { getLocale, getTranslations } from "next-intl/server";
 import ActiveFilters from "./parts/ActiveFilters";
-import ArticleCard from "./parts/ArticleCard";
 import EmptyState from "./parts/EmptyState";
 import Pagination from "./parts/Pagination";
+import PostCard from "./parts/PostCard";
 
 const ITEMS_PER_PAGE = 6;
 
 type Props = {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+};
+
+// 🌟 カードコンポーネントが求めるデータの最終形を定義
+type ViewPost = {
+  id: string;
+  date: string;
+  readTime: number;
+  title: string;
+  description: string | null;
+  tags: string[];
+  image: string | null;
+  slug: string;
+  category: string;
 };
 
 const Page = async (props: Props) => {
@@ -20,7 +34,6 @@ const Page = async (props: Props) => {
   const locale = await getLocale();
 
   if (!isValidLocale(locale)) {
-    // 🌟 サポート外の言語URLだった場合のエラーハンドリング（またはデフォルト言語へのフォールバック）
     return <div>サポートされていない言語です。</div>;
   }
   const searchQueryString = (searchParams.search as string) || "";
@@ -33,96 +46,120 @@ const Page = async (props: Props) => {
     : [];
 
   const currentPage = parseInt((searchParams.page as string) || "1", 10);
+  const isFeaturedOnly = searchParams.isFeatured === "true";
 
-  const res = await getPublishedPostsAction(locale);
-  if (!res.success || !res.data) {
-    return <div>エラーが発生しました。:{res.error}</div>;
+  let viewPosts: ViewPost[] = [];
+  // 🌟 slug（URL用）と name（表示用）を両方保持する Map を作成
+  const uniqueTagsMap = new Map<string, string>();
+
+  if (isFeaturedOnly) {
+    // 注目の記事: getFeaturedPosts はすでに近い形に整形されているので、プロパティ名を合わせる
+    const featured = await getFeaturedPosts(locale);
+    viewPosts = featured.map((fp) => {
+      // featured側からslugを取得できない場合のフォールバックとしてnameをそのまま登録
+      fp.tags?.forEach((tagName) => {
+        if (tagName && !uniqueTagsMap.has(tagName)) uniqueTagsMap.set(tagName, tagName);
+      });
+
+      return {
+        id: fp.id,
+        date: fp.date,
+        readTime: 5,
+        title: fp.title,
+        description: fp.description,
+        tags: fp.tags || [],
+        image: fp.thumbnail || null,
+        slug: fp.slug,
+        category: fp.category || "BLOG"
+      };
+    });
+  } else {
+    // 🌟 通常の記事: 生のデータベースオブジェクトが返ってくるため、ここでUI向けに抽出・整形する
+    const res = await getPublishedPostsAction(locale);
+    if (!res.success || !res.data) {
+      return <div>エラーが発生しました。:{res.error}</div>;
+    }
+
+    viewPosts = (res.data as any[]).map((post) => {
+      // 該当言語のコンテンツを探す
+      const content = post.contents?.find((c: any) => c.locale === locale) || post.contents?.[0];
+
+      const localizedTags: string[] = [];
+
+      post.postTags?.forEach((pt: any) => {
+        // 🌟 修正点1: フォールバック([0])を削除し、完全に現在の言語のタグのみを抽出する
+        const tagContent = pt.tag?.contents?.find((c: any) => c.locale === locale);
+
+        if (tagContent) {
+          localizedTags.push(tagContent.name);
+
+          // 🌟 修正点2: URL用の親slug と 表示用のローカライズname を確実に紐付ける
+          if (pt.tag?.slug && !uniqueTagsMap.has(pt.tag.slug)) {
+            uniqueTagsMap.set(pt.tag.slug, tagContent.name);
+          }
+        }
+      });
+
+      return {
+        id: post.id,
+        date: new Date(post.createdAt).toLocaleDateString("ja-JP"),
+        readTime: 5,
+        title: content?.title || "No Title",
+        description: content?.seoDescription || null,
+        tags: localizedTags,
+        image: post.thumbnail || null,
+        slug: content?.slug || "",
+        category: post.category || "BLOG"
+      };
+    });
   }
 
-  const posts = res.data;
-  //* 🌟 修正1: slug（URL用）と name（表示用）を両方保持する Map を作成
-  const uniqueTagsMap = new Map<string, string>();
-  posts
-    .flatMap((post) => post.postTags)
-    .forEach((pt) => {
-      const slug = pt.tag.slug;
-      const tagContent = pt.tag.contents?.[0];
-      const name = tagContent?.name || decodeURIComponent(slug); // nameがない場合はデコードしたslugをフォールバック
-
-      if (slug && !uniqueTagsMap.has(slug)) {
-        uniqueTagsMap.set(slug, name);
-      }
-    });
-
-  //* 配列に変換 [{ slug: "kin-tore", name: "筋トレ" }, ...]
   const allAvailableTags = Array.from(uniqueTagsMap.entries()).map(([slug, name]) => ({ slug, name }));
 
-  // Filter articles based on search and tag
-  const filteredArticles = posts.filter((post) => {
-    const baseContent = post.contents.find((c) => c.locale === "ja") || post.contents[0];
-    if (!baseContent) return false;
-
+  // Filter posts based on search and tag
+  const filteredPosts = viewPosts.filter((post) => {
     const matchesSearch =
       searchKeywords.length > 0
         ? searchKeywords.every(
             (keyword) =>
-              (baseContent.title?.toLowerCase().includes(keyword.toLowerCase()) ?? false) ||
-              (baseContent.seoDescription?.toLowerCase().includes(keyword.toLowerCase()) ?? false)
+              (post.title?.toLowerCase().includes(keyword.toLowerCase()) ?? false) ||
+              (post.description?.toLowerCase().includes(keyword.toLowerCase()) ?? false)
           )
         : true;
 
     const matchesTag =
       activeTags.length > 0
-        ? activeTags.some((activeTag) =>
-            post.postTags.some((pt) => pt.tag.slug === activeTag || pt.tagId === activeTag)
-          )
+        ? activeTags.some((activeTagSlug) => {
+            // 🌟 修正点3: URLのパラメータ(slug)から日本語の表示名を逆引きして、post.tagsと照合する
+            const activeTagName = uniqueTagsMap.get(activeTagSlug) || decodeURIComponent(activeTagSlug);
+            return post.tags.includes(activeTagName);
+          })
         : true;
 
     return matchesSearch && matchesTag;
   });
 
-  const mappedArticles = filteredArticles.map((post) => {
-    const baseContent = post.contents.find((c) => c.locale === "ja") || post.contents[0];
-
-    return {
-      id: post.id,
-      date: new Date(post.createdAt).toLocaleDateString("ja-JP"),
-      readTime: 5,
-      title: baseContent.title,
-      description: baseContent.seoDescription,
-
-      //* 🌟 修正2: 記事カードに渡すタグも contents[0].name またはデコード済みの文字列にする
-      tags: post.postTags.map((pt) => {
-        const tagContent = pt.tag.contents?.[0];
-        return tagContent?.name || decodeURIComponent(pt.tag.slug) || "タグ";
-      }),
-
-      image: post.thumbnail || "",
-      slug: baseContent.slug,
-      category: "未分類"
-    };
-  });
-
-  const totalPages = Math.ceil(mappedArticles.length / ITEMS_PER_PAGE);
+  const totalPages = Math.ceil(filteredPosts.length / ITEMS_PER_PAGE);
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-  const paginatedArticles = mappedArticles.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+  const paginatedPosts = filteredPosts.slice(startIndex, startIndex + ITEMS_PER_PAGE);
 
   let dynamicPageTitle = t("pageTitle");
 
-  //* タイトルの動的生成時も、slug から name を逆引きして綺麗に表示する
   const getActiveTagNames = () => {
     return activeTags.map((slug) => uniqueTagsMap.get(slug) || decodeURIComponent(slug));
   };
 
-  if (searchKeywords.length > 0 && activeTags.length > 0) {
+  if (isFeaturedOnly) {
+    dynamicPageTitle = t("featuredPosts") || "注目の記事";
+  } else if (searchKeywords.length > 0 && activeTags.length > 0) {
     dynamicPageTitle = `「${searchKeywords.join(" ")}」の検索結果 (${getActiveTagNames()
-      .map((t) => `#${t}`)
+      .map((tag) => `#${tag}`)
       .join(", ")})`;
   } else if (searchKeywords.length > 0) {
     dynamicPageTitle = `「${searchKeywords.join(" ")}」の検索結果`;
   } else if (activeTags.length > 0) {
     dynamicPageTitle = `${getActiveTagNames()
-      .map((t) => `#${t}`)
+      .map((tag) => `#${tag}`)
       .join(", ")} の記事`;
   }
 
@@ -161,7 +198,6 @@ const Page = async (props: Props) => {
                 {t("popularTags") || "TAGS"}
               </span>
               <div className="flex flex-wrap gap-2">
-                {/* 🌟 修正3: hrefにはslugを、画面表示にはnameを使う */}
                 {allAvailableTags.map(({ slug, name }) => {
                   const isSelected = activeTags.includes(slug);
                   return (
@@ -187,12 +223,12 @@ const Page = async (props: Props) => {
           </div>
 
           <div className="w-full pt-16">
-            {paginatedArticles.length > 0 ? (
+            {paginatedPosts.length > 0 ? (
               <div className="grid grid-cols-2 gap-8">
-                {paginatedArticles.map((article) => (
-                  <ArticleCard
-                    key={article.id}
-                    article={article}
+                {paginatedPosts.map((post) => (
+                  <PostCard
+                    key={post.id}
+                    post={post}
                     layout="grid"
                   />
                 ))}
@@ -202,7 +238,7 @@ const Page = async (props: Props) => {
             )}
           </div>
 
-          {paginatedArticles.length > 0 && totalPages > 1 && (
+          {paginatedPosts.length > 0 && totalPages > 1 && (
             <div className="w-full pt-16">
               <Pagination
                 currentPage={currentPage}
@@ -226,7 +262,6 @@ const Page = async (props: Props) => {
               {t("popularTags") || "TAGS"}
             </span>
             <div className="flex gap-2 overflow-x-auto pb-2 -mx-4 px-4 scrollbar-none">
-              {/* 🌟 修正4: モバイルレイアウトも同様に表示をnameに */}
               {allAvailableTags.map(({ slug, name }) => {
                 const isSelected = activeTags.includes(slug);
                 return (
@@ -261,12 +296,12 @@ const Page = async (props: Props) => {
         )}
 
         <div className="flex flex-col gap-8 w-full">
-          {paginatedArticles.length > 0 ? (
+          {paginatedPosts.length > 0 ? (
             <>
-              {paginatedArticles.map((article) => (
-                <ArticleCard
-                  key={article.id}
-                  article={article}
+              {paginatedPosts.map((post) => (
+                <PostCard
+                  key={post.id}
+                  post={post}
                   layout="horizontal"
                 />
               ))}

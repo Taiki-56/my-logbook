@@ -29,7 +29,6 @@ export type TagContentMinAggregateOutputType = {
   tagId: string | null
   locale: string | null
   name: string | null
-  slug: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -39,7 +38,6 @@ export type TagContentMaxAggregateOutputType = {
   tagId: string | null
   locale: string | null
   name: string | null
-  slug: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -49,7 +47,6 @@ export type TagContentCountAggregateOutputType = {
   tagId: number
   locale: number
   name: number
-  slug: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -61,7 +58,6 @@ export type TagContentMinAggregateInputType = {
   tagId?: true
   locale?: true
   name?: true
-  slug?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -71,7 +67,6 @@ export type TagContentMaxAggregateInputType = {
   tagId?: true
   locale?: true
   name?: true
-  slug?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -81,7 +76,6 @@ export type TagContentCountAggregateInputType = {
   tagId?: true
   locale?: true
   name?: true
-  slug?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -164,7 +158,6 @@ export type TagContentGroupByOutputType = {
   tagId: string
   locale: string
   name: string
-  slug: string
   createdAt: Date
   updatedAt: Date
   _count: TagContentCountAggregateOutputType | null
@@ -195,7 +188,6 @@ export type TagContentWhereInput = {
   tagId?: Prisma.UuidFilter<"TagContent"> | string
   locale?: Prisma.StringFilter<"TagContent"> | string
   name?: Prisma.StringFilter<"TagContent"> | string
-  slug?: Prisma.StringFilter<"TagContent"> | string
   createdAt?: Prisma.DateTimeFilter<"TagContent"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"TagContent"> | Date | string
   tag?: Prisma.XOR<Prisma.TagScalarRelationFilter, Prisma.TagWhereInput>
@@ -206,7 +198,6 @@ export type TagContentOrderByWithRelationInput = {
   tagId?: Prisma.SortOrder
   locale?: Prisma.SortOrder
   name?: Prisma.SortOrder
-  slug?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   tag?: Prisma.TagOrderByWithRelationInput
@@ -214,9 +205,7 @@ export type TagContentOrderByWithRelationInput = {
 
 export type TagContentWhereUniqueInput = Prisma.AtLeast<{
   id?: string
-  slug?: string
   tagId_locale?: Prisma.TagContentTagIdLocaleCompoundUniqueInput
-  locale_slug?: Prisma.TagContentLocaleSlugCompoundUniqueInput
   AND?: Prisma.TagContentWhereInput | Prisma.TagContentWhereInput[]
   OR?: Prisma.TagContentWhereInput[]
   NOT?: Prisma.TagContentWhereInput | Prisma.TagContentWhereInput[]
@@ -226,14 +215,13 @@ export type TagContentWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"TagContent"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"TagContent"> | Date | string
   tag?: Prisma.XOR<Prisma.TagScalarRelationFilter, Prisma.TagWhereInput>
-}, "id" | "slug" | "tagId_locale" | "locale_slug">
+}, "id" | "tagId_locale">
 
 export type TagContentOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   tagId?: Prisma.SortOrder
   locale?: Prisma.SortOrder
   name?: Prisma.SortOrder
-  slug?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.TagContentCountOrderByAggregateInput
@@ -249,7 +237,6 @@ export type TagContentScalarWhereWithAggregatesInput = {
   tagId?: Prisma.UuidWithAggregatesFilter<"TagContent"> | string
   locale?: Prisma.StringWithAggregatesFilter<"TagContent"> | string
   name?: Prisma.StringWithAggregatesFilter<"TagContent"> | string
-  slug?: Prisma.StringWithAggregatesFilter<"TagContent"> | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"TagContent"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"TagContent"> | Date | string
 }
@@ -258,7 +245,6 @@ export type TagContentCreateInput = {
   id?: string
   locale: string
   name: string
-  slug: string
   createdAt?: Date | string
   updatedAt?: Date | string
   tag: Prisma.TagCreateNestedOneWithoutContentsInput
@@ -269,7 +255,6 @@ export type TagContentUncheckedCreateInput = {
   tagId: string
   locale: string
   name: string
-  slug: string
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -278,7 +263,6 @@ export type TagContentUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   locale?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  slug?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tag?: Prisma.TagUpdateOneRequiredWithoutContentsNestedInput
@@ -289,7 +273,6 @@ export type TagContentUncheckedUpdateInput = {
   tagId?: Prisma.StringFieldUpdateOperationsInput | string
   locale?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  slug?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -299,7 +282,6 @@ export type TagContentCreateManyInput = {
   tagId: string
   locale: string
   name: string
-  slug: string
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -308,7 +290,6 @@ export type TagContentUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   locale?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  slug?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -318,7 +299,6 @@ export type TagContentUncheckedUpdateManyInput = {
   tagId?: Prisma.StringFieldUpdateOperationsInput | string
   locale?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  slug?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -338,17 +318,11 @@ export type TagContentTagIdLocaleCompoundUniqueInput = {
   locale: string
 }
 
-export type TagContentLocaleSlugCompoundUniqueInput = {
-  locale: string
-  slug: string
-}
-
 export type TagContentCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   tagId?: Prisma.SortOrder
   locale?: Prisma.SortOrder
   name?: Prisma.SortOrder
-  slug?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -358,7 +332,6 @@ export type TagContentMaxOrderByAggregateInput = {
   tagId?: Prisma.SortOrder
   locale?: Prisma.SortOrder
   name?: Prisma.SortOrder
-  slug?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -368,7 +341,6 @@ export type TagContentMinOrderByAggregateInput = {
   tagId?: Prisma.SortOrder
   locale?: Prisma.SortOrder
   name?: Prisma.SortOrder
-  slug?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -419,7 +391,6 @@ export type TagContentCreateWithoutTagInput = {
   id?: string
   locale: string
   name: string
-  slug: string
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -428,7 +399,6 @@ export type TagContentUncheckedCreateWithoutTagInput = {
   id?: string
   locale: string
   name: string
-  slug: string
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -467,7 +437,6 @@ export type TagContentScalarWhereInput = {
   tagId?: Prisma.UuidFilter<"TagContent"> | string
   locale?: Prisma.StringFilter<"TagContent"> | string
   name?: Prisma.StringFilter<"TagContent"> | string
-  slug?: Prisma.StringFilter<"TagContent"> | string
   createdAt?: Prisma.DateTimeFilter<"TagContent"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"TagContent"> | Date | string
 }
@@ -476,7 +445,6 @@ export type TagContentCreateManyTagInput = {
   id?: string
   locale: string
   name: string
-  slug: string
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -485,7 +453,6 @@ export type TagContentUpdateWithoutTagInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   locale?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  slug?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -494,7 +461,6 @@ export type TagContentUncheckedUpdateWithoutTagInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   locale?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  slug?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -503,7 +469,6 @@ export type TagContentUncheckedUpdateManyWithoutTagInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   locale?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  slug?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -515,7 +480,6 @@ export type TagContentSelect<ExtArgs extends runtime.Types.Extensions.InternalAr
   tagId?: boolean
   locale?: boolean
   name?: boolean
-  slug?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   tag?: boolean | Prisma.TagDefaultArgs<ExtArgs>
@@ -526,7 +490,6 @@ export type TagContentSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ex
   tagId?: boolean
   locale?: boolean
   name?: boolean
-  slug?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   tag?: boolean | Prisma.TagDefaultArgs<ExtArgs>
@@ -537,7 +500,6 @@ export type TagContentSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ex
   tagId?: boolean
   locale?: boolean
   name?: boolean
-  slug?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   tag?: boolean | Prisma.TagDefaultArgs<ExtArgs>
@@ -548,12 +510,11 @@ export type TagContentSelectScalar = {
   tagId?: boolean
   locale?: boolean
   name?: boolean
-  slug?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type TagContentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "tagId" | "locale" | "name" | "slug" | "createdAt" | "updatedAt", ExtArgs["result"]["tagContent"]>
+export type TagContentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "tagId" | "locale" | "name" | "createdAt" | "updatedAt", ExtArgs["result"]["tagContent"]>
 export type TagContentInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   tag?: boolean | Prisma.TagDefaultArgs<ExtArgs>
 }
@@ -574,7 +535,6 @@ export type $TagContentPayload<ExtArgs extends runtime.Types.Extensions.Internal
     tagId: string
     locale: string
     name: string
-    slug: string
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["tagContent"]>
@@ -1005,7 +965,6 @@ export interface TagContentFieldRefs {
   readonly tagId: Prisma.FieldRef<"TagContent", 'String'>
   readonly locale: Prisma.FieldRef<"TagContent", 'String'>
   readonly name: Prisma.FieldRef<"TagContent", 'String'>
-  readonly slug: Prisma.FieldRef<"TagContent", 'String'>
   readonly createdAt: Prisma.FieldRef<"TagContent", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"TagContent", 'DateTime'>
 }

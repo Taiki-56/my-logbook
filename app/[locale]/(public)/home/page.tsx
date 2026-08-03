@@ -1,4 +1,5 @@
-import { getFeaturedPosts, getLatestPosts } from "@/services/post";
+import { getFeaturedPosts, getLatestPosts, getPopularTags } from "@/services/post";
+import { isValidLocale } from "@/types/config";
 import { getLocale } from "next-intl/server";
 import Featured from "./parts/Featured";
 import Head from "./parts/Head";
@@ -8,16 +9,22 @@ import Tags from "./parts/Tags";
 
 const Page = async () => {
   const locale = await getLocale();
-  const featuredPost = await getFeaturedPosts(locale);
+  if (!isValidLocale(locale)) {
+    return <div>サポートされていない言語です。</div>;
+  }
+
+  const featuredPost = await getFeaturedPosts(locale, 4);
   const latestPost = await getLatestPosts(locale);
+  const tags = await getPopularTags(locale, 10);
   return (
-    <div className="max-w-300 mx-auto px-4 lg:px-6 pb-16">
+    // 🌟 ヘッダーに合わせて max-w-[1536px] と lg:px-8 に変更
+    <div className="max-w-384 w-full mx-auto px-4 lg:px-8 pb-16">
       <Head />
       {/* Mobile Layout */}
       <div className="flex flex-col gap-12 py-12 lg:hidden">
         <Featured posts={featuredPost} />
         <Latest posts={latestPost} />
-        <Tags />
+        <Tags tags={tags} />
         <Newsletter />
       </div>
       {/* Desktop Layout */}
@@ -27,7 +34,7 @@ const Page = async () => {
           <Latest posts={latestPost} />
         </div>
         <div className="lg:col-span-4 flex flex-col gap-12">
-          <Tags />
+          <Tags tags={tags} />
           {/* Todo Will implement this with Resend and will send a email when a new post is published */}
           {/* <Newsletter /> */}
         </div>
