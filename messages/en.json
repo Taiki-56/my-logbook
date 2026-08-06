@@ -34,33 +34,119 @@
   },
   "About": {
     "profile": {
-      "name": "Alex Mercer",
-      "jobTitle": "SOFTWARE ENGINEER"
+      "name": "Taiki Honda",
+      "jobTitle": "Software Engineer"
+    },
+    "techStack": {
+      "heading": "Tech Stack & Tools",
+      "tooltipTitle": "Why choose {item}?",
+      "categories": {
+        "languages": {
+          "title": "Languages"
+        },
+        "frontend": {
+          "title": "Frontend"
+        },
+        "backend": {
+          "title": "Backend & Database"
+        },
+        "services": {
+          "title": "AI & External Services"
+        },
+        "tools": {
+          "title": "Tools & Infrastructure"
+        }
+      },
+      "reasons": {
+        "typescript": "To ensure maintainability through type safety and maximize Developer Experience (DX).",
+        "javascript": "To implement flexible, framework-agnostic solutions based on a deep understanding of web standards.",
+        "react": "Adopted for its rich ecosystem and high reusability driven by a component-based architecture.",
+        "nextjs": "To leverage App Router benefits (faster initial loading, SEO) and flexible rendering strategies.",
+        "tailwindcss": "To bridge the gap between components and styling, achieving both rapid UI implementation and consistency.",
+        "materialui": "To dramatically accelerate the development of admin dashboards utilizing its robust component library.",
+        "zustand": "To manage state lightweight and simply, avoiding unnecessary re-renders typical of React Context.",
+        "redux": "To build a predictable, single global state management tree for large-scale applications.",
+        "formik": "To robustly implement complex form validation and state management with minimal boilerplate.",
+        "nextintl": "To implement clean, URL-based multilingual routing with high affinity for the App Router.",
+        "tiptap": "To implement a headless, highly flexible, and customizable rich text editor.",
+        "axios": "To simplify global error handling using interceptors and streamline authentication token attachment.",
+        "nodejs": "To eliminate context switching by writing the backend in the same TypeScript used for the frontend.",
+        "express": "To rapidly build APIs using middleware with its lightweight and highly flexible nature.",
+        "postgresql": "For its high reliability in complex queries and transaction processing, and data manipulation flexibility.",
+        "mongodb": "To enable fast iterations by leveraging schema-less flexibility for highly variable requirements like product data.",
+        "prisma": "For its highly intuitive schema management and exceptional affinity with TypeScript as a type-safe ORM.",
+        "geminiapi": "To integrate advanced natural language processing into products quickly and cost-effectively leveraging the latest generative AI.",
+        "stripe": "To rapidly integrate a secure credit card payment infrastructure into the Next.js environment, utilizing its developer-friendly API and robust webhooks.",
+        "resend": "To reliably and rapidly deliver transactional emails using a developer-friendly API with exceptional affinity for Next.js and React Email.",
+        "docker": "To build a consistent 'run anywhere' container environment from development to production, eliminating environmental dependencies.",
+        "github": "For robust version control and the construction of seamless CI/CD pipelines using Actions.",
+        "jira": "To streamline team development through sprint management in agile workflows and task visualization.",
+        "slack": "To maintain information transparency as the foundation for asynchronous communication by integrating various notifications and bots.",
+        "figma": "For seamless UI/UX prototyping and design system management, built on the premise of collaboration with designers."
+      }
     },
     "coreFocus": {
-      "heading": "CORE FOCUS",
-      "focuses": ["Machine Learning", "Systems Architecture", "React & Node", "Hypertrophy"]
+      "heading": "Core Areas of Interest",
+      "focuses": [
+        "TypeScript",
+        "React / Next.js",
+        "PostgreSQL / Prisma",
+        "Generative AI",
+        "Weight Training",
+        "Bodybuilding",
+        "Cooking",
+        "Piano",
+        "Traveling Abroad"
+      ]
     },
     "biography": {
-      "heading": "Bridging code and culture.",
-      "paragraph1": "Currently operating between Toronto and Tokyo, I design and build high-performance software systems. My work is driven by a deep fascination with how artificial intelligence can augment human capabilities, focusing heavily on scalable architecture and minimal, precise user interfaces.",
-      "paragraph2": "The discipline required to engineer robust distributed systems parallels my dedication to bodybuilding. Both demand consistency, incremental progression, and a meticulous attention to detail. Whether optimizing a neural network or structuring a training cycle, the underlying philosophy remains the same: deliberate practice yields exponential results."
+      "heading": "Border-crossing adaptability and an uncompromising eye for detail. Building products that solve problems from the ground up.",
+      "paragraphs": [
+        "A solid foundation in Computer Science, studied systematically at a Canadian college where diverse cultures intersect, combined with the philosophy of \"tenaciously refining the final product\" forged as a professional chef in a multinational team. These two experiences form the bedrock of my engineering approach.",
+        "I am highly confident in my adaptability to dive into unknown environments and tackle complex technical challenges, making continuous self-improvement a daily habit through online courses like Udemy. In response to the rapidly accelerating development of AI technologies, I actively test and explore new generative AI tools in my personal time. This curiosity-driven learning directly translates to agile integration in practical applications, such as implementing the Gemini API.",
+        "In the fast-paced frontend domain, rather than simply chasing trends, I pursue the construction of systems that \"maximize business value and user experience\" while carefully evaluating architectural trade-offs."
+      ]
     },
-    "trajectory": {
-      "heading": "Trajectory",
-      "current": "PRESENT",
+    "experiences": {
+      "heading": "Experience",
       "timeline": [
         {
-          "period": "2022 - PRESENT",
-          "title": "Senior AI Engineer",
-          "company": "Nexus Labs, Tokyo (Remote).",
-          "description": "Spearheading development of LLM orchestration frameworks and optimizing inference pipelines for enterprise clients."
+          "period": "2026.06 - Present",
+          "title": "Generative AI-Driven Multilingual Blog System Development",
+          "jobTitle": "Personal Project / This Portfolio",
+          "description": "Developed a multilingual blog system from scratch based on Next.js (App Router). Implemented a mechanism to automatically generate multilingual articles from original content by integrating the Gemini API as the system's core, while adopting next-intl for UI localization. Continuously operated not merely as an information platform, but as a testing ground for modern technologies and performance tuning.",
+          "linkText": "View architecture details and AI implementation on GitHub",
+          "linkUrl": "https://github.com/Taiki-56/My-Multilingual-Blog"
         },
         {
-          "period": "2019 - 2022",
-          "title": "Full Stack Developer",
-          "company": "Vanguard Tech, Toronto.",
-          "description": "Architected and scaled microservices architecture handling 10M+ daily requests. Mentored junior engineers."
+          "period": "2025.04 - 2026.05",
+          "title": "Large-Scale Newspaper System Modernization",
+          "jobTitle": "Frontend Engineer / Mentor",
+          "description": "Waterfall development project migrating from a legacy system (Java/JSP) to a modern environment. In charge of frontend development. Analyzed existing Java code, visualized process flows using sequence diagrams, and drove the clarification of complex business specifications and the formulation of detailed designs. Additionally, contributed to the independence of junior members and elevated the overall development capabilities of the team by providing technical support and documentation assistance through pair programming as a mentor."
+        },
+        {
+          "period": "2024.04 - 2025.03",
+          "title": "New E-commerce Site Development",
+          "jobTitle": "Full-Stack Engineer",
+          "description": "New e-commerce site launch project. Solely responsible for everything from requirements definition to design, implementation, and operation. Given the relatively small backend scale, established a consistent architecture by utilizing Next.js (App Router) Route Handlers to encapsulate APIs. Adopted MongoDB for the database to flexibly respond to specification changes. Integrated a secure payment infrastructure using the Stripe API and automated transactional email delivery (order completion, inquiries) via Resend, achieving stable operation within a short timeframe."
+        },
+        {
+          "period": "2023.04 - 2024.03",
+          "title": "Portfolio Creation Platform Development",
+          "jobTitle": "Software Engineer",
+          "description": "Participated in a new launch project for a portfolio creation service targeting engineers and creators. Primarily responsible for the backend domain, centered on TypeScript, during the team development implementation phase. Focused on designing API routing using Express.js and implementing business logic (controller processing) for each endpoint call. Established the fundamentals of modern web development and team workflows in a practical setting by constructing a suite of APIs, including CRUD operations using MongoDB."
+        },
+        {
+          "period": "2022.01 - 2023.03",
+          "title": "Systematic Study of Computer Science and Web Development",
+          "jobTitle": "Cornerstone International Community College of Canada (Vancouver, Canada)",
+          "description": "Systematically studied everything from fundamental CS theories to algorithms and data structures in an English-speaking environment. Comprehensively mastered modern web development technologies—from frontend (React, Next.js) to backend (Express.js, MySQL, MongoDB)—through a practical curriculum centered on JavaScript/TypeScript. Acquired the ability to drive development projects forward by communicating logically across language and cultural barriers through group work with multinational peers."
+        },
+        {
+          "period": "2022.02 - 2023.03",
+          "title": "Chef",
+          "jobTitle": "Hyatt Regency Vancouver",
+          "description": "Worked concurrently with my college studies. Accumulated experience in refining a single product while collaborating with a multinational team in a high-pressure, cross-cultural kitchen environment. The time management and communication skills forged in this demanding setting, along with an uncompromising dedication to detail and quality, serve as the firm foundation for my professional values today."
         }
       ]
     }

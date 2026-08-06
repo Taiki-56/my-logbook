@@ -182,7 +182,7 @@ const Page = async (props: Props) => {
   };
 
   return (
-    <div className="w-full">
+    <div className="max-w-400 w-full mx-auto px-4 lg:px-8 pb-16">
       {/* Desktop Layout */}
       <div className="hidden lg:flex flex-col items-start px-35">
         <div className="w-full flex flex-col py-16">

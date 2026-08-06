@@ -8,12 +8,9 @@ const CoreFocus = () => {
 
   return (
     <div className="backdrop-blur-[6px] bg-[rgba(250,250,250,0.8)] border border-[#eaeaea] rounded-lg p-6 flex flex-col gap-4">
-      {/* Section Heading */}
       <h3 className="font-['JetBrains_Mono'] font-medium text-[14px] text-[#414754] uppercase leading-[19.6px]">
         {t("heading")}
       </h3>
-
-      {/* Tags */}
       <div className="flex flex-wrap gap-2">
         {focuses.map((focus, index) => (
           <div

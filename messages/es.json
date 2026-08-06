@@ -34,33 +34,119 @@
   },
   "About": {
     "profile": {
-      "name": "Alex Mercer",
+      "name": "Taiki Honda",
       "jobTitle": "Ingeniero de Software"
     },
+    "techStack": {
+      "heading": "Stack Tecnológico y Herramientas",
+      "tooltipTitle": "¿Por qué elegir {item}?",
+      "categories": {
+        "languages": {
+          "title": "Lenguajes"
+        },
+        "frontend": {
+          "title": "Frontend"
+        },
+        "backend": {
+          "title": "Backend y Base de datos"
+        },
+        "services": {
+          "title": "IA y Servicios Externos"
+        },
+        "tools": {
+          "title": "Herramientas e Infraestructura"
+        }
+      },
+      "reasons": {
+        "typescript": "Para garantizar la mantenibilidad mediante la seguridad de tipos y maximizar la experiencia del desarrollador (DX).",
+        "javascript": "Para implementar soluciones flexibles, independientes del framework, basadas en una profunda comprensión de los estándares web.",
+        "react": "Adoptado por su rico ecosistema y alta reutilización impulsada por una arquitectura orientada a componentes.",
+        "nextjs": "Para aprovechar los beneficios de App Router (carga inicial rápida, SEO) y estrategias de renderizado flexibles.",
+        "tailwindcss": "Para eliminar la distancia entre los componentes y los estilos, logrando una implementación de interfaz de usuario rápida y coherente.",
+        "materialui": "Para acelerar drásticamente el desarrollo de paneles de administración utilizando su robusta biblioteca de componentes.",
+        "zustand": "Para gestionar el estado de forma ligera y sencilla, evitando las renderizaciones innecesarias típicas de React Context.",
+        "redux": "Para construir un árbol de gestión de estado global único y predecible para aplicaciones a gran escala.",
+        "formik": "Para implementar de forma robusta la validación de formularios complejos y la gestión del estado con un mínimo de código repetitivo (boilerplate).",
+        "nextintl": "Para implementar un enrutamiento multilingüe limpio y basado en URL, con alta afinidad con App Router.",
+        "tiptap": "Para implementar un editor de texto enriquecido headless, altamente flexible y personalizable.",
+        "axios": "Para simplificar el manejo global de errores usando interceptores y facilitar la adición de tokens de autenticación.",
+        "nodejs": "Para eliminar el cambio de contexto escribiendo el backend en el mismo TypeScript que el frontend.",
+        "express": "Para construir API rápidamente utilizando middleware gracias a su naturaleza ligera y altamente flexible.",
+        "postgresql": "Por su alta confiabilidad en consultas complejas y procesamiento de transacciones, y flexibilidad en la manipulación de datos.",
+        "mongodb": "Para permitir iteraciones rápidas aprovechando la flexibilidad sin esquema para requisitos muy variables, como los datos de productos.",
+        "prisma": "Por su gestión de esquemas intuitiva y su afinidad excepcional con TypeScript como un ORM con seguridad de tipos (type-safe).",
+        "geminiapi": "Para integrar el procesamiento avanzado de lenguaje natural en los productos, de forma rápida y rentable, aprovechando la última IA generativa.",
+        "stripe": "Para integrar rápidamente una infraestructura segura de pago con tarjeta de crédito en el entorno de Next.js, utilizando su API amigable para desarrolladores y webhooks robustos.",
+        "resend": "Para entregar correos electrónicos transaccionales de manera confiable y rápida utilizando una API amigable para desarrolladores con una afinidad excepcional por Next.js y React Email.",
+        "docker": "Para construir un entorno de contenedores coherente que 'funcione en cualquier lugar', desde el desarrollo hasta la producción, eliminando las dependencias del entorno.",
+        "github": "Para un sólido control de versiones y la construcción de flujos de trabajo de CI/CD fluidos utilizando Actions.",
+        "jira": "Para optimizar el desarrollo en equipo mediante la gestión de sprints en el desarrollo ágil y la visualización de tareas.",
+        "slack": "Para mantener la transparencia de la información como base de la comunicación asíncrona mediante la integración de diversas notificaciones y bots.",
+        "figma": "Para un prototipado de UI/UX fluido y la gestión del sistema de diseño, creados con la premisa de la colaboración con diseñadores."
+      }
+    },
     "coreFocus": {
-      "heading": "Áreas de interés principales",
-      "focuses": ["Machine Learning", "Arquitectura de Sistemas", "React & Node", "Hipertrofia muscular"]
+      "heading": "Principales áreas de interés",
+      "focuses": [
+        "TypeScript",
+        "React / Next.js",
+        "PostgreSQL / Prisma",
+        "IA Generativa",
+        "Entrenamiento con pesas",
+        "Fisicoculturismo",
+        "Cocina",
+        "Piano",
+        "Viajes al extranjero"
+      ]
     },
     "biography": {
-      "heading": "Conectando código y cultura.",
-      "paragraph1": "Actualmente con sede entre Toronto y Tokio, diseño y construyo sistemas de software de alto rendimiento. Con un profundo interés en cómo la inteligencia artificial puede ampliar las capacidades humanas, me enfoco en arquitecturas escalables e interfaces de usuario minimalistas y precisas.",
-      "paragraph2": "La disciplina requerida para diseñar sistemas distribuidos robustos es paralela a mi dedicación al culturismo. Ambos exigen consistencia, progreso gradual y una atención meticulosa a los detalles. Ya sea optimizando redes neuronales o estructurando ciclos de entrenamiento, la filosofía subyacente es la misma: la práctica intencional produce resultados exponenciales."
+      "heading": "Capacidad de adaptación sin fronteras y atención al detalle. Construyendo productos que resuelven problemas de raíz.",
+      "paragraphs": [
+        "Una base sólida en Ciencias de la Computación, estudiada sistemáticamente en un college canadiense donde convergen diversas culturas, combinada con la filosofía de \"perfeccionar el producto final con tenacidad\" forjada como chef profesional en un equipo multinacional. Estas dos experiencias forman los cimientos de mi enfoque en la ingeniería.",
+        "Tengo gran confianza en mi capacidad de adaptación para sumergirme en entornos desconocidos y abordar desafíos técnicos complejos, haciendo del auto-perfeccionamiento continuo un hábito diario a través de cursos en línea como Udemy. Ante el acelerado desarrollo de las tecnologías de IA, pruebo y exploro activamente nuevas herramientas de IA generativa en mi tiempo personal. Este aprendizaje impulsado por la curiosidad se traduce directamente en una integración ágil a nivel práctico, como la implementación de la API Gemini.",
+        "En el vertiginoso dominio del frontend, en lugar de simplemente seguir tendencias, busco construir sistemas que \"maximicen el valor comercial y la experiencia del usuario\" evaluando cuidadosamente las concesiones (trade-offs) arquitectónicas."
+      ]
     },
-    "trajectory": {
-      "heading": "Trayectoria profesional",
-      "current": "Actualidad",
+    "experiences": {
+      "heading": "Experiencia",
       "timeline": [
         {
-          "period": "2022 - Actualidad",
-          "title": "Ingeniero Senior de IA",
-          "company": "Nexus Labs, Tokio (Remoto)",
-          "description": "Lidero el desarrollo de frameworks de orquestación de LLM y la optimización de pipelines de inferencia para clientes corporativos."
+          "period": "2026.06 - Presente",
+          "title": "Desarrollo de un sistema de blog multilingüe impulsado por IA generativa",
+          "jobTitle": "Proyecto Personal / Este Portafolio",
+          "description": "Desarrollo de un sistema de blog multilingüe desde cero basado en Next.js (App Router). Implementación de un mecanismo para generar automáticamente artículos multilingües a partir del contenido original integrando la API Gemini como el núcleo del sistema, adoptando simultáneamente next-intl para la localización de la interfaz de usuario. Operado continuamente no solo como una plataforma de información, sino como un campo de pruebas para tecnologías modernas y optimización del rendimiento.",
+          "linkText": "Ver detalles de la arquitectura e implementación de IA en GitHub",
+          "linkUrl": "https://github.com/Taiki-56/My-Multilingual-Blog"
         },
         {
-          "period": "2019 - 2022",
-          "title": "Desarrollador Full Stack",
-          "company": "Vanguard Tech, Toronto",
-          "description": "Diseño y escalado de arquitectura de microservicios que procesa más de 10 millones de solicitudes al día. También a cargo de la tutoría de ingenieros junior."
+          "period": "2025.04 - 2026.05",
+          "title": "Modernización del sistema para un importante periódico",
+          "jobTitle": "Ingeniero Frontend / Mentor",
+          "description": "Proyecto de desarrollo en cascada (Waterfall) migrando de un sistema heredado (Java/JSP) a un entorno moderno. Análisis del código Java existente, visualización de los flujos de procesos utilizando diagramas de secuencia e impulso de la clarificación de especificaciones comerciales complejas y la formulación de diseños detallados. A cargo del desarrollo frontend de extremo a extremo, desde la implementación y las pruebas hasta la resolución de errores y modificaciones en el entorno de producción, garantizando el funcionamiento estable del sistema. Además, contribución a la independencia de los miembros junior y elevación de las capacidades de desarrollo generales del equipo brindando soporte técnico y ayuda con la documentación a través de la programación en pareja como mentor."
+        },
+        {
+          "period": "2024.04 - 2025.03",
+          "title": "Desarrollo de un nuevo sitio de comercio electrónico",
+          "jobTitle": "Desarrollador Full-Stack",
+          "description": "Proyecto de lanzamiento de un nuevo sitio de comercio electrónico. Único responsable de todas las etapas, desde la definición de requisitos hasta el diseño, implementación y operación. Dada la escala relativamente pequeña del backend, establecimiento de una arquitectura coherente utilizando Route Handlers de Next.js (App Router) para encapsular las API. Adopción de MongoDB para la base de datos con el fin de responder flexiblemente a los cambios en las especificaciones. Integración de una infraestructura de pago segura a través de la API Stripe y entrega automatizada de correos electrónicos transaccionales (confirmación de compra, consultas) mediante Resend, logrando una operación estable en un corto período de tiempo."
+        },
+        {
+          "period": "2023.04 - 2024.03",
+          "title": "Desarrollo de una plataforma de creación de portafolios",
+          "jobTitle": "Ingeniero de Software",
+          "description": "Participación en un proyecto de lanzamiento de un nuevo servicio de creación de portafolios dirigido a ingenieros y creadores. Principalmente responsable del dominio backend, centrado en TypeScript, durante la fase de implementación de desarrollo en equipo. Enfoque en el diseño del enrutamiento de API utilizando Express.js y la implementación de la lógica de negocio (procesamiento de controladores) para cada llamada de punto final. Establecimiento de los fundamentos del desarrollo web moderno y los flujos de trabajo en equipo en un entorno práctico mediante la construcción de un conjunto de API, incluyendo operaciones CRUD utilizando MongoDB."
+        },
+        {
+          "period": "2022.01 - 2023.03",
+          "title": "Estudio sistemático de Ciencias de la Computación y Desarrollo Web",
+          "jobTitle": "Cornerstone International Community College of Canada (Vancouver, Canada)",
+          "description": "Estudio sistemático de teorías fundamentales de CS, algoritmos y estructuras de datos en un entorno de habla inglesa. Dominio integral de tecnologías modernas de desarrollo web—desde el frontend (React, Next.js) hasta el backend (Express.js, MySQL, MongoDB)—a través de un plan de estudios práctico centrado en JavaScript/TypeScript. Adquisición de la capacidad para impulsar proyectos de desarrollo al comunicarse de manera lógica superando las barreras del idioma y la cultura a través del trabajo grupal con compañeros de diversas nacionalidades."
+        },
+        {
+          "period": "2022.02 - 2023.03",
+          "title": "Chef",
+          "jobTitle": "Hyatt Regency Vancouver",
+          "description": "Trabajé simultáneamente con mis estudios universitarios. Experiencia acumulada en el perfeccionamiento de un solo producto mientras colaboraba con un equipo multinacional en un entorno de cocina intercultural y de alta presión. Las habilidades de gestión del tiempo y comunicación forjadas en este entorno exigente, junto con una dedicación inquebrantable a los detalles y la calidad, sirven hoy como la base firme para mis valores profesionales."
         }
       ]
     }
