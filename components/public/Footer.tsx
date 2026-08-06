@@ -2,8 +2,8 @@ import { Link } from "@/i18n/navigation";
 
 const Footer = async () => {
   return (
-    <footer className="bg-[#f5f3f3] border-[#c1c6d7] border-solid border-t py-12 px-6 md:px-10">
-      <div className="max-w-300 w-full mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
+    <footer className="bg-[#f5f3f3] border-t border-[#c1c6d7] border-solid w-full  py-8 px-6 md:px-10">
+      <div className="w-full mx-auto h-16 lg:px-8 flex items-center justify-between">
         {/* 左側 (または上部): サイト名 */}
         <Link
           href={"/home"}
