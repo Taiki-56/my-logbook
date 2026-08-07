@@ -1,199 +1,275 @@
 import "dotenv/config";
 
 import bcrypt from "bcrypt";
-import prisma from "../lib/prisma";
+import prisma from "../libs/prisma";
 
-const projectDataTech = {
+// ==========================================
+// 1. テスト用のデータ（JSON & HTML）を定義
+// ==========================================
+
+// 長文テスト用の巨大なHTMLデータ
+const htmlLong = `
+<h2>はじめに：なぜサプリメントが必要なのか？</h2>
+<p>筋トレを始めると、多くの人が「プロテイン」を飲み始めますが、トレーニングの強度が高まるにつれて、それ以外のサプリメントにも興味を持つようになります。もちろん、基本は毎日のバランスの取れた食事が最も重要です。しかし、ハードなトレーニングによって消費される栄養素や、筋肉の合成を最大限に高めるために必要な成分を、すべて普段の食事だけで完璧にカバーするのは至難の業です。</p>
+<p>特に、仕事とトレーニングを両立している社会人トレーニーにとって、手軽に必要な栄養を補給できるサプリメントは、貴重な時間と労力を節約する強力な武器になります。この記事では、数あるサプリメントの中でも、特に筋肥大とパフォーマンス向上において科学的根拠が豊富で、私自身も効果を体感している「クレアチン」「シトルリン」「マルチビタミン」の3つについて詳しく解説します。</p>
+
+<h3>食事だけでは不足しがちな栄養素</h3>
+<p>例えば、筋肉の瞬発的なエネルギー源となる「クレアチン」は、牛肉や豚肉にも含まれていますが、効果を実感できる目安である1日5gを摂取しようと思うと、毎日1kg以上の生肉を食べる必要があります。これは胃腸への負担やコストを考えると現実的ではありません。</p>
+<p>このように、「食事から摂れるけれど、必要な量を摂取するのが難しい成分」をピンポイントで補えるのが、サプリメントを活用する最大のメリットです。お金をかけてサプリメントを買うからには、その成分が自分の体にどう作用するのかを理解しておきましょう。</p>
+
+<h2>クレアチン：圧倒的なパワーと筋肥大を引き出す</h2>
+<p>クレアチンは、国際スポーツ栄養学会（ISSN）でも安全性と効果が極めて高いと評価されている、最も代表的なエルゴジェニックエイド（運動パフォーマンス向上サプリ）の一つです。筋肉の中に「クレアチンリン酸」として蓄えられ、無酸素運動（ウェイトトレーニングなど）時の主要なエネルギー源であるATP（アデノシン三リン酸）の再合成を急激に促進します。</p>
+
+<h3>クレアチンの働きと効果</h3>
+<p>クレアチンを摂取して筋肉内の貯蔵量を最大化することで、以下のような効果が期待できます。</p>
+<p>1. <strong>最大筋力の向上:</strong> ベンチプレスやスクワットなどにおいて、いつもなら挙がらない「あと1回」が挙がるようになります。<br>2. <strong>筋肥大の促進:</strong> パフォーマンスが向上することで、より強い物理的ストレスを筋肉に与えることができ、結果として筋肥大が加速します。<br>3. <strong>筋肉の水分量増加:</strong> クレアチンは筋肉内に水分を引き込む性質があるため、筋肉がパンプアップしやすく、外見的にも張りが出ます。細胞内の水分が満たされることは、筋合成のシグナルにもなると言われています。</p>
+
+<h3>正しい飲み方とローディング</h3>
+<p>クレアチンには「ローディング（体内貯蔵量を急速に満たす方法）」という摂取プロトコルがあります。最初の5〜7日間は1日20g（5gを4回に分ける）を摂取し、その後は1日3〜5gを維持期として摂取し続けるという方法です。</p>
+<p>ただし、一度に大量に飲むと胃腸が弱い方はお腹が緩くなることがあるため、ローディングを行わず、最初から毎日5gを1ヶ月間継続して摂取する（ゆっくり貯蔵量を増やす）方法も推奨されます。摂取タイミングは、インスリンの分泌によって吸収が高まる「食後」や「トレーニング後のプロテインと一緒」がベストです。</p>
+
+<h2>シトルリン：パンプ感と血流促進によるリカバリー</h2>
+<p>シトルリンは、スイカから発見されたアミノ酸の一種で、プレワークアウト（トレーニング前）サプリメントの主成分として非常に人気があります。体内に入るとアルギニンという別のアミノ酸に変換され、一酸化窒素（NO）の産生を強力にサポートします。</p>
+
+<h3>一酸化窒素（NO）の生成とパンプ感</h3>
+<p>一酸化窒素（NO）には、血管を拡張させる作用があります。血管が広がることで筋肉への血流量が増加し、トレーニング中の強烈な「パンプ感（筋肉が血液でパンパンに張る感覚）」を得ることができます。</p>
+<p>血流が良くなるということは、単に見た目が良くなるだけではありません。酸素や栄養素が筋肉の隅々まで迅速に運ばれ、同時にトレーニングによって発生した老廃物（乳酸やアンモニアなど）が素早く排出されるため、セット間の疲労回復が早まり、質の高いトレーニングを長時間維持できるようになります。</p>
+
+<h3>摂取タイミングと相性の良いサプリ</h3>
+<p>シトルリンの最適な摂取タイミングは、トレーニングの30分〜60分前です。1回あたり2g〜6g程度が目安とされています。海外のプレワークアウトサプリの多くには、このシトルリンがたっぷりと配合されています。</p>
+<p>また、同じくプレワークアウトとして定番の「カフェイン」や、集中力を高める「チロシン」、ピリピリとした感覚（パレストヘジア）を引き起こし持久力を向上させる「ベータアラニン」などと組み合わせて独自にブレンドして摂取することで、さらなる相乗効果が期待できます。</p>
+
+<h2>マルチビタミン：体の土台を作る陰の立役者</h2>
+<p>プロテインやクレアチンのように、「飲んだらパワーが出る！」「筋肉が大きくなる！」といった直接的な体感を得にくいのがビタミンやミネラルです。しかし、これらが不足していると、いくらタンパク質を大量に摂取しても、体内で筋肉として合成されるプロセスが正常に機能しません。</p>
+
+<h3>筋合成とビタミンの深い関係</h3>
+<p>例えば、<strong>ビタミンB群</strong>は「代謝のビタミン」と呼ばれ、摂取した糖質や脂質をエネルギーに変換したり、タンパク質をアミノ酸に分解して筋肉を合成する過程で必須の補酵素として働きます。プロテインをたくさん飲んでいるのにビタミンB群が不足していると、消化吸収が追いつかず、腸内環境を悪化させる原因にもなります。</p>
+<p>また、<strong>ビタミンC</strong>や<strong>ビタミンE</strong>は強力な抗酸化作用を持ち、激しいトレーニングによって発生する活性酸素から細胞を守り、疲労回復や免疫力の低下を防ぎます。筋肉を成長させるためには、怪我や病気をせずにトレーニングを継続することが何より重要であり、マルチビタミンはその「マイナスを防ぐ」ための強力な盾となります。</p>
+
+<h2>まとめ：サプリメントはあくまで「補助」</h2>
+<p>ここまで、クレアチン、シトルリン、マルチビタミンの素晴らしい効果について解説してきましたが、最後にもう一度強調しておきたいのは、「サプリメントは魔法の薬ではない」ということです。</p>
+<p>適切なトレーニングによる筋肉への刺激、十分なカロリーとPFCバランスの取れた食事、質の高い睡眠と休養。これら3つの土台がしっかり構築されて初めて、サプリメントはその真価を発揮します。まずは日々の生活習慣を見直し、その上で自分に足りない部分を補う「賢い選択」として、これらのサプリメントを活用してみてください。</p>
+`;
+
+const projectDataLong = {
   type: "doc",
   content: [
     {
-      type: "blockquote",
-      content: [
-        {
-          type: "paragraph",
-          content: [
-            {
-              text: "デスクワーク中心のエンジニアにとって、筋トレは最高のライフハックです。週3回のジム通いで集中力とスタミナが劇的に向上します。",
-              type: "text"
-            }
-          ]
-        }
-      ]
+      type: "heading",
+      attrs: { level: 2 },
+      content: [{ text: "はじめに：なぜサプリメントが必要なのか？", type: "text" }]
     },
-    { type: "heading", content: [{ text: "なぜエンジニアに筋トレが必要なのか？", type: "text" }] },
     {
       type: "paragraph",
       content: [
         {
-          text: "長時間のPC作業は、慢性的な運動不足、肩こり、腰痛を引き起こします。私自身、過去の腰痛をきっかけに本格的なボディメイクを始めました。",
+          text: "筋トレを始めると、多くの人が「プロテイン」を飲み始めますが、トレーニングの強度が高まるにつれて、それ以外のサプリメントにも興味を持つようになります。もちろん、基本は毎日のバランスの取れた食事が最も重要です。しかし、ハードなトレーニングによって消費される栄養素や、筋肉の合成を最大限に高めるために必要な成分を、すべて普段の食事だけで完璧にカバーするのは至難の業です。",
           type: "text"
         }
       ]
     },
-    { type: "heading", content: [{ text: "主な効果", type: "text" }] },
-    {
-      type: "bulletList",
-      content: [
-        {
-          type: "listItem",
-          content: [{ type: "paragraph", content: [{ text: "血流改善による疲労感の軽減", type: "text" }] }]
-        },
-        {
-          type: "listItem",
-          content: [{ type: "paragraph", content: [{ text: "集中力の持続時間の延長", type: "text" }] }]
-        },
-        {
-          type: "listItem",
-          content: [{ type: "paragraph", content: [{ text: "メンタルの安定とストレス耐性の向上", type: "text" }] }]
-        }
-      ]
-    },
-    { type: "heading", content: [{ text: "まとめ", type: "text" }] },
     {
       type: "paragraph",
       content: [
         {
-          text: "体を動かすことは最高の気分転換になります。健康な体こそが、最高の開発パフォーマンスを生み出します。",
+          text: "特に、仕事とトレーニングを両立している社会人トレーニーにとって、手軽に必要な栄養を補給できるサプリメントは、貴重な時間と労力を節約する強力な武器になります。この記事では、数あるサプリメントの中でも、特に筋肥大とパフォーマンス向上において科学的根拠が豊富で、私自身も効果を体感している「クレアチン」「シトルリン」「マルチビタミン」の3つについて詳しく解説します。",
           type: "text"
         }
       ]
     },
-    { type: "paragraph" }
-  ]
-};
-
-const projectDataFitness = {
-  type: "doc",
-  content: [
-    {
-      type: "blockquote",
-      content: [
-        {
-          type: "paragraph",
-          content: [
-            {
-              text: "💡 要約：デスクワーク中心のエンジニアにとって、筋トレは最高のハック。週3回のジム通いで、集中力と体力が劇的に向上します。",
-              type: "text"
-            }
-          ]
-        }
-      ]
-    },
-    { type: "paragraph" },
-    { type: "heading", content: [{ text: "なぜエンジニアに筋トレが必要なのか？", type: "text" }] },
+    { type: "heading", attrs: { level: 3 }, content: [{ text: "食事だけでは不足しがちな栄養素", type: "text" }] },
     {
       type: "paragraph",
       content: [
         {
-          text: "長時間PCに向かう仕事柄、私たちは慢性的な運動不足や肩こり、腰痛に悩まされがちです。私自身、過去に腰を痛めてから本格的にボディメイクを始めました。",
+          text: "例えば、筋肉の瞬発的なエネルギー源となる「クレアチン」は、牛肉や豚肉にも含まれていますが、効果を実感できる目安である1日5gを摂取しようと思うと、毎日1kg以上の生肉を食べる必要があります。これは胃腸への負担やコストを考えると現実的ではありません。",
           type: "text"
         }
       ]
     },
-    { type: "paragraph" },
-    { type: "heading", content: [{ text: "主なメリット", type: "text" }] },
     {
-      type: "bulletList",
+      type: "paragraph",
       content: [
         {
-          type: "listItem",
-          content: [{ type: "paragraph", content: [{ text: "血流改善による脳のパフォーマンス向上", type: "text" }] }]
-        },
-        {
-          type: "listItem",
-          content: [{ type: "paragraph", content: [{ text: "テストステロン分泌によるメンタルの安定", type: "text" }] }]
-        },
-        {
-          type: "listItem",
-          content: [
-            {
-              type: "paragraph",
-              content: [{ text: "睡眠の質が改善し、翌日のコーディング集中力がアップ", type: "text" }]
-            }
-          ]
+          text: "このように、「食事から摂れるけれど、必要な量を摂取するのが難しい成分」をピンポイントで補えるのが、サプリメントを活用する最大のメリットです。お金をかけてサプリメントを買うからには、その成分が自分の体にどう作用するのかを理解しておきましょう。",
+          type: "text"
         }
       ]
     },
-    { type: "paragraph" },
-    { type: "heading", content: [{ text: "私の1週間のルーティン", type: "text" }] },
+
+    {
+      type: "heading",
+      attrs: { level: 2 },
+      content: [{ text: "クレアチン：圧倒的なパワーと筋肥大を引き出す", type: "text" }]
+    },
     {
       type: "paragraph",
       content: [
-        { text: "現在は週に3回、仕事前の朝の時間を活用してジムに通っています。最初は「", type: "text" },
-        { text: "忙しくて時間がない", type: "text", marks: [{ type: "bold" }] },
-        { text: "」と思っていましたが、習慣化してしまえばこれほど", type: "text" },
-        { text: "投資対効果の高いアクティビティ", type: "text", marks: [{ type: "highlight" }] },
-        { text: "はありません。ぜひ、今日から少しずつ体を動かしてみてください！", type: "text" }
+        {
+          text: "クレアチンは、国際スポーツ栄養学会（ISSN）でも安全性と効果が極めて高いと評価されている、最も代表的なエルゴジェニックエイド（運動パフォーマンス向上サプリ）の一つです。筋肉の中に「クレアチンリン酸」として蓄えられ、無酸素運動（ウェイトトレーニングなど）時の主要なエネルギー源であるATP（アデノシン三リン酸）の再合成を急激に促進します。",
+          type: "text"
+        }
       ]
     },
-    { type: "paragraph" },
-    { type: "paragraph" }
-  ]
-};
-
-const projectDataFood = {
-  type: "doc",
-  content: [
-    { type: "heading", content: [{ text: "週末のラーメン巡り", type: "text" }] },
+    { type: "heading", attrs: { level: 3 }, content: [{ text: "クレアチンの働きと効果", type: "text" }] },
     {
       type: "paragraph",
-      content: [{ text: "開発の疲れを癒やす最高の一杯を探して、都内の名店を巡っています。", type: "text" }]
+      content: [
+        { text: "クレアチンを摂取して筋肉内の貯蔵量を最大化することで、以下のような効果が期待できます。", type: "text" }
+      ]
+    },
+    {
+      type: "paragraph",
+      content: [
+        {
+          text: "1. 最大筋力の向上: ベンチプレスやスクワットなどにおいて、いつもなら挙がらない「あと1回」が挙がるようになります。 2. 筋肥大の促進: パフォーマンスが向上することで、より強い物理的ストレスを筋肉に与えることができ、結果として筋肥大が加速します。 3. 筋肉の水分量増加: クレアチンは筋肉内に水分を引き込む性質があるため、筋肉がパンプアップしやすく、外見的にも張りが出ます。細胞内の水分が満たされることは、筋合成のシグナルにもなると言われています。",
+          type: "text"
+        }
+      ]
+    },
+    { type: "heading", attrs: { level: 3 }, content: [{ text: "正しい飲み方とローディング", type: "text" }] },
+    {
+      type: "paragraph",
+      content: [
+        {
+          text: "クレアチンには「ローディング（体内貯蔵量を急速に満たす方法）」という摂取プロトコルがあります。最初の5〜7日間は1日20g（5gを4回に分ける）を摂取し、その後は1日3〜5gを維持期として摂取し続けるという方法です。",
+          type: "text"
+        }
+      ]
+    },
+    {
+      type: "paragraph",
+      content: [
+        {
+          text: "ただし、一度に大量に飲むと胃腸が弱い方はお腹が緩くなることがあるため、ローディングを行わず、最初から毎日5gを1ヶ月間継続して摂取する（ゆっくり貯蔵量を増やす）方法も推奨されます。摂取タイミングは、インスリンの分泌によって吸収が高まる「食後」や「トレーニング後のプロテインと一緒」がベストです。",
+          type: "text"
+        }
+      ]
+    },
+
+    {
+      type: "heading",
+      attrs: { level: 2 },
+      content: [{ text: "シトルリン：パンプ感と血流促進によるリカバリー", type: "text" }]
+    },
+    {
+      type: "paragraph",
+      content: [
+        {
+          text: "シトルリンは、スイカから発見されたアミノ酸の一種で、プレワークアウト（トレーニング前）サプリメントの主成分として非常に人気があります。体内に入るとアルギニンという別のアミノ酸に変換され、一酸化窒素（NO）の産生を強力にサポートします。",
+          type: "text"
+        }
+      ]
+    },
+    { type: "heading", attrs: { level: 3 }, content: [{ text: "一酸化窒素（NO）の生成とパンプ感", type: "text" }] },
+    {
+      type: "paragraph",
+      content: [
+        {
+          text: "一酸化窒素（NO）には、血管を拡張させる作用があります。血管が広がることで筋肉への血流量が増加し、トレーニング中の強烈な「パンプ感（筋肉が血液でパンパンに張る感覚）」を得ることができます。",
+          type: "text"
+        }
+      ]
+    },
+    {
+      type: "paragraph",
+      content: [
+        {
+          text: "血流が良くなるということは、単に見た目が良くなるだけではありません。酸素や栄養素が筋肉の隅々まで迅速に運ばれ、同時にトレーニングによって発生した老廃物（乳酸やアンモニアなど）が素早く排出されるため、セット間の疲労回復が早まり、質の高いトレーニングを長時間維持できるようになります。",
+          type: "text"
+        }
+      ]
+    },
+    { type: "heading", attrs: { level: 3 }, content: [{ text: "摂取タイミングと相性の良いサプリ", type: "text" }] },
+    {
+      type: "paragraph",
+      content: [
+        {
+          text: "シトルリンの最適な摂取タイミングは、トレーニングの30分〜60分前です。1回あたり2g〜6g程度が目安とされています。海外のプレワークアウトサプリの多くには、このシトルリンがたっぷりと配合されています。",
+          type: "text"
+        }
+      ]
+    },
+    {
+      type: "paragraph",
+      content: [
+        {
+          text: "また、同じくプレワークアウトとして定番の「カフェイン」や、集中力を高める「チロシン」、ピリピリとした感覚（パレストヘジア）を引き起こし持久力を向上させる「ベータアラニン」などと組み合わせて独自にブレンドして摂取することで、さらなる相乗効果が期待できます。",
+          type: "text"
+        }
+      ]
+    },
+
+    {
+      type: "heading",
+      attrs: { level: 2 },
+      content: [{ text: "マルチビタミン：体の土台を作る陰の立役者", type: "text" }]
+    },
+    {
+      type: "paragraph",
+      content: [
+        {
+          text: "プロテインやクレアチンのように、「飲んだらパワーが出る！」「筋肉が大きくなる！」といった直接的な体感を得にくいのがビタミンやミネラルです。しかし、これらが不足していると、いくらタンパク質を大量に摂取しても、体内で筋肉として合成されるプロセスが正常に機能しません。",
+          type: "text"
+        }
+      ]
+    },
+    { type: "heading", attrs: { level: 3 }, content: [{ text: "筋合成とビタミンの深い関係", type: "text" }] },
+    {
+      type: "paragraph",
+      content: [
+        {
+          text: "例えば、ビタミンB群は「代謝のビタミン」と呼ばれ、摂取した糖質や脂質をエネルギーに変換したり、タンパク質をアミノ酸に分解して筋肉を合成する過程で必須の補酵素として働きます。プロテインをたくさん飲んでいるのにビタミンB群が不足していると、消化吸収が追いつかず、腸内環境を悪化させる原因にもなります。",
+          type: "text"
+        }
+      ]
+    },
+    {
+      type: "paragraph",
+      content: [
+        {
+          text: "また、ビタミンCやビタミンEは強力な抗酸化作用を持ち、激しいトレーニングによって発生する活性酸素から細胞を守り、疲労回復や免疫力の低下を防ぎます。筋肉を成長させるためには、怪我や病気をせずにトレーニングを継続することが何より重要であり、マルチビタミンはその「マイナスを防ぐ」ための強力な盾となります。",
+          type: "text"
+        }
+      ]
+    },
+
+    {
+      type: "heading",
+      attrs: { level: 2 },
+      content: [{ text: "まとめ：サプリメントはあくまで「補助」", type: "text" }]
+    },
+    {
+      type: "paragraph",
+      content: [
+        {
+          text: "ここまで、クレアチン、シトルリン、マルチビタミンの素晴らしい効果について解説してきましたが、最後にもう一度強調しておきたいのは、「サプリメントは魔法の薬ではない」ということです。",
+          type: "text"
+        }
+      ]
+    },
+    {
+      type: "paragraph",
+      content: [
+        {
+          text: "適切なトレーニングによる筋肉への刺激、十分なカロリーとPFCバランスの取れた食事、質の高い睡眠と休養。これら3つの土台がしっかり構築されて初めて、サプリメントはその真価を発揮します。まずは日々の生活習慣を見直し、その上で自分に足りない部分を補う「賢い選択」として、これらのサプリメントを活用してみてください。",
+          type: "text"
+        }
+      ]
     }
   ]
 };
 
-const projectDataWork = {
-  type: "doc",
-  content: [
-    { type: "heading", content: [{ text: "モダンなチーム開発のあり方", type: "text" }] },
-    {
-      type: "paragraph",
-      content: [
-        {
-          text: "非同期コミュニケーションを前提としたフルリモート環境での、生産性向上の工夫についてまとめました。",
-          type: "text"
-        }
-      ]
-    }
-  ]
-};
-
-const projectDataTravel = {
-  type: "doc",
-  content: [
-    { type: "heading", content: [{ text: "ワーケーションという選択肢", type: "text" }] },
-    {
-      type: "paragraph",
-      content: [{ text: "場所にとらわれない働き方を実践するため、1週間の地方滞在を試してみた記録です。", type: "text" }]
-    }
-  ]
-};
-
-const projectDataLife = {
-  type: "doc",
-  content: [
-    { type: "heading", content: [{ text: "デジタルデトックスの実践", type: "text" }] },
-    {
-      type: "paragraph",
-      content: [
-        {
-          text: "週末の数時間だけデバイスを手放すことで、驚くほど頭がクリアになり、月曜からのパフォーマンスが向上します。",
-          type: "text"
-        }
-      ]
-    }
-  ]
-};
+// ==========================================
+// 2. メインのSeed処理
+// ==========================================
 
 const main = async () => {
   console.log("🧹 Cleaning up existing data...");
 
-  // 外部キー制約（リレーション）のエラーを防ぐため、子テーブルから順番に削除します
   await prisma.postContent.deleteMany();
   await prisma.postTag.deleteMany();
   await prisma.post.deleteMany();
-
-  // 🌟 TagContent の削除コメントアウトを解除しました
   await prisma.tagContent.deleteMany();
   await prisma.tag.deleteMany();
   await prisma.user.deleteMany();
@@ -205,79 +281,41 @@ const main = async () => {
   const passwordHash = await bcrypt.hash(password, 10);
 
   const user = await prisma.user.upsert({
-    where: {
-      email
-    },
-    update: {
-      passwordHash
-    },
-    create: {
-      email,
-      passwordHash
-    }
+    where: { email },
+    update: { passwordHash },
+    create: { email, passwordHash }
   });
   console.log("Created user:", user);
 
   console.log("Seeding tags...");
 
-  // 🌟 子タグ(TagContent)の生成から `slug` を削除しました
   const techTag = await prisma.tag.create({
-    data: {
-      slug: "nextjs",
-      contents: {
-        create: [{ locale: "ja", name: "Next.js" }]
-      }
-    }
+    data: { slug: "nextjs", contents: { create: [{ locale: "ja", name: "Next.js" }] } }
   });
-
   const foodTag = await prisma.tag.create({
-    data: {
-      slug: "ramen",
-      contents: {
-        create: [{ locale: "ja", name: "ラーメン" }]
-      }
-    }
+    data: { slug: "ramen", contents: { create: [{ locale: "ja", name: "ラーメン" }] } }
   });
-
+  // 🌟 既存の筋トレタグ
   const fitnessTag = await prisma.tag.create({
-    data: {
-      slug: "workout",
-      contents: {
-        create: [{ locale: "ja", name: "筋トレ" }]
-      }
-    }
+    data: { slug: "workout", contents: { create: [{ locale: "ja", name: "筋トレ" }] } }
   });
-
+  // 🌟 新しくサプリメントタグを追加
+  const supplementTag = await prisma.tag.create({
+    data: { slug: "supplement", contents: { create: [{ locale: "ja", name: "サプリメント" }] } }
+  });
   const workTag = await prisma.tag.create({
-    data: {
-      slug: "career",
-      contents: {
-        create: [{ locale: "ja", name: "キャリア" }]
-      }
-    }
+    data: { slug: "career", contents: { create: [{ locale: "ja", name: "キャリア" }] } }
   });
-
   const travelTag = await prisma.tag.create({
-    data: {
-      slug: "trip",
-      contents: {
-        create: [{ locale: "ja", name: "旅行" }]
-      }
-    }
+    data: { slug: "trip", contents: { create: [{ locale: "ja", name: "旅行" }] } }
   });
-
   const lifeTag = await prisma.tag.create({
-    data: {
-      slug: "minimalism",
-      contents: {
-        create: [{ locale: "ja", name: "ミニマリズム" }]
-      }
-    }
+    data: { slug: "minimalism", contents: { create: [{ locale: "ja", name: "ミニマリズム" }] } }
   });
 
   console.log("Seeding posts...");
 
-  // TECH カテゴリー (Featured 1)
+  // TECH カテゴリー
   await prisma.post.create({
     data: {
       authorId: user.id,
@@ -290,44 +328,17 @@ const main = async () => {
           slug: "engineer-performance-habits",
           status: "PUBLISHED",
           seoTitle: "エンジニアの生産性を上げるライフハック",
-          seoDescription: "デスクワーク中心のエンジニアにとって、筋トレは最高のライフハックです。",
-          html: "<p>本文はprojectDataのエディタで管理しています。</p>",
-          projectData: projectDataTech,
-          isFeatured: true
-        }
-      },
-      postTags: {
-        create: [{ tagId: techTag.id }]
-      }
-    }
-  });
-
-  // FOOD カテゴリー (Featured にはしない)
-  await prisma.post.create({
-    data: {
-      authorId: user.id,
-      category: "FOOD",
-      thumbnail: null,
-      contents: {
-        create: {
-          locale: "ja",
-          title: "東京で絶対に食べるべき絶品ラーメン店5選",
-          slug: "tokyo-best-ramen-top-5",
-          status: "PUBLISHED",
-          seoTitle: "東京の絶品ラーメン トップ5",
-          seoDescription: "ラーメン激戦区の東京で、本当におすすめしたい名店を5つ厳選してご紹介します。",
-          html: "<p>本文はprojectDataのエディタで管理しています。</p>",
-          projectData: projectDataFood,
+          seoDescription: "デスクワーク中心のエンジニアにとって、健康管理は最高のライフハックです。",
+          html: "<p>プレースホルダー</p>",
+          projectData: { type: "doc", content: [] },
           isFeatured: false
         }
       },
-      postTags: {
-        create: [{ tagId: foodTag.id }]
-      }
+      postTags: { create: [{ tagId: techTag.id }] }
     }
   });
 
-  // FITNESS カテゴリー (Featured 2)
+  // FITNESS カテゴリー 🌟 (これが今回追加した超特大ボリュームのテスト記事)
   await prisma.post.create({
     data: {
       authorId: user.id,
@@ -336,93 +347,20 @@ const main = async () => {
       contents: {
         create: {
           locale: "ja",
-          title: "初心者向け！自宅でできる効果的な自重トレーニングメニュー",
-          slug: "home-workout-for-beginners-guide",
+          title: "筋トレの効果を最大化する！必須サプリメント徹底解説（クレアチン・シトルリン・マルチビタミン）",
+          slug: "ultimate-supplements-for-workout",
           status: "PUBLISHED",
-          seoTitle: "自宅で簡単！初心者向け筋トレ",
-          seoDescription: "特別な器具がなくても大丈夫。自宅の省スペースで今日から始められるメニューです。",
-          html: "<p>本文はprojectDataのエディタで管理しています。</p>",
-          projectData: projectDataFitness,
+          seoTitle: "筋トレの効果を最大化する必須サプリメント",
+          seoDescription:
+            "筋トレのパフォーマンス向上と筋肥大に欠かせないサプリメントの効果と正しい摂取方法について、クレアチン、シトルリン、マルチビタミンを中心に詳しく解説します。",
+          html: htmlLong,
+          projectData: projectDataLong,
           isFeatured: true
         }
       },
+      // 🌟 ここで複数のタグを付与
       postTags: {
-        create: [{ tagId: fitnessTag.id }]
-      }
-    }
-  });
-
-  // WORK カテゴリー (Featured 3)
-  await prisma.post.create({
-    data: {
-      authorId: user.id,
-      category: "WORK",
-      thumbnail: null,
-      contents: {
-        create: {
-          locale: "ja",
-          title: "非同期コミュニケーションで劇的に変わるチームの生産性",
-          slug: "async-communication-productivity",
-          status: "PUBLISHED",
-          seoTitle: "非同期コミュニケーションのメリット",
-          seoDescription: "リモートワーク時代において、同期的な会議を減らし生産性を高めるためのアプローチ。",
-          html: "<p>本文はprojectDataのエディタで管理しています。</p>",
-          projectData: projectDataWork,
-          isFeatured: true
-        }
-      },
-      postTags: {
-        create: [{ tagId: workTag.id }]
-      }
-    }
-  });
-
-  // TRAVEL カテゴリー (Featured 4)
-  await prisma.post.create({
-    data: {
-      authorId: user.id,
-      category: "TRAVEL",
-      thumbnail: null,
-      contents: {
-        create: {
-          locale: "ja",
-          title: "PC1台で旅に出る：1週間のワーケーション実践記",
-          slug: "one-week-workation-experience",
-          status: "PUBLISHED",
-          seoTitle: "ワーケーションのリアルな体験談",
-          seoDescription: "新しい環境に身を置くことで得られるインスピレーションと、旅先での仕事術について。",
-          html: "<p>本文はprojectDataのエディタで管理しています。</p>",
-          projectData: projectDataTravel,
-          isFeatured: true
-        }
-      },
-      postTags: {
-        create: [{ tagId: travelTag.id }]
-      }
-    }
-  });
-
-  // LIFE カテゴリー (Featured 5)
-  await prisma.post.create({
-    data: {
-      authorId: user.id,
-      category: "LIFE",
-      thumbnail: null,
-      contents: {
-        create: {
-          locale: "ja",
-          title: "週末のデジタルデトックスがもたらす圧倒的なクリア感",
-          slug: "weekend-digital-detox",
-          status: "PUBLISHED",
-          seoTitle: "デジタルデトックスの効果と実践方法",
-          seoDescription: "情報過多の現代において、意図的にオフラインの時間を作ることで得られるメリット。",
-          html: "<p>本文はprojectDataのエディタで管理しています。</p>",
-          projectData: projectDataLife,
-          isFeatured: true
-        }
-      },
-      postTags: {
-        create: [{ tagId: lifeTag.id }]
+        create: [{ tagId: fitnessTag.id }, { tagId: supplementTag.id }]
       }
     }
   });

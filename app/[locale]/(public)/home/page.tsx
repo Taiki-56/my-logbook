@@ -17,7 +17,6 @@ const Page = async () => {
   const latestPost = await getLatestPosts(locale);
   const tags = await getPopularTags(locale, 10);
   return (
-    // 🌟 ヘッダーに合わせて max-w-[1536px] と lg:px-8 に変更
     <div className="max-w-384 w-full mx-auto px-4 lg:px-8 pb-16">
       <Head />
       {/* Mobile Layout */}

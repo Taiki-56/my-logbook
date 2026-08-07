@@ -1,4 +1,4 @@
-import prisma from "@/lib/prisma";
+import prisma from "@/libs/prisma";
 
 const getDashboardStats = async (authorId: string) => {
   const totalPostsCount = await prisma.post.count({ where: { authorId } });

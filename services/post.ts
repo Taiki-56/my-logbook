@@ -1,7 +1,7 @@
 import slugify from "@/helpers/slugify";
-import { Prisma } from "@/lib/generated/client";
-import { Category } from "@/lib/generated/enums";
-import prisma from "@/lib/prisma";
+import { Prisma } from "@/libs/generated/client";
+import { Category } from "@/libs/generated/enums";
+import prisma from "@/libs/prisma";
 import { PostFormValues } from "@/schemas/postSchema";
 import { Locale } from "@/types/config";
 import { AdminDisplayPost, DisplayPost, PopularTagView, PostWithRelations, UpdatePost } from "@/types/post";

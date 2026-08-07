@@ -1,7 +1,7 @@
 "use server";
 
 import { redirect } from "@/i18n/navigation";
-import { signIn } from "@/lib/auth";
+import { signIn } from "@/libs/auth";
 import { CredentialFormValues } from "@/schemas/credentialSchema";
 import { AuthError } from "next-auth";
 

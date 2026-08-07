@@ -265,7 +265,7 @@
 
 "use client";
 
-import { Prisma } from "@/lib/generated/client";
+import { Prisma } from "@/libs/generated/client";
 import { Color } from "@tiptap/extension-color";
 import Highlight from "@tiptap/extension-highlight";
 import Image from "@tiptap/extension-image";

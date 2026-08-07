@@ -1,6 +1,8 @@
 "use client";
 
+import ClockIcon from "@/components/ui/ClockIcon";
 import { Link, useRouter } from "@/i18n/navigation";
+import DEFAULT_POST_IMAGE from "@/libs/constants";
 import { DisplayPost } from "@/types/post";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
@@ -8,22 +10,6 @@ import Image from "next/image";
 type Props = {
   posts: DisplayPost[];
 };
-
-// Clock icon component
-const ClockIcon = () => (
-  <svg
-    width="12"
-    height="12"
-    viewBox="0 0 12 12"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-    className="shrink-0">
-    <path
-      d="M6 0C2.68629 0 0 2.68629 0 6C0 9.31371 2.68629 12 6 12C9.31371 12 12 9.31371 12 6C12 2.68629 9.31371 0 6 0ZM6 10.8C3.34629 10.8 1.2 8.65371 1.2 6C1.2 3.34629 3.34629 1.2 6 1.2C8.65371 1.2 10.8 3.34629 10.8 6C10.8 8.65371 8.65371 10.8 6 10.8ZM6.6 3H5.4V6.6L8.4 8.34L9 7.38L6.6 5.94V3Z"
-      fill="#414754"
-    />
-  </svg>
-);
 
 const Latest = ({ posts }: Props) => {
   const t = useTranslations("Home.latest");
@@ -54,14 +40,13 @@ const Latest = ({ posts }: Props) => {
               index < posts.length - 1 ? "border-b border-[rgba(193,198,215,0.5)]" : ""
             }`}>
             <div className="w-25 h-22 lg:w-32 lg:h-20 bg-[#e9e8e7] rounded-sm shrink-0 relative overflow-hidden">
-              {post.thumbnail && (
-                <Image
-                  src={post.thumbnail}
-                  alt={post.title}
-                  fill
-                  className="object-cover"
-                />
-              )}
+              <Image
+                src={post.thumbnail || DEFAULT_POST_IMAGE}
+                alt={post.title}
+                fill
+                sizes="(max-width: 1024px) 100px, 128px"
+                className="object-cover"
+              />
             </div>
 
             <div className="flex-1 flex flex-col gap-1">
@@ -108,7 +93,6 @@ const Latest = ({ posts }: Props) => {
         href="/posts"
         className="flex items-center gap-2 text-[#0058c3] text-sm leading-[19.6px] hover:underline w-fit">
         <span>すべての記事を見る</span>
-        {/* SVG Icon省略 */}
       </Link>
     </div>
   );

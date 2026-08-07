@@ -1,4 +1,4 @@
-import { Prisma } from "@/lib/generated/client";
+import { Prisma } from "@/libs/generated/client";
 import { routingLocales } from "@/types/config";
 import * as z from "zod";
 

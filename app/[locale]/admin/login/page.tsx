@@ -1,5 +1,5 @@
 import { redirect } from "@/i18n/navigation";
-import { auth } from "@/lib/auth";
+import { auth } from "@/libs/auth";
 import LoginForm from "./parts/LoginForm";
 
 const Page = async () => {

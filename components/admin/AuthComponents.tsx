@@ -1,4 +1,4 @@
-import { signOut } from "@/lib/auth";
+import { signOut } from "@/libs/auth";
 import { LogOut } from "lucide-react";
 import { getLocale } from "next-intl/server";
 

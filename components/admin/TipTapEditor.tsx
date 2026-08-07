@@ -1,6 +1,6 @@
 "use client";
 
-import { Prisma } from "@/lib/generated/client";
+import { Prisma } from "@/libs/generated/client";
 import { EditorContent, JSONContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 
