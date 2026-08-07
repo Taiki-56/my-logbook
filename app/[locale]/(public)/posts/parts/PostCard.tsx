@@ -1,6 +1,9 @@
 "use client";
 
+import CalendarIcon from "@/components/ui/CalendarIcon";
+import ClockIcon from "@/components/ui/ClockIcon";
 import { Link, useRouter } from "@/i18n/navigation";
+import DEFAULT_POST_IMAGE from "@/libs/constants";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
 
@@ -19,36 +22,6 @@ interface PostCardProps {
   layout?: "grid" | "horizontal";
 }
 
-const ClockIcon = ({ size = 12 }: { size?: number }) => (
-  <svg
-    width={size}
-    height={size}
-    viewBox="0 0 12 12"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-    className="shrink-0">
-    <path
-      d="M6 0C2.68629 0 0 2.68629 0 6C0 9.31371 2.68629 12 6 12C9.31371 12 12 9.31371 12 6C12 2.68629 9.31371 0 6 0ZM6 10.8C3.34629 10.8 1.2 8.65371 1.2 6C1.2 3.34629 3.34629 1.2 6 1.2C8.65371 1.2 10.8 3.34629 10.8 6C10.8 8.65371 8.65371 10.8 6 10.8ZM6.6 3H5.4V6.6L8.4 8.34L9 7.38L6.6 5.94V3Z"
-      fill="#414754"
-    />
-  </svg>
-);
-
-const CalendarIcon = ({ size = 12 }: { size?: number }) => (
-  <svg
-    width={size}
-    height={size}
-    viewBox="0 0 12 12"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-    className="shrink-0">
-    <path
-      d="M10 1H9V0H8V1H4V0H3V1H2C1.448 1 1 1.448 1 2V11C1 11.552 1.448 12 2 12H10C10.552 12 11 11.552 11 11V2C11 1.448 10.552 1 10 1ZM10 11H2V4H10V11Z"
-      fill="#5E5E5E"
-    />
-  </svg>
-);
-
 const PostCard = ({ post, layout = "grid" }: PostCardProps) => {
   const t = useTranslations("Posts");
   const router = useRouter();
@@ -58,10 +31,6 @@ const PostCard = ({ post, layout = "grid" }: PostCardProps) => {
     e.stopPropagation();
     router.push(`/posts?tag=${tag}`);
   };
-
-  console.log("確認: ", post);
-
-  const defaultImage = "https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?w=400&h=300&fit=crop";
 
   // Desktop Grid Layout
   if (layout === "grid") {
@@ -74,7 +43,7 @@ const PostCard = ({ post, layout = "grid" }: PostCardProps) => {
           <div className="relative w-full h-72 overflow-hidden rounded-[inherit]">
             <Image
               priority
-              src={post.image || defaultImage}
+              src={post.image || DEFAULT_POST_IMAGE}
               alt={post.title}
               fill
               sizes="(max-width: 1024px) 100vw, 340px"
@@ -131,7 +100,7 @@ const PostCard = ({ post, layout = "grid" }: PostCardProps) => {
       <div className="bg-[#f5f3f3] w-35 shrink-0 relative min-h-[120px]">
         <Image
           priority
-          src={post.image || defaultImage}
+          src={post.image || DEFAULT_POST_IMAGE}
           alt={post.title}
           fill
           sizes="140px"

@@ -1,8 +1,8 @@
 "use server";
 
 import { redirect } from "@/i18n/navigation";
-import { auth } from "@/lib/auth";
-import { Prisma } from "@/lib/generated/client";
+import { auth } from "@/libs/auth";
+import { Prisma } from "@/libs/generated/client";
 import { PostFormValues, SaveContentInput, postSchema, saveContentSchema } from "@/schemas/postSchema";
 import { getDashboardStats } from "@/services/dashboard";
 import { createPost, createTranslatedPost, getPostBySlug, getPublishedPosts, updatePost } from "@/services/post";

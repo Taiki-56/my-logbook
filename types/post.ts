@@ -1,5 +1,5 @@
-import { Prisma } from "@/lib/generated/client";
-import { Category, PostStatus } from "@/lib/generated/enums";
+import { Prisma } from "@/libs/generated/client";
+import { Category, PostStatus } from "@/libs/generated/enums";
 import { Locale } from "./config";
 
 type DisplayPost = {

@@ -5,8 +5,8 @@ import { createPostAction, createTranslatedPostAction, savePostAction } from "@/
 import { translatePostAction } from "@/actions/translation";
 import formatSlug from "@/helpers/formatSlug";
 import { useRouter } from "@/i18n/navigation";
-import { Prisma } from "@/lib/generated/client";
-import { Category, PostStatus } from "@/lib/generated/enums";
+import { Prisma } from "@/libs/generated/client";
+import { Category, PostStatus } from "@/libs/generated/enums";
 import { PostFormValues, postSchema } from "@/schemas/postSchema";
 import { Locale } from "@/types/config";
 import { zodResolver } from "@hookform/resolvers/zod";
