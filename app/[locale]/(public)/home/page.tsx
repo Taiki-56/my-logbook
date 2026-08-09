@@ -4,7 +4,6 @@ import { getLocale } from "next-intl/server";
 import Featured from "./parts/Featured";
 import Head from "./parts/Head";
 import Latest from "./parts/Latest";
-import Newsletter from "./parts/Newsletter";
 import Tags from "./parts/Tags";
 
 const Page = async () => {
@@ -24,7 +23,7 @@ const Page = async () => {
         <Featured posts={featuredPost} />
         <Latest posts={latestPost} />
         <Tags tags={tags} />
-        <Newsletter />
+        {/* <Newsletter /> */}
       </div>
       {/* Desktop Layout */}
       <div className="hidden lg:grid lg:grid-cols-12 gap-12 py-12">
