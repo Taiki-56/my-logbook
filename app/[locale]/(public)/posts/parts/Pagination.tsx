@@ -1,5 +1,6 @@
 "use client";
 
+import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useRouter, useSearchParams } from "next/navigation";
 
@@ -8,41 +9,7 @@ interface PaginationProps {
   totalPages: number;
 }
 
-const ChevronLeftIcon = () => (
-  <svg
-    width="13.333"
-    height="13.333"
-    viewBox="0 0 14 14"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg">
-    <path
-      d="M8.75 3.5L5.25 7L8.75 10.5"
-      stroke="currentColor"
-      strokeWidth="1.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-  </svg>
-);
-
-const ChevronRightIcon = () => (
-  <svg
-    width="13.333"
-    height="13.333"
-    viewBox="0 0 14 14"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg">
-    <path
-      d="M5.25 3.5L8.75 7L5.25 10.5"
-      stroke="currentColor"
-      strokeWidth="1.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-  </svg>
-);
-
-export default function Pagination({ currentPage, totalPages }: PaginationProps) {
+const Pagination = ({ currentPage, totalPages }: PaginationProps) => {
   const t = useTranslations("Posts");
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -184,4 +151,6 @@ export default function Pagination({ currentPage, totalPages }: PaginationProps)
       </div>
     </>
   );
-}
+};
+
+export default Pagination;

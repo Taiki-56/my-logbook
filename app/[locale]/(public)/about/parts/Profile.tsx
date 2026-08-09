@@ -1,7 +1,5 @@
-"use client";
-
 import GithubIcon from "@/components/ui/GithubIcon";
-import LinkedinIcon from "@/components/ui/LinkedIn";
+import LinkedinIcon from "@/components/ui/Linkedin";
 import { Mail } from "lucide-react";
 import { useTranslations } from "next-intl";
 import Image from "next/image";

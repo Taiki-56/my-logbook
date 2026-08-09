@@ -1,7 +1,5 @@
-"use client";
-
 import ClockIcon from "@/components/ui/ClockIcon";
-import { Link, useRouter } from "@/i18n/navigation";
+import { Link } from "@/i18n/navigation";
 import DEFAULT_POST_IMAGE from "@/libs/constants";
 import { DisplayPost } from "@/types/post";
 import { useTranslations } from "next-intl";
@@ -13,15 +11,8 @@ type Props = {
 
 const Latest = ({ posts }: Props) => {
   const t = useTranslations("Home.latest");
-  const router = useRouter();
 
   if (!posts || posts.length === 0) return null;
-
-  const handleTagClick = (e: React.MouseEvent, tag: string) => {
-    e.preventDefault();
-    e.stopPropagation();
-    router.push(`/posts?tag=${tag}`);
-  };
 
   return (
     <div className="flex flex-col gap-4 w-full">
@@ -33,13 +24,19 @@ const Latest = ({ posts }: Props) => {
 
       <div className="flex flex-col w-full">
         {posts.map((post, index) => (
-          <Link
+          <div
             key={post.id}
-            href={`/posts/${post.slug}`}
-            className={`flex gap-6 py-6 hover:bg-[#fbf9f8] transition-colors rounded-sm -mx-2 px-2 ${
+            className={`flex gap-6 py-6 hover:bg-[#fbf9f8] transition-colors rounded-sm -mx-2 px-2 relative group ${
               index < posts.length - 1 ? "border-b border-[rgba(193,198,215,0.5)]" : ""
             }`}>
-            <div className="w-25 h-22 lg:w-32 lg:h-20 bg-[#e9e8e7] rounded-sm shrink-0 relative overflow-hidden">
+            {/* 🌟 カード全体を覆う透明なリンク */}
+            <Link
+              href={`/posts/${post.slug}`}
+              className="absolute inset-0 z-0"
+              aria-label={post.title}
+            />
+
+            <div className="w-25 h-22 lg:w-32 lg:h-20 bg-[#e9e8e7] rounded-sm shrink-0 relative overflow-hidden pointer-events-none z-10">
               <Image
                 src={post.thumbnail || DEFAULT_POST_IMAGE}
                 alt={post.title}
@@ -49,8 +46,8 @@ const Latest = ({ posts }: Props) => {
               />
             </div>
 
-            <div className="flex-1 flex flex-col gap-1">
-              <h3 className="font-['Noto_Sans_JP'] font-bold text-[13px] lg:text-lg text-black lg:text-[#1b1c1c] leading-normal lg:leading-7 line-clamp-2">
+            <div className="flex-1 flex flex-col gap-1 z-10 pointer-events-none">
+              <h3 className="font-['Noto_Sans_JP'] font-bold text-[13px] lg:text-lg text-black lg:text-[#1b1c1c] leading-normal lg:leading-7 line-clamp-2 group-hover:text-[#0058c3] transition-colors">
                 {post.title}
               </h3>
 
@@ -74,18 +71,20 @@ const Latest = ({ posts }: Props) => {
                   </span>
                 </div>
               </div>
-              <div className="hidden lg:flex gap-2 pt-1">
+
+              {/* 🌟 タグ部分だけ手前に出し(z-20)、クリックを有効(pointer-events-auto)にする */}
+              <div className="hidden lg:flex gap-2 pt-1 pointer-events-auto z-20">
                 {post.tags.map((tag) => (
-                  <span
+                  <Link
                     key={tag}
-                    className="font-['JetBrains_Mono'] font-normal text-xs text-[#414754] leading-4 cursor-pointer hover:text-[#0058c3] hover:underline transition-colors"
-                    onClick={(e) => handleTagClick(e, tag)}>
+                    href={`/posts?tag=${tag}`}
+                    className="font-['JetBrains_Mono'] font-normal text-xs text-[#414754] leading-4 hover:text-[#0058c3] hover:underline transition-colors">
                     #{tag}
-                  </span>
+                  </Link>
                 ))}
               </div>
             </div>
-          </Link>
+          </div>
         ))}
       </div>
 

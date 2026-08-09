@@ -233,7 +233,7 @@ const PostForm = ({ mode, sourceData, initialData }: PostFormProps) => {
           } else {
             alert("Translation saved successfully!");
             //* Redirect back to the edit page of the translated content
-            router.push(`/admin/posts/edit/${payload.slug}`);
+            router.push("/admin/posts/edit/dashboard");
           }
         } catch (error) {
           console.error("Network error:", error);

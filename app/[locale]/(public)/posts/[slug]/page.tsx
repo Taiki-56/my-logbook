@@ -35,7 +35,7 @@ const Page = async (props: Props) => {
 
   return (
     <div className="min-h-screen bg-[#fbf9f8] py-8 lg:py-16">
-      <div className="max-w-[1700px] w-full mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-425 w-full mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10">
           <ArticleContent
             post={post}

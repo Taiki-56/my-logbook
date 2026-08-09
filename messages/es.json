@@ -171,14 +171,21 @@
   },
   "Admin": {
     "login": {
-      "title": "BlogAdmin",
       "subtitle": "Inicia sesión en tu cuenta",
       "emailLabel": "Correo electrónico",
       "emailPlaceholder": "tu@ejemplo.com",
       "passwordLabel": "Contraseña",
       "passwordPlaceholder": "••••••••",
-      "forgotPassword": "¿Olvidaste tu contraseña?",
-      "signInButton": "Iniciar sesión"
+      "loginButton": "Iniciar sesión",
+      "statusSubmitting": "Iniciando sesión...",
+      "invalidEmail": "Por favor, introduce un correo electrónico válido.",
+      "passwordMin": "La contraseña debe tener al menos 10 caracteres.",
+      "passwordMax": "La contraseña no debe superar los 20 caracteres.",
+      "statusError": "Correo electrónico o contraseña incorrectos.",
+      "statusSuccess": "Inicio de sesión exitoso."
+    },
+    "adminHeader": {
+      "publicPage": "Página Pública"
     },
     "sidebar": {
       "version": "v2.4.0",
@@ -190,49 +197,60 @@
       "support": "Soporte"
     },
     "dashboard": {
-      "title": "Panel de CMS",
-      "overview": "Resumen",
-      "metricsSubtitle": "Tu registro de actividad y estado de traducción",
-      "lastDays": "Últimos 30 días",
-      "totalPosts": "Total de registros",
-      "draftPosts": "Borradores",
-      "translationRate": "Tasa de traducción",
-      "currentStreak": "Racha actual",
-      "vsLastMonth": "vs el mes pasado",
-      "recentActivity": "Actividad reciente",
-      "viewAll": "Ver todo",
-      "postTitle": "Título",
-      "category": "Categoría",
-      "language": "Idioma",
-      "time": "Última actualización",
-      "status": "Estado",
-      "translationHealth": "Estado de traducción",
-      "needsTranslation": "Pendiente de traducción",
-      "translateNow": "Traducir ahora",
-      "categoryDistribution": "Distribución de registros",
-      "tech": "Ingeniería",
-      "fitness": "Culturismo y Fitness",
-      "food": "Cocina y Repostería",
-      "travel": "Vida en el extranjero y Viajes"
+      "general": {
+        "loadError": "Error al cargar los datos del panel."
+      },
+      "overview": {
+        "title": "Resumen",
+        "metricsSubtitle": "Tus registros de actividad y estado de traducción",
+        "totalPosts": "Total de registros",
+        "translationRate": "Tasa de traducción",
+        "draftPosts": "Borradores",
+        "currentStreak": "Racha actual",
+        "vsLastMonth": "vs Mes anterior"
+      },
+      "recentLogs": {
+        "title": "Registros recientes",
+        "viewAll": "Ver todo",
+        "postTitle": "Título",
+        "category": "Categoría",
+        "language": "Idioma",
+        "time": "Actualizado el",
+        "noActivity": "No se encontró actividad."
+      },
+      "translationHealth": {
+        "title": "Estado de traducción",
+        "needsTranslation": "Pendiente de traducción",
+        "translateNow": "Traducir ahora"
+      },
+      "categoryDistribution": {
+        "title": "Distribución de registros",
+        "tech": "Ingeniería",
+        "fitness": "Musculación y Fitness",
+        "food": "Cocina y Repostería",
+        "travel": "Viajes y Vida en el extranjero",
+        "work": "Trabajo",
+        "lifeAndOthers": "Vida y Otros",
+        "noCategoryData": "No hay datos de categoría disponibles."
+      }
     },
     "posts": {
-      "title": "Gestión de artículos",
-      "createPost": "Crear publicación",
-      "searchPlaceholder": "Buscar artículos por título o autor...",
-      "allStatuses": "Todos los estados",
-      "allCategories": "Todas las categorías",
-      "tableTitle": "Título",
-      "tableAuthor": "Autor",
-      "tableStatus": "Estado",
-      "tableUpdatedAt": "Última actualización",
-      "tableActions": "Acciones",
-      "statusPublished": "Publicado",
-      "statusDraft": "Borrador",
-      "statusArchived": "Archivado",
-      "showing": "Mostrando",
-      "to": "a",
-      "of": "de",
-      "entries": "entradas"
+      "pageHeader": {
+        "title": "Publicaciones",
+        "createPost": "Crear publicación"
+      },
+      "postTable": {
+        "title": "TÍTULO",
+        "languageStatus": "IDIOMA Y ESTADO",
+        "updatedAt": "ACTUALIZADO EL",
+        "actions": "ACCIONES (TRADUCCIÓN)",
+        "translateTo": "Traducir al {lang}"
+      },
+      "statusBadge": {
+        "uncreated": "No creado",
+        "published": "PUBLICADO",
+        "draft": "BORRADOR"
+      }
     },
     "editor": {
       "title": "Editor de publicaciones",

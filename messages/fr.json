@@ -171,14 +171,21 @@
   },
   "Admin": {
     "login": {
-      "title": "BlogAdmin",
       "subtitle": "Connectez-vous à votre compte",
       "emailLabel": "E-mail",
       "emailPlaceholder": "vous@exemple.com",
       "passwordLabel": "Mot de passe",
       "passwordPlaceholder": "••••••••",
-      "forgotPassword": "Mot de passe oublié ?",
-      "signInButton": "Se connecter"
+      "loginButton": "Connexion",
+      "statusSubmitting": "Connexion en cours...",
+      "invalidEmail": "Veuillez entrer une adresse e-mail valide.",
+      "passwordMin": "Le mot de passe doit comporter au moins 10 caractères.",
+      "passwordMax": "Le mot de passe ne doit pas dépasser 20 caractères.",
+      "statusError": "E-mail ou mot de passe incorrect.",
+      "statusSuccess": "Connexion réussie."
+    },
+    "adminHeader": {
+      "publicPage": "Page Publique"
     },
     "sidebar": {
       "version": "v2.4.0",
@@ -190,52 +197,60 @@
       "support": "Support"
     },
     "dashboard": {
-      "title": "Tableau de bord CMS",
-      "tabDashboard": "Tableau de bord",
-      "tabPosts": "Articles",
-      "overview": "Aperçu",
-      "metricsSubtitle": "Vos métriques de contenu pour les 30 derniers jours.",
-      "lastDays": "30 derniers jours",
-      "totalPosts": "TOTAL DES ARTICLES",
-      "draftPosts": "BROUILLONS",
-      "published": "PUBLIÉS",
-      "private": "PRIVÉS",
-      "stable": "Stable",
-      "vsLastMonth": "vs mois dernier",
-      "recentActivity": "Activité récente",
-      "viewAll": "Voir tout",
-      "postTitle": "TITRE DE L'ARTICLE",
-      "action": "ACTION",
-      "user": "UTILISATEUR",
-      "time": "HEURE",
-      "edited": "Modifié",
-      "translated": "Traduit",
-      "publishedAction": "Publié",
-      "systemStatus": "État du système",
-      "database": "Base de données",
-      "cdn": "CDN",
-      "operational": "Opérationnel",
-      "translationQueue": "FILE DE TRADUCTION",
-      "pendingItems": "Éléments en attente"
+      "general": {
+        "loadError": "Échec du chargement des données du tableau de bord."
+      },
+      "overview": {
+        "title": "Aperçu",
+        "metricsSubtitle": "Vos journaux d'activité et statut de traduction",
+        "totalPosts": "Total des journaux",
+        "translationRate": "Taux de traduction",
+        "draftPosts": "Brouillons",
+        "currentStreak": "Série en cours",
+        "vsLastMonth": "vs Mois Dernier"
+      },
+      "recentLogs": {
+        "title": "Journaux récents",
+        "viewAll": "Tout voir",
+        "postTitle": "Titre",
+        "category": "Catégorie",
+        "language": "Langue",
+        "time": "Mis à jour le",
+        "noActivity": "Aucune activité trouvée."
+      },
+      "translationHealth": {
+        "title": "Statut de traduction",
+        "needsTranslation": "En attente de traduction",
+        "translateNow": "Traduire maintenant"
+      },
+      "categoryDistribution": {
+        "title": "Répartition des journaux",
+        "tech": "Ingénierie",
+        "fitness": "Musculation et Fitness",
+        "food": "Cuisine et Pâtisserie",
+        "travel": "Voyage et Expatriation",
+        "work": "Travail",
+        "lifeAndOthers": "Vie et Autres",
+        "noCategoryData": "Aucune donnée de catégorie disponible."
+      }
     },
     "posts": {
-      "title": "Gestion des articles",
-      "createPost": "Créer un article",
-      "searchPlaceholder": "Rechercher des articles par titre ou auteur...",
-      "allStatuses": "Tous les statuts",
-      "allCategories": "Toutes les catégories",
-      "tableTitle": "TITRE",
-      "tableAuthor": "AUTEUR",
-      "tableStatus": "STATUT",
-      "tableUpdatedAt": "MIS À JOUR LE",
-      "tableActions": "ACTIONS",
-      "statusPublished": "Publié",
-      "statusDraft": "Brouillon",
-      "statusArchived": "Archivé",
-      "showing": "Affichage de",
-      "to": "à",
-      "of": "sur",
-      "entries": "entrées"
+      "pageHeader": {
+        "title": "Articles",
+        "createPost": "Créer un article"
+      },
+      "postTable": {
+        "title": "TITRE",
+        "languageStatus": "LANGUE ET STATUT",
+        "updatedAt": "MIS À JOUR LE",
+        "actions": "ACTIONS (TRADUCTION)",
+        "translateTo": "Traduire en {lang}"
+      },
+      "statusBadge": {
+        "uncreated": "Non créé",
+        "published": "PUBLIÉ",
+        "draft": "BROUILLON"
+      }
     },
     "editor": {
       "title": "Éditeur d'article",

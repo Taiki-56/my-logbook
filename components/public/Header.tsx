@@ -1,28 +1,12 @@
 "use client";
 
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/DropdownMenu";
-import { Link, usePathname, useRouter } from "@/i18n/navigation";
-import { useLocale, useTranslations } from "next-intl";
+import { Link, usePathname } from "@/i18n/navigation";
+import { useTranslations } from "next-intl";
+import LanguageSwitcher from "../common/LanguageSwitcher";
 
 const Header = () => {
   const t = useTranslations();
   const pathname = usePathname();
-  const locale = useLocale();
-  const router = useRouter();
-
-  const handleChangeLanguage = (lang: string) => {
-    router.replace(pathname, { locale: lang });
-  };
-
-  const getFlag = (localeCode: string) => {
-    const flags: Record<string, string> = {
-      ja: "🇯🇵",
-      en: "🇬🇧",
-      fr: "🇫🇷",
-      es: "🇪🇸"
-    };
-    return flags[localeCode] || "🌐";
-  };
 
   const isActive = (path: string) => {
     return pathname.includes(path);
@@ -68,36 +52,7 @@ const Header = () => {
               </span>
             </Link>
 
-            {/* 国旗アイコン側にもリンクと同じ高さのボックス（pb-1.5 と透明ボーダー）を持たせることで、重心を完璧に一致させる */}
-            <div className="flex flex-col items-center pb-1.5 border-b-2 border-transparent">
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  {/* アイコンの line-height による微細なズレを防ぐため、padding を細かく調整 */}
-                  <button className="flex items-center justify-center px-2 py-0.5 hover:bg-[#eaeaea] rounded transition-colors h-[24px]">
-                    <span className="text-[22px] leading-none">{getFlag(locale)}</span>
-                  </button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent
-                  align="end"
-                  className="bg-white border-[#c1c6d7]">
-                  {[
-                    { code: "ja", label: "🇯🇵 日本語" },
-                    { code: "en", label: "🇬🇧 English" },
-                    { code: "fr", label: "🇫🇷 Français" },
-                    { code: "es", label: "🇪🇸 Español" }
-                  ].map(({ code, label }) => (
-                    <DropdownMenuItem
-                      key={code}
-                      onClick={() => handleChangeLanguage(code)}
-                      className={`cursor-pointer font-['JetBrains_Mono'] ${
-                        locale === code ? "bg-[#f5f3f3]" : ""
-                      } text-[#414754] hover:bg-[#f5f3f3]`}>
-                      {label}
-                    </DropdownMenuItem>
-                  ))}
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </div>
+            <LanguageSwitcher />
           </nav>
         </div>
       </div>

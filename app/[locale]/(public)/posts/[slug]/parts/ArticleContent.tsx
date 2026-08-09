@@ -1,6 +1,4 @@
-"use client";
-
-import DEFAULT_POST_IMAGE from "@/libs/constants"; // ※環境に合わせてパスを確認してください
+import DEFAULT_POST_IMAGE from "@/libs/constants";
 import Image from "next/image";
 
 type Props = {
@@ -50,7 +48,7 @@ const ArticleContent = ({ post, displayContent }: Props) => {
       {/* 🌟 px-6 等でテキストと左右の開始位置を合わせ、フレックスで中央寄せ */}
       <div className="w-full px-6 md:px-10 lg:px-12 mb-8 flex justify-center">
         {/* 🌟 max-w-[850px] と角丸 (rounded-xl) を追加 */}
-        <div className="relative w-full max-w-[850px] aspect-[16/9] max-h-[450px] bg-[#f5f3f3] rounded-xl overflow-hidden border border-[#e4e2e2] shadow-sm">
+        <div className="relative w-full max-w-212.5 aspect-video max-h-112.5 bg-[#f5f3f3] rounded-xl overflow-hidden border border-[#e4e2e2] shadow-sm">
           <Image
             src={post.thumbnail || DEFAULT_POST_IMAGE}
             alt={displayContent.title}
