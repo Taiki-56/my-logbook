@@ -2,8 +2,9 @@ import { Link } from "@/i18n/navigation";
 
 const Footer = async () => {
   return (
-    <footer className="bg-[#f5f3f3] border-t border-[#c1c6d7] border-solid w-full  py-8 px-6 md:px-10">
-      <div className="w-full mx-auto h-16 lg:px-8 flex items-center justify-between">
+    <footer className="bg-[#f5f3f3] border-t border-[#c1c6d7] border-solid w-full py-8 px-6 md:px-10">
+      {/* 🌟 flex-col でスマホは縦並び、md:flex-row でPCは横並びに変更 */}
+      <div className="w-full mx-auto flex flex-col md:flex-row items-center justify-between gap-4 md:gap-0 lg:px-8">
         {/* 左側 (または上部): サイト名 */}
         <Link
           href={"/home"}
@@ -14,7 +15,7 @@ const Footer = async () => {
         </Link>
 
         {/* 右側 (または下部): コピーライト */}
-        <p className="font-normal text-[#727786] text-sm md:text-base text-center md:text-left tracking-wide">
+        <p className="font-normal text-[#727786] text-xs sm:text-sm md:text-base text-center md:text-left tracking-wide">
           © 2026 MyLogbook. All rights reserved.
         </p>
       </div>
