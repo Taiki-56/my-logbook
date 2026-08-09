@@ -14,11 +14,9 @@ interface PostCardProps {
 const PostCard = ({ post, layout = "grid" }: PostCardProps) => {
   const t = useTranslations("Posts");
 
-  // Desktop Grid Layout
   if (layout === "grid") {
     return (
       <div className="bg-[#fbf9f8] border border-transparent rounded-sm hover:shadow-md transition-shadow p-2.25 flex flex-col gap-4 relative group">
-        {/* 🌟 カード全体を覆う透明なリンク */}
         <Link
           href={`/posts/${post.slug}`}
           className="absolute inset-0 z-0"
@@ -27,51 +25,48 @@ const PostCard = ({ post, layout = "grid" }: PostCardProps) => {
 
         {/* Image */}
         <div className="bg-[#f5f3f3] border border-[#c1c6d7] rounded-xs w-full p-px pointer-events-none z-10">
-          <div className="relative w-full h-72 overflow-hidden rounded-[inherit]">
+          {/* 🌟 aspect-video (16:9) でサムネが切り取られずにフル表示されます */}
+          <div className="relative w-full aspect-video overflow-hidden rounded-[inherit]">
             <Image
               priority
               src={post.thumbnail || DEFAULT_POST_IMAGE}
               alt={post.title}
               fill
               sizes="(max-width: 1024px) 100vw, 340px"
-              className="object-cover"
+              className="object-cover transition-transform duration-500 group-hover:scale-105"
             />
           </div>
         </div>
 
         {/* Content */}
         <div className="flex flex-col z-10 pointer-events-none">
-          {/* Meta Information */}
           <div className="flex gap-2 items-center">
-            <span className="font-['JetBrains_Mono'] font-medium text-[14px] leading-[19.6px] text-[#414754] whitespace-nowrap">
+            <span className="font-['JetBrains_Mono'] font-medium text-[13px] lg:text-[14px] leading-[19.6px] text-[#414754] whitespace-nowrap">
               {post.date}
             </span>
-            <span className="font-['JetBrains_Mono'] font-medium text-[14px] leading-[19.6px] text-[#414754]">·</span>
-            <span className="font-['Noto_Sans_JP'] font-medium text-[14px] leading-[19.6px] text-[#414754] whitespace-nowrap">
+            <span className="font-['JetBrains_Mono'] font-medium text-[13px] lg:text-[14px] leading-[19.6px] text-[#414754]">
+              ·
+            </span>
+            <span className="font-['Noto_Sans_JP'] font-medium text-[13px] lg:text-[14px] leading-[19.6px] text-[#414754] whitespace-nowrap">
               {post.readTime}
               {t("readTime")}
             </span>
           </div>
 
-          {/* Title */}
-          {/* 🌟 ホバー時にタイトル色がテーマカラーに変わるよう微調整 */}
-          <h3 className="mt-2 font-['Noto_Sans_JP'] font-medium text-2xl leading-[31.2px] text-[#1b1c1c] line-clamp-2 group-hover:text-[#0058c3] transition-colors">
+          <h3 className="mt-2 font-['Noto_Sans_JP'] font-medium text-[20px] lg:text-2xl leading-tight lg:leading-[31.2px] text-[#1b1c1c] line-clamp-2 group-hover:text-[#0058c3] transition-colors">
             {post.title}
           </h3>
 
-          {/* Description */}
-          <p className="mt-2 font-['Noto_Sans_JP'] font-medium text-base leading-6 text-[#414754] line-clamp-2">
+          <p className="mt-2 font-['Noto_Sans_JP'] font-medium text-[14px] lg:text-base leading-relaxed lg:leading-6 text-[#414754] line-clamp-2">
             {post.description || "説明はありません"}
           </p>
 
-          {/* Tags */}
-          {/* 🌟 タグ部分だけ手前に出し(z-20)、クリックを有効(pointer-events-auto)にする */}
           <div className="mt-2 flex gap-2 items-start pt-2 flex-wrap pointer-events-auto z-20">
             {(post.tags || []).map((tag, index) => (
               <Link
                 key={index}
                 href={`/posts?tag=${tag}`}
-                className="bg-[#f5f3f3] border border-[#c1c6d7] text-[#414754] px-2.25 pt-0.5 pb-[3.8px] font-['JetBrains_Mono'] font-normal text-[13px] leading-[20.8px] rounded-xs cursor-pointer transition-all duration-200 ease-out hover:bg-white hover:shadow-sm hover:border-[#a0a6b5] hover:-translate-y-px hover:text-[#0058c3]">
+                className="bg-[#f5f3f3] border border-[#c1c6d7] text-[#414754] px-2.25 pt-0.5 pb-[3.8px] font-['JetBrains_Mono'] font-normal text-[12px] lg:text-[13px] leading-[20.8px] rounded-xs cursor-pointer transition-all duration-200 ease-out hover:bg-white hover:shadow-sm hover:border-[#a0a6b5] hover:-translate-y-px hover:text-[#0058c3]">
                 {decodeURIComponent(tag)}
               </Link>
             ))}
@@ -81,50 +76,46 @@ const PostCard = ({ post, layout = "grid" }: PostCardProps) => {
     );
   }
 
-  // Mobile Horizontal Layout
   return (
-    <div className="bg-[#fbf9f8] border border-[#e4e2e2] flex overflow-hidden hover:shadow-md transition-shadow relative group">
-      {/* 🌟 カード全体を覆う透明なリンク */}
+    <div className="bg-[#fbf9f8] border border-[#e4e2e2] flex items-center overflow-hidden hover:shadow-md transition-shadow relative group">
       <Link
         href={`/posts/${post.slug}`}
         className="absolute inset-0 z-0"
         aria-label={post.title}
       />
 
-      <div className="bg-[#f5f3f3] w-35 shrink-0 relative min-h-30 pointer-events-none z-10">
+      <div className="bg-[#f5f3f3] w-40 sm:w-50 shrink-0 relative aspect-video pointer-events-none z-10">
         <Image
           priority
           src={post.thumbnail || DEFAULT_POST_IMAGE}
           alt={post.title}
           fill
-          sizes="140px"
-          className="object-cover grayscale"
+          sizes="(max-width: 640px) 160px, 200px"
+          className="object-cover grayscale transition-all duration-300 group-hover:grayscale-0"
         />
       </div>
 
-      {/* Content */}
-      <div className="flex flex-col gap-1 justify-center p-3 flex-1 z-10 pointer-events-none">
-        {/* Category */}
+      <div className="flex flex-col gap-1.5 justify-center p-3 sm:p-4 flex-1 z-10 pointer-events-none">
         {post.category && (
           <div className="font-['JetBrains_Mono'] font-normal text-xs text-[#0058c3] uppercase tracking-wider">
             {post.category}
           </div>
         )}
-
-        {/* Title */}
-        <h3 className="font-['Noto_Sans_JP'] font-medium text-base text-[#1b1c1c] line-clamp-2 group-hover:text-[#0058c3] transition-colors">
+        <h3 className="font-['Noto_Sans_JP'] font-medium text-[15px] sm:text-base leading-snug text-[#1b1c1c] line-clamp-2 group-hover:text-[#0058c3] transition-colors">
           {post.title}
         </h3>
-
-        {/* Meta Information */}
         <div className="flex gap-3 items-center pt-1">
           <div className="flex gap-1 items-center">
             <CalendarIcon />
-            <span className="font-['JetBrains_Mono'] font-normal text-xs text-[#5e5e5e]">{post.date}</span>
+            <span className="font-['JetBrains_Mono'] font-normal text-[11px] sm:text-xs text-[#5e5e5e]">
+              {post.date}
+            </span>
           </div>
           <div className="flex gap-1 items-center">
             <ClockIcon />
-            <span className="font-['JetBrains_Mono'] font-normal text-xs text-[#5e5e5e]">{post.readTime} min</span>
+            <span className="font-['JetBrains_Mono'] font-normal text-[11px] sm:text-xs text-[#5e5e5e]">
+              {post.readTime} min
+            </span>
           </div>
         </div>
       </div>
