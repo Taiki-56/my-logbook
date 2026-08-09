@@ -1,49 +1,36 @@
-"use client";
-
 import CalendarIcon from "@/components/ui/CalendarIcon";
 import ClockIcon from "@/components/ui/ClockIcon";
-import { Link, useRouter } from "@/i18n/navigation";
+import { Link } from "@/i18n/navigation";
 import DEFAULT_POST_IMAGE from "@/libs/constants";
+import { DisplayPost } from "@/types/post";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
 
 interface PostCardProps {
-  post: {
-    id: string;
-    date: string;
-    readTime: number | string;
-    title: string;
-    description: string | null;
-    tags?: string[];
-    image: string | null;
-    slug: string;
-    category?: string;
-  };
+  post: DisplayPost;
   layout?: "grid" | "horizontal";
 }
 
 const PostCard = ({ post, layout = "grid" }: PostCardProps) => {
   const t = useTranslations("Posts");
-  const router = useRouter();
-
-  const handleTagClick = (e: React.MouseEvent, tag: string) => {
-    e.preventDefault();
-    e.stopPropagation();
-    router.push(`/posts?tag=${tag}`);
-  };
 
   // Desktop Grid Layout
   if (layout === "grid") {
     return (
-      <Link
-        href={`/posts/${post.slug}`}
-        className="bg-[#fbf9f8] border border-transparent rounded-sm hover:shadow-md transition-shadow p-2.25 flex flex-col gap-4">
+      <div className="bg-[#fbf9f8] border border-transparent rounded-sm hover:shadow-md transition-shadow p-2.25 flex flex-col gap-4 relative group">
+        {/* 🌟 カード全体を覆う透明なリンク */}
+        <Link
+          href={`/posts/${post.slug}`}
+          className="absolute inset-0 z-0"
+          aria-label={post.title}
+        />
+
         {/* Image */}
-        <div className="bg-[#f5f3f3] border border-[#c1c6d7] rounded-xs w-full p-px">
+        <div className="bg-[#f5f3f3] border border-[#c1c6d7] rounded-xs w-full p-px pointer-events-none z-10">
           <div className="relative w-full h-72 overflow-hidden rounded-[inherit]">
             <Image
               priority
-              src={post.image || DEFAULT_POST_IMAGE}
+              src={post.thumbnail || DEFAULT_POST_IMAGE}
               alt={post.title}
               fill
               sizes="(max-width: 1024px) 100vw, 340px"
@@ -53,7 +40,7 @@ const PostCard = ({ post, layout = "grid" }: PostCardProps) => {
         </div>
 
         {/* Content */}
-        <div className="flex flex-col">
+        <div className="flex flex-col z-10 pointer-events-none">
           {/* Meta Information */}
           <div className="flex gap-2 items-center">
             <span className="font-['JetBrains_Mono'] font-medium text-[14px] leading-[19.6px] text-[#414754] whitespace-nowrap">
@@ -67,7 +54,8 @@ const PostCard = ({ post, layout = "grid" }: PostCardProps) => {
           </div>
 
           {/* Title */}
-          <h3 className="mt-2 font-['Noto_Sans_JP'] font-medium text-2xl leading-[31.2px] text-[#1b1c1c] line-clamp-2">
+          {/* 🌟 ホバー時にタイトル色がテーマカラーに変わるよう微調整 */}
+          <h3 className="mt-2 font-['Noto_Sans_JP'] font-medium text-2xl leading-[31.2px] text-[#1b1c1c] line-clamp-2 group-hover:text-[#0058c3] transition-colors">
             {post.title}
           </h3>
 
@@ -77,30 +65,36 @@ const PostCard = ({ post, layout = "grid" }: PostCardProps) => {
           </p>
 
           {/* Tags */}
-          <div className="mt-2 flex gap-2 items-start pt-2 flex-wrap">
+          {/* 🌟 タグ部分だけ手前に出し(z-20)、クリックを有効(pointer-events-auto)にする */}
+          <div className="mt-2 flex gap-2 items-start pt-2 flex-wrap pointer-events-auto z-20">
             {(post.tags || []).map((tag, index) => (
-              <button
+              <Link
                 key={index}
-                onClick={(e) => handleTagClick(e, tag)}
+                href={`/posts?tag=${tag}`}
                 className="bg-[#f5f3f3] border border-[#c1c6d7] text-[#414754] px-2.25 pt-0.5 pb-[3.8px] font-['JetBrains_Mono'] font-normal text-[13px] leading-[20.8px] rounded-xs cursor-pointer transition-all duration-200 ease-out hover:bg-white hover:shadow-sm hover:border-[#a0a6b5] hover:-translate-y-px hover:text-[#0058c3]">
                 {decodeURIComponent(tag)}
-              </button>
-            ))}{" "}
+              </Link>
+            ))}
           </div>
         </div>
-      </Link>
+      </div>
     );
   }
 
   // Mobile Horizontal Layout
   return (
-    <Link
-      href={`/posts/${post.slug}`}
-      className="bg-[#fbf9f8] border border-[#e4e2e2] flex overflow-hidden hover:shadow-md transition-shadow">
-      <div className="bg-[#f5f3f3] w-35 shrink-0 relative min-h-[120px]">
+    <div className="bg-[#fbf9f8] border border-[#e4e2e2] flex overflow-hidden hover:shadow-md transition-shadow relative group">
+      {/* 🌟 カード全体を覆う透明なリンク */}
+      <Link
+        href={`/posts/${post.slug}`}
+        className="absolute inset-0 z-0"
+        aria-label={post.title}
+      />
+
+      <div className="bg-[#f5f3f3] w-35 shrink-0 relative min-h-30 pointer-events-none z-10">
         <Image
           priority
-          src={post.image || DEFAULT_POST_IMAGE}
+          src={post.thumbnail || DEFAULT_POST_IMAGE}
           alt={post.title}
           fill
           sizes="140px"
@@ -109,7 +103,7 @@ const PostCard = ({ post, layout = "grid" }: PostCardProps) => {
       </div>
 
       {/* Content */}
-      <div className="flex flex-col gap-1 justify-center p-3 flex-1">
+      <div className="flex flex-col gap-1 justify-center p-3 flex-1 z-10 pointer-events-none">
         {/* Category */}
         {post.category && (
           <div className="font-['JetBrains_Mono'] font-normal text-xs text-[#0058c3] uppercase tracking-wider">
@@ -118,7 +112,9 @@ const PostCard = ({ post, layout = "grid" }: PostCardProps) => {
         )}
 
         {/* Title */}
-        <h3 className="font-['Noto_Sans_JP'] font-medium text-base text-[#1b1c1c] line-clamp-2">{post.title}</h3>
+        <h3 className="font-['Noto_Sans_JP'] font-medium text-base text-[#1b1c1c] line-clamp-2 group-hover:text-[#0058c3] transition-colors">
+          {post.title}
+        </h3>
 
         {/* Meta Information */}
         <div className="flex gap-3 items-center pt-1">
@@ -132,7 +128,7 @@ const PostCard = ({ post, layout = "grid" }: PostCardProps) => {
           </div>
         </div>
       </div>
-    </Link>
+    </div>
   );
 };
 

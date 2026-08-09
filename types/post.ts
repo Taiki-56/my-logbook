@@ -8,7 +8,7 @@ type DisplayPost = {
   date: string;
   readTime: string;
   title: string;
-  description: string;
+  description: string | null;
   tags: string[];
   thumbnail: string;
   slug: string;

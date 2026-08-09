@@ -171,68 +171,83 @@
   },
   "Admin": {
     "login": {
-      "title": "BlogAdmin",
-      "subtitle": "アカウントにサインイン",
+      "subtitle": "アカウントにログイン",
       "emailLabel": "メールアドレス",
       "emailPlaceholder": "you@example.com",
       "passwordLabel": "パスワード",
       "passwordPlaceholder": "••••••••",
-      "forgotPassword": "パスワードをお忘れですか?",
-      "signInButton": "サインイン"
+      "loginButton": "ログイン",
+      "statusSubmitting": "送信中...",
+      "invalidEmail": "有効なメールアドレスを入力してください",
+      "passwordMin": "パスワードは10文字以上で入力してください",
+      "passwordMax": "パスワードは20文字以内で入力してください",
+      "statusError": "メールアドレスまたはパスワードが間違っています。",
+      "statusSuccess": "ログインしました。"
+    },
+    "adminHeader": {
+      "publicPage": "公開ページ"
     },
     "sidebar": {
-      "version": "v2.4.0",
       "newPost": "新規投稿",
       "dashboard": "ダッシュボード",
       "posts": "投稿",
-      "media": "メディア",
-      "settings": "設定",
-      "support": "サポート"
+      "media": "メディア"
     },
     "dashboard": {
-      "title": "CMS ダッシュボード",
-      "overview": "概要",
-      "metricsSubtitle": "あなたの活動ログと翻訳ステータス",
-      "lastDays": "過去30日間",
-      "totalPosts": "総ログ数",
-      "draftPosts": "下書き",
-      "translationRate": "翻訳完了率",
-      "currentStreak": "継続日数",
-      "vsLastMonth": "対先月比",
-      "recentActivity": "最近のログ",
-      "viewAll": "すべて表示",
-      "postTitle": "タイトル",
-      "category": "カテゴリー",
-      "language": "言語",
-      "time": "更新日時",
-      "status": "ステータス",
-      "translationHealth": "翻訳ステータス",
-      "needsTranslation": "翻訳待ち",
-      "translateNow": "翻訳する",
-      "categoryDistribution": "ログの分布",
-      "tech": "エンジニアリング",
-      "fitness": "ボディビル・筋トレ",
-      "food": "料理・お菓子",
-      "travel": "海外生活・旅行"
+      "general": {
+        "loadError": "ダッシュボードデータの読み込みに失敗しました。"
+      },
+      "overview": {
+        "title": "概要",
+        "metricsSubtitle": "あなたの活動ログと翻訳ステータス",
+        "totalPosts": "総ログ数",
+        "translationRate": "翻訳完了率",
+        "draftPosts": "下書き",
+        "currentStreak": "継続日数",
+        "vsLastMonth": "対先月比"
+      },
+      "recentLogs": {
+        "title": "最近のログ",
+        "viewAll": "すべて表示",
+        "postTitle": "タイトル",
+        "category": "カテゴリー",
+        "language": "言語",
+        "time": "更新日時",
+        "noActivity": "アクティビティがありません"
+      },
+      "translationHealth": {
+        "title": "翻訳ステータス",
+        "needsTranslation": "翻訳待ち",
+        "translateNow": "翻訳する"
+      },
+      "categoryDistribution": {
+        "title": "ログの分布",
+        "tech": "エンジニアリング",
+        "fitness": "ボディビル・筋トレ",
+        "food": "料理・お菓子",
+        "travel": "海外生活・旅行",
+        "work": "仕事",
+        "lifeAndOthers": "生活・その他",
+        "noCategoryData": "カテゴリーデータがありません"
+      }
     },
     "posts": {
-      "title": "記事管理",
-      "createPost": "投稿を作成",
-      "searchPlaceholder": "タイトルまたは著者で記事を検索...",
-      "allStatuses": "すべてのステータス",
-      "allCategories": "すべてのカテゴリ",
-      "tableTitle": "タイトル",
-      "tableAuthor": "著者",
-      "tableStatus": "ステータス",
-      "tableUpdatedAt": "更新日時",
-      "tableActions": "アクション",
-      "statusPublished": "公開済み",
-      "statusDraft": "下書き",
-      "statusArchived": "アーカイブ済み",
-      "showing": "表示中",
-      "to": "から",
-      "of": "全",
-      "entries": "件"
+      "pageHeader": {
+        "title": "記事一覧",
+        "createPost": "新規作成"
+      },
+      "postTable": {
+        "title": "タイトル",
+        "languageStatus": "言語 & ステータス",
+        "updatedAt": "更新日時",
+        "actions": "アクション (翻訳)",
+        "translateTo": "{lang}へ翻訳"
+      },
+      "statusBadge": {
+        "uncreated": "未作成",
+        "published": "公開",
+        "draft": "下書き"
+      }
     },
     "editor": {
       "title": "投稿エディタ",

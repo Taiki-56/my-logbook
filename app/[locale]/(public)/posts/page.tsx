@@ -1,8 +1,10 @@
 import { getPublishedPostsAction } from "@/actions/post";
 import SearchBar from "@/components/public/SearchBar";
 import { Link } from "@/i18n/navigation";
+import DEFAULT_POST_IMAGE from "@/libs/constants";
 import { getFeaturedPosts } from "@/services/post";
 import { isValidLocale } from "@/types/config";
+import { DisplayPost } from "@/types/post";
 import { getLocale, getTranslations } from "next-intl/server";
 import ActiveFilters from "./parts/ActiveFilters";
 import EmptyState from "./parts/EmptyState";
@@ -13,19 +15,6 @@ const ITEMS_PER_PAGE = 6;
 
 type Props = {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
-};
-
-// 🌟 カードコンポーネントが求めるデータの最終形を定義
-type ViewPost = {
-  id: string;
-  date: string;
-  readTime: number;
-  title: string;
-  description: string | null;
-  tags: string[];
-  image: string | null;
-  slug: string;
-  category: string;
 };
 
 const Page = async (props: Props) => {
@@ -48,7 +37,7 @@ const Page = async (props: Props) => {
   const currentPage = parseInt((searchParams.page as string) || "1", 10);
   const isFeaturedOnly = searchParams.isFeatured === "true";
 
-  let viewPosts: ViewPost[] = [];
+  let viewPosts: DisplayPost[] = [];
   // 🌟 slug（URL用）と name（表示用）を両方保持する Map を作成
   const uniqueTagsMap = new Map<string, string>();
 
@@ -64,11 +53,11 @@ const Page = async (props: Props) => {
       return {
         id: fp.id,
         date: fp.date,
-        readTime: 5,
+        readTime: "5",
         title: fp.title,
         description: fp.description,
         tags: fp.tags || [],
-        image: fp.thumbnail || null,
+        thumbnail: fp.thumbnail || DEFAULT_POST_IMAGE,
         slug: fp.slug,
         category: fp.category || "BLOG"
       };
@@ -80,15 +69,15 @@ const Page = async (props: Props) => {
       return <div>エラーが発生しました。:{res.error}</div>;
     }
 
-    viewPosts = (res.data as any[]).map((post) => {
+    viewPosts = res.data.map((post) => {
       // 該当言語のコンテンツを探す
-      const content = post.contents?.find((c: any) => c.locale === locale) || post.contents?.[0];
+      const content = post.contents?.find((c) => c.locale === locale) || post.contents?.[0];
 
       const localizedTags: string[] = [];
 
-      post.postTags?.forEach((pt: any) => {
+      post.postTags?.forEach((pt) => {
         // 🌟 修正点1: フォールバック([0])を削除し、完全に現在の言語のタグのみを抽出する
-        const tagContent = pt.tag?.contents?.find((c: any) => c.locale === locale);
+        const tagContent = pt.tag?.contents?.find((c) => c.locale === locale);
 
         if (tagContent) {
           localizedTags.push(tagContent.name);
@@ -103,11 +92,11 @@ const Page = async (props: Props) => {
       return {
         id: post.id,
         date: new Date(post.createdAt).toLocaleDateString("ja-JP"),
-        readTime: 5,
+        readTime: "5",
         title: content?.title || "No Title",
         description: content?.seoDescription || null,
         tags: localizedTags,
-        image: post.thumbnail || null,
+        thumbnail: post.thumbnail || DEFAULT_POST_IMAGE,
         slug: content?.slug || "",
         category: post.category || "BLOG"
       };

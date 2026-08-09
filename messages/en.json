@@ -171,14 +171,21 @@
   },
   "Admin": {
     "login": {
-      "title": "BlogAdmin",
-      "subtitle": "Sign in to your account",
+      "subtitle": "Login to your account",
       "emailLabel": "Email",
       "emailPlaceholder": "you@example.com",
       "passwordLabel": "Password",
       "passwordPlaceholder": "••••••••",
-      "forgotPassword": "Forgot password?",
-      "signInButton": "Sign In"
+      "loginButton": "Log In",
+      "statusSubmitting": "Logging in...",
+      "invalidEmail": "Please enter a valid email address.",
+      "passwordMin": "Password must be at least 10 characters.",
+      "passwordMax": "Password must be at most 20 characters.",
+      "statusError": "Invalid email or password.",
+      "statusSuccess": "Signed in successfully."
+    },
+    "adminHeader": {
+      "publicPage": "Public Page"
     },
     "sidebar": {
       "version": "v2.4.0",
@@ -190,52 +197,60 @@
       "support": "Support"
     },
     "dashboard": {
-      "title": "CMS Dashboard",
-      "tabDashboard": "Dashboard",
-      "tabPosts": "Posts",
-      "overview": "Overview",
-      "metricsSubtitle": "Your content metrics for the last 30 days.",
-      "lastDays": "Last 30 Days",
-      "totalPosts": "TOTAL POSTS",
-      "draftPosts": "DRAFT POSTS",
-      "published": "PUBLISHED",
-      "private": "PRIVATE",
-      "stable": "Stable",
-      "vsLastMonth": "vs last month",
-      "recentActivity": "Recent Activity",
-      "viewAll": "View All",
-      "postTitle": "POST TITLE",
-      "action": "ACTION",
-      "user": "USER",
-      "time": "TIME",
-      "edited": "Edited",
-      "translated": "Translated",
-      "publishedAction": "Published",
-      "systemStatus": "System Status",
-      "database": "Database",
-      "cdn": "CDN",
-      "operational": "Operational",
-      "translationQueue": "TRANSLATION QUEUE",
-      "pendingItems": "Pending items"
+      "general": {
+        "loadError": "Failed to load dashboard data."
+      },
+      "overview": {
+        "title": "Overview",
+        "metricsSubtitle": "Your activity logs and translation status",
+        "totalPosts": "Total Logs",
+        "translationRate": "Translation Rate",
+        "draftPosts": "Drafts",
+        "currentStreak": "Current Streak",
+        "vsLastMonth": "vs Last Month"
+      },
+      "recentLogs": {
+        "title": "Recent Logs",
+        "viewAll": "View All",
+        "postTitle": "Title",
+        "category": "Category",
+        "language": "Language",
+        "time": "Updated At",
+        "noActivity": "No activity found."
+      },
+      "translationHealth": {
+        "title": "Translation Status",
+        "needsTranslation": "Needs Translation",
+        "translateNow": "Translate Now"
+      },
+      "categoryDistribution": {
+        "title": "Log Distribution",
+        "tech": "Engineering",
+        "fitness": "Bodybuilding & Fitness",
+        "food": "Cooking & Baking",
+        "travel": "Travel & Living Abroad",
+        "work": "Work",
+        "lifeAndOthers": "Life & Others",
+        "noCategoryData": "No category data available."
+      }
     },
     "posts": {
-      "title": "Article Management",
-      "createPost": "Create Post",
-      "searchPlaceholder": "Search articles by title or author...",
-      "allStatuses": "All Statuses",
-      "allCategories": "All Categories",
-      "tableTitle": "TITLE",
-      "tableAuthor": "AUTHOR",
-      "tableStatus": "STATUS",
-      "tableUpdatedAt": "UPDATED AT",
-      "tableActions": "ACTIONS",
-      "statusPublished": "Published",
-      "statusDraft": "Draft",
-      "statusArchived": "Archived",
-      "showing": "Showing",
-      "to": "to",
-      "of": "of",
-      "entries": "entries"
+      "pageHeader": {
+        "title": "Posts",
+        "createPost": "Create Post"
+      },
+      "postTable": {
+        "title": "TITLE",
+        "languageStatus": "LANGUAGE & STATUS",
+        "updatedAt": "UPDATED AT",
+        "actions": "ACTIONS (TRANSLATION)",
+        "translateTo": "Translate to {lang}"
+      },
+      "statusBadge": {
+        "uncreated": "Not Created",
+        "published": "PUBLISHED",
+        "draft": "DRAFT"
+      }
     },
     "editor": {
       "title": "Post Editor",

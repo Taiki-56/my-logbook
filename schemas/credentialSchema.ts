@@ -1,11 +1,18 @@
 import * as z from "zod";
 
-export const credentialSchema = z.object({
-  email: z.email({ message: "有効なメールアドレスを入力してください" }),
-  password: z
-    .string()
-    .min(8, { message: "パスワードは10文字以上で入力してください" })
-    .max(20, { message: "パスワードは20文字以内で入力してください" })
+export const getLocalizedCredentialSchema = (t: (key: string) => string) => {
+  return z.object({
+    email: z.email({ message: t("invalidEmail") }),
+    password: z
+      .string()
+      .min(10, { message: t("passwordMin") })
+      .max(20, { message: t("passwordMax") })
+  });
+};
+
+const credentialSchema = z.object({
+  email: z.email(),
+  password: z.string().min(10).max(20)
 });
 
 export type CredentialFormValues = z.infer<typeof credentialSchema>;

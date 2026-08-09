@@ -1,0 +1,7 @@
+{
+  "functions": {
+    "app/[locale]/admin/(authenticated)/posts/new/page.tsx": {
+      "maxDuration": 60
+    }
+  }
+}
