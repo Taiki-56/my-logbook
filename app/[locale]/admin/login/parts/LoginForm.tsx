@@ -5,6 +5,7 @@ import { CredentialFormValues, getLocalizedCredentialSchema } from "@/schemas/cr
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Lock, Mail } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { type } from "os";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 
@@ -37,8 +38,9 @@ const LoginForm = () => {
         setSubmitStatus("success");
         reset();
       }
-    } catch (error: any) {
-      const isRedirectError = error?.message === "NEXT_REDIRECT" || error?.digest?.startsWith("NEXT_REDIRECT");
+    } catch (error: unknown) {
+      const err = error as Error & { digest?: string };
+      const isRedirectError = err?.message === "NEXT_REDIRECT" || err?.digest?.startsWith("NEXT_REDIRECT");
       if (isRedirectError) {
         throw error;
       }
@@ -51,74 +53,77 @@ const LoginForm = () => {
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="space-y-4">
+      className="space-y-5 sm:space-y-6">
       {/* Email Field */}
       <div>
         <label
           htmlFor="email"
-          className="block font-['Geist:Medium'] font-medium text-[12px] text-[#1b1c1c] tracking-[0.24px] mb-2">
+          className="block font-['Geist:Medium'] font-medium text-[13px] sm:text-[14px] text-[#1b1c1c] tracking-[0.24px] mb-2 sm:mb-2.5">
           {t("emailLabel")}
         </label>
         <div className="relative">
-          <div className="absolute left-3 top-1/2 -translate-y-1/2">
-            <Mail className="w-4.5 h-4.5 text-[#414754]" />
+          <div className="absolute left-3.5 sm:left-4 top-1/2 -translate-y-1/2">
+            <Mail className="w-5 h-5 text-[#414754]" />
           </div>
           <input
             {...register("email")}
             type="email"
             id="email"
             placeholder={t("emailPlaceholder")}
-            className={`w-full h-11 pl-11 pr-4 border rounded-lg font-['Geist:Regular'] text-[14px] text-[#1b1c1c] placeholder:text-[#999] focus:outline-none focus:ring-1 transition-colors ${
+            className={`w-full h-12 sm:h-14 pl-11 sm:pl-12 pr-4 border rounded-lg font-['Geist:Regular'] text-[14px] sm:text-base text-[#1b1c1c] placeholder:text-[#999] focus:outline-none focus:ring-1 transition-colors ${
               errors.email
                 ? "border-red-500 focus:border-red-500 focus:ring-red-500"
                 : "border-[#c1c6d7] focus:border-[#0058c3] focus:ring-[#0058c3]"
             }`}
           />
         </div>
-        {errors.email && <p className="mt-1.5 text-[12px] text-red-600">{errors.email.message}</p>}
+        {errors.email && <p className="mt-1.5 text-[12px] sm:text-[13px] text-red-600">{errors.email.message}</p>}
       </div>
 
       {/* Password Field */}
       <div>
         <label
           htmlFor="password"
-          className="block font-['Geist:Medium'] font-medium text-[12px] text-[#1b1c1c] tracking-[0.24px] mb-2">
+          className="block font-['Geist:Medium'] font-medium text-[13px] sm:text-[14px] text-[#1b1c1c] tracking-[0.24px] mb-2 sm:mb-2.5">
           {t("passwordLabel")}
         </label>
         <div className="relative">
-          <div className="absolute left-3 top-1/2 -translate-y-1/2">
-            <Lock className="w-4.5 h-4.5 text-[#414754]" />
+          <div className="absolute left-3.5 sm:left-4 top-1/2 -translate-y-1/2">
+            <Lock className="w-5 h-5 text-[#414754]" />
           </div>
           <input
             {...register("password")}
             type="password"
             id="password"
             placeholder={t("passwordPlaceholder")}
-            className={`w-full h-11 pl-11 pr-4 border rounded-lg font-['Geist:Regular'] text-[14px] text-[#1b1c1c] placeholder:text-[#999] focus:outline-none focus:ring-1 transition-colors ${
+            className={`w-full h-12 sm:h-14 pl-11 sm:pl-12 pr-4 border rounded-lg font-['Geist:Regular'] text-[14px] sm:text-base text-[#1b1c1c] placeholder:text-[#999] focus:outline-none focus:ring-1 transition-colors ${
               errors.password
                 ? "border-red-500 focus:border-red-500 focus:ring-red-500"
                 : "border-[#c1c6d7] focus:border-[#0058c3] focus:ring-[#0058c3]"
             }`}
           />
         </div>
-        {errors.password && <p className="mt-1.5 text-[12px] text-red-600">{errors.password.message}</p>}
+        {errors.password && <p className="mt-1.5 text-[12px] sm:text-[13px] text-red-600">{errors.password.message}</p>}
       </div>
 
       {/* Submit Button */}
-      <button
-        type="submit"
-        disabled={submitStatus === "submitting"}
-        className="w-full h-11 bg-[#1b1c1c] text-white font-['Geist:Medium'] font-medium text-[14px] rounded-lg hover:bg-[#2a2b2b] transition-colors disabled:opacity-50 disabled:cursor-not-allowed mt-2">
-        {/* 🌟 修正: signInButton から loginButton に変更 */}
-        {submitStatus === "submitting" ? t("statusSubmitting") : t("loginButton")}
-      </button>
+      <div className="pt-2 sm:pt-4">
+        <button
+          type="submit"
+          disabled={submitStatus === "submitting"}
+          className="w-full h-12 sm:h-14 bg-[#1b1c1c] text-white font-['Geist:Medium'] font-medium text-[15px] sm:text-base rounded-lg hover:bg-[#2a2b2b] transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+          {submitStatus === "submitting" ? t("statusSubmitting") : t("loginButton")}
+        </button>
+      </div>
 
       {/* Status Messages */}
       {submitStatus === "error" && (
-        <p className="text-[13px] text-red-600 text-center font-['Geist:Medium']">{t("statusError")}</p>
+        <p className="text-[13px] sm:text-[14px] text-red-600 text-center font-['Geist:Medium']">{t("statusError")}</p>
       )}
       {submitStatus === "success" && (
-        <p className="text-[13px] text-green-600 text-center font-['Geist:Medium']">{t("statusSuccess")}</p>
+        <p className="text-[13px] sm:text-[14px] text-green-600 text-center font-['Geist:Medium']">
+          {t("statusSuccess")}
+        </p>
       )}
     </form>
   );
