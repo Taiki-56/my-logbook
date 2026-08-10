@@ -1,17 +1,18 @@
 import DEFAULT_POST_IMAGE from "@/libs/constants";
+import { PostWithRelations } from "@/types/post";
 import Image from "next/image";
 
 type Props = {
-  post: any;
-  displayContent: any;
+  post: PostWithRelations;
+  displayContent: PostWithRelations["contents"][number];
 };
 
-const ArticleContent = ({ post, displayContent }: Props) => {
+const PostContent = ({ post, displayContent }: Props) => {
   return (
     <article className="lg:col-span-8 bg-white rounded-2xl shadow-[0_2px_8px_rgba(0,0,0,0.04)] border border-[#e4e2e2] overflow-hidden flex flex-col">
       {/* 1. トップエリア：タイトルとメタ情報 */}
-      <header className="px-6 pt-8 md:px-10 md:pt-10 lg:px-12 lg:pt-12">
-        <div className="flex items-center gap-4 text-[#5e5e5e] font-['JetBrains_Mono'] text-sm mb-4">
+      <header className="px-4 pt-6 sm:px-6 sm:pt-8 md:px-10 md:pt-10 lg:px-12 lg:pt-12">
+        <div className="flex items-center gap-3 text-[#5e5e5e] font-['JetBrains_Mono'] text-xs sm:text-sm mb-3 sm:mb-4">
           <time dateTime={post.createdAt.toISOString()}>
             {new Date(post.createdAt).toLocaleDateString("ja-JP", {
               year: "numeric",
@@ -39,15 +40,13 @@ const ArticleContent = ({ post, displayContent }: Props) => {
             5 min read
           </span>
         </div>
-        <h1 className="text-3xl md:text-4xl font-bold font-['Noto_Sans_JP'] text-[#1b1c1c] leading-[1.4] tracking-tight mb-6">
+        <h1 className="text-[22px] sm:text-3xl md:text-4xl font-bold font-['Noto_Sans_JP'] text-[#1b1c1c] leading-[1.4] tracking-tight mb-5 sm:mb-6">
           {displayContent.title}
         </h1>
       </header>
 
-      {/* 2. サムネイル画像（最大幅を制限して中央配置） */}
-      {/* 🌟 px-6 等でテキストと左右の開始位置を合わせ、フレックスで中央寄せ */}
-      <div className="w-full px-6 md:px-10 lg:px-12 mb-8 flex justify-center">
-        {/* 🌟 max-w-[850px] と角丸 (rounded-xl) を追加 */}
+      {/* 2. サムネイル画像 */}
+      <div className="w-full px-4 sm:px-6 md:px-10 lg:px-12 mb-6 sm:mb-8 flex justify-center">
         <div className="relative w-full max-w-212.5 aspect-video max-h-112.5 bg-[#f5f3f3] rounded-xl overflow-hidden border border-[#e4e2e2] shadow-sm">
           <Image
             src={post.thumbnail || DEFAULT_POST_IMAGE}
@@ -61,31 +60,32 @@ const ArticleContent = ({ post, displayContent }: Props) => {
       </div>
 
       {/* 3. ボトムエリア：概要文と本文 */}
-      <div className="px-6 pb-10 md:px-10 md:pb-12 lg:px-12">
+      <div className="px-4 pb-8 sm:px-6 sm:pb-10 md:px-10 md:pb-12 lg:px-12">
         {displayContent.seoDescription && (
-          <p className="text-base md:text-lg text-[#414754] font-medium leading-relaxed bg-[#fbf9f8] p-5 rounded-xl border-l-4 border-[#0058c3] mb-8">
+          <p className="text-[14px] sm:text-[15px] md:text-base text-[#414754] font-medium leading-relaxed bg-[#fbf9f8] p-4 sm:p-5 rounded-xl border-l-4 border-[#0058c3] mb-6 sm:mb-8">
             {displayContent.seoDescription}
           </p>
         )}
         <div
-          className="prose prose-lg max-w-none font-['Noto_Sans_JP'] text-[#2d313a]
+          className="prose max-w-none font-['Noto_Sans_JP'] text-[#2d313a]
                      
                      /* H2のスタイル */
                      prose-headings:font-bold prose-headings:text-[#1b1c1c] prose-headings:tracking-tight
-                     prose-h2:border-b prose-h2:border-gray-200 prose-h2:pb-3 prose-h2:mt-20 prose-h2:mb-6
+                     prose-h2:text-[20px] sm:prose-h2:text-[24px] prose-h2:border-b prose-h2:border-gray-200 prose-h2:pb-2 prose-h2:mt-14 sm:prose-h2:mt-16 prose-h2:mb-4 sm:prose-h2:mb-6
                      
                      /* H3のスタイル */
-                     prose-h3:mt-10 prose-h3:mb-2
+                     prose-h3:text-[18px] sm:prose-h3:text-[20px] prose-h3:mt-8 sm:prose-h3:mt-10 prose-h3:mb-2
                      
-                     /* Pタグのスタイル */
-                     prose-p:leading-[1.8] prose-p:mb-6
+                     /* Pタグ・リストのスタイル */
+                     prose-p:text-[15px] sm:prose-p:text-base prose-p:leading-[1.8] prose-p:mb-5 sm:prose-p:mb-6
+                     prose-li:text-[15px] sm:prose-li:text-base
                      
                      /* リンクと画像のスタイル */
                      prose-a:text-[#0058c3] prose-a:no-underline hover:prose-a:underline
                      prose-img:rounded-xl prose-img:shadow-sm prose-img:mx-auto
                      
                      /* リストのスタイル */
-                     prose-ul:my-6 prose-li:my-2 prose-li:marker:text-[#0058c3]"
+                     prose-ul:my-5 sm:prose-ul:my-6 prose-li:my-1.5 sm:prose-li:my-2 prose-li:marker:text-[#0058c3]"
           dangerouslySetInnerHTML={{ __html: displayContent.html || "<p>本文がありません。</p>" }}
         />
       </div>
@@ -93,4 +93,4 @@ const ArticleContent = ({ post, displayContent }: Props) => {
   );
 };
 
-export default ArticleContent;
+export default PostContent;

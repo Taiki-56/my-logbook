@@ -1,13 +1,14 @@
 import { Link } from "@/i18n/navigation";
+import { PostWithRelations } from "@/types/post";
 
 type Props = {
-  postTags: any[];
+  postTags: PostWithRelations["postTags"];
 };
 
 const TagsWidget = ({ postTags }: Props) => {
   return (
-    <div className="bg-white rounded-2xl shadow-[0_2px_8px_rgba(0,0,0,0.04)] border border-[#e4e2e2] p-6 lg:p-7">
-      <h3 className="font-['JetBrains_Mono'] font-bold text-[13px] tracking-widest uppercase text-[#414754] mb-6 border-b border-gray-100 pb-3 flex items-center gap-2">
+    <div className="bg-white rounded-2xl shadow-[0_2px_8px_rgba(0,0,0,0.04)] border border-[#e4e2e2] p-5 lg:p-7">
+      <h3 className="font-['JetBrains_Mono'] font-bold text-[13px] tracking-widest uppercase text-[#414754] mb-5 border-b border-gray-100 pb-2.5 flex items-center gap-2">
         <svg
           width="16"
           height="16"
@@ -24,7 +25,7 @@ const TagsWidget = ({ postTags }: Props) => {
         </svg>
         Tags
       </h3>
-      <div className="flex flex-wrap gap-2.5">
+      <div className="flex flex-wrap gap-2">
         {postTags.map((pt) => {
           const tagContent = pt.tag.contents?.[0];
           const tagName = tagContent?.name || decodeURIComponent(pt.tag.slug);
@@ -33,7 +34,7 @@ const TagsWidget = ({ postTags }: Props) => {
             <Link
               href={`/posts?tag=${pt.tag.slug}`}
               key={pt.tagId}
-              className="bg-[#f5f3f3] hover:bg-[#e4e2e2] transition-colors border border-[#c1c6d7] text-[#414754] px-3 pt-1 pb-1.5 rounded text-[13px] font-medium cursor-pointer flex items-center">
+              className="bg-[#f5f3f3] hover:bg-[#e4e2e2] transition-colors border border-[#c1c6d7] text-[#414754] px-2.5 pt-1 pb-1.5 rounded text-[12.5px] font-medium cursor-pointer flex items-center">
               <span className="text-[#0058c3] mr-1">#</span> {tagName}
             </Link>
           );
