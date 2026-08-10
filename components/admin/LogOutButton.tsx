@@ -13,9 +13,9 @@ const LogOutButton = async () => {
           redirectTo: `/${locale}/admin/login`
         });
       }}>
-      <button className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-[#414754] bg-white border border-[#c1c6d7] rounded-lg hover:text-[#0058c3] hover:border-[#0058c3] hover:bg-[#fbf9f8] transition-all duration-200 shadow-sm group">
+      <button className="flex items-center gap-2 px-2 md:px-4 py-2 text-sm font-medium text-[#414754] bg-white border border-[#c1c6d7] rounded-lg hover:text-[#0058c3] hover:border-[#0058c3] hover:bg-[#fbf9f8] transition-all duration-200 shadow-sm group">
         <LogOut className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
-        <span>Log Out</span>
+        <span className="hidden md:inline">Log Out</span>
       </button>
     </form>
   );

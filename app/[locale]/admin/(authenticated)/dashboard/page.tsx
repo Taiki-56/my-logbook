@@ -13,16 +13,18 @@ const Page = async () => {
   if (!res.success || !res.data) {
     return (
       <AdminSidebar>
-        <div className="p-8 text-red-500">{t("loadError")}</div>
+        <div className="p-4 md:p-8 text-red-500">{t("loadError")}</div>
       </AdminSidebar>
     );
   }
+
   const { totalPosts, draftPosts, translationRate, currentStreak, recentActivity, categories, needsTranslationCount } =
     res.data;
 
   return (
     <AdminSidebar>
-      <div className="p-8 max-w-7xl mx-auto">
+      {/* 🌟 修正: max-w-7xl(1280px) → max-w-[1600px] へ拡大。大画面(2xl)向けにゆとりのある余白(p-10)を追加 */}
+      <div className="p-4 md:p-8 2xl:p-10 max-w-400 mx-auto w-full">
         <Overview
           totalPosts={totalPosts}
           draftPosts={draftPosts}
@@ -30,9 +32,10 @@ const Page = async () => {
           currentStreak={currentStreak}
         />
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* 🌟 修正: 大画面で横に広がりすぎないように、ギャップを lg:gap-8 へ少しだけ広げる */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6 lg:gap-8">
           <RecentLogs activities={recentActivity} />
-          <div className="space-y-6">
+          <div className="space-y-4 md:space-y-6 lg:space-y-8">
             <TranslationHealth count={needsTranslationCount} />
             <CategoryDistribution categories={categories} />
           </div>

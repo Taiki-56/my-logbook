@@ -8,7 +8,7 @@ const Page = async () => {
 
   return (
     <AdminSidebar>
-      <div className="min-h-screen bg-white">
+      <div className="h-full">
         <PageHeader />
         <PostTable posts={posts} />
       </div>

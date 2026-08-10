@@ -37,11 +37,8 @@ export default function AdminSidebar({ children }: AdminSidebarProps) {
   };
 
   return (
-    // 修正: min-h-screen をやめ、画面全体からヘッダーの高さ(約73px)を引いた高さに固定
-    <div className="flex h-[calc(100vh-73px)] bg-[#fbf9f8]">
-      {/* Sidebar: overflow-y-auto でサイドバー単体でスクロールできるようにする */}
-      <aside className="w-60 bg-[#fbf9f8] border-r border-[#c1c6d7] flex flex-col overflow-y-auto pt-6">
-        {/* New Post Button */}
+    <div className="flex h-[calc(100dvh-60px)] md:h-[calc(100vh-73px)] bg-[#fbf9f8]">
+      <aside className="hidden md:flex w-60 bg-[#fbf9f8] border-r border-[#c1c6d7] flex-col overflow-y-auto pt-6">
         <div className="px-4 pb-6">
           <Link href="/admin/posts/new">
             <button className="w-full bg-[#1b1c1c] text-[#fbf9f8] py-2 rounded-lg flex items-center justify-center gap-2 font-['Geist:Medium'] font-medium text-[13px] tracking-[0.13px] hover:bg-[#2a2b2b] transition-colors shadow-sm">
@@ -51,7 +48,6 @@ export default function AdminSidebar({ children }: AdminSidebarProps) {
           </Link>
         </div>
 
-        {/* Navigation */}
         <nav className="flex-1 px-3 space-y-1">
           {navItems.map((item) => {
             const Icon = item.icon;
@@ -76,8 +72,34 @@ export default function AdminSidebar({ children }: AdminSidebarProps) {
         </nav>
       </aside>
 
-      {/* Main Content: overflow-y-auto でメイン領域のみスクロールさせる */}
-      <main className="flex-1 overflow-y-auto">{children}</main>
+      {/* Main Content */}
+      <main className="flex-1 overflow-y-auto pb-20 md:pb-0">{children}</main>
+
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-[#c1c6d7] flex justify-around items-center h-16 z-50 px-2 pb-safe shadow-[0_-2px_10px_rgba(0,0,0,0.05)]">
+        <Link
+          href="/admin/posts/new"
+          className="p-2 text-[#414754] flex flex-col items-center gap-1">
+          <div className="bg-[#1b1c1c] text-white p-1.5 rounded-full shadow-sm">
+            <Plus className="w-4 h-4" />
+          </div>
+          <span className="text-[10px] font-['Geist:Medium'] whitespace-nowrap">{t("newPost")}</span>
+        </Link>
+        {navItems.map((item) => {
+          const Icon = item.icon;
+          const active = isActive(item.href);
+          return (
+            <Link
+              key={item.href}
+              href={item.href}
+              className={`p-2 flex flex-col items-center gap-1 transition-colors ${
+                active ? "text-[#0058c3]" : "text-[#5e5e5e]"
+              }`}>
+              <Icon className="w-5 h-5" />
+              <span className="text-[10px] font-['Geist:Medium'] whitespace-nowrap">{item.name}</span>
+            </Link>
+          );
+        })}
+      </nav>
     </div>
   );
 }
