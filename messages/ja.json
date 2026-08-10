@@ -20,7 +20,8 @@
       "viewAll": "すべての注目の記事を見る"
     },
     "latest": {
-      "heading": "LATEST / 最新の記事"
+      "heading": "LATEST / 最新の記事",
+      "viewAll": "すべての記事を見る"
     },
     "tags": {
       "heading": "TAGS / タグ"
