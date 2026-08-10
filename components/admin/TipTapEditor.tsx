@@ -19,27 +19,30 @@ const TipTapEditor = ({ content, onChange }: TipTapEditorProps) => {
     },
     editorProps: {
       attributes: {
-        class: "prose max-w-none focus:outline-none min-h-[400px] p-6 font-['Liberation_Serif:Regular'] text-[#1b1c1c]"
+        class:
+          "prose max-w-none focus:outline-none min-h-[300px] lg:min-h-[400px] p-6 font-['Liberation_Serif:Regular'] text-[#1b1c1c] text-base leading-relaxed"
       }
     }
   });
 
   return (
-    <div className="bg-white border border-[#c1c6d7] rounded shadow-sm overflow-hidden">
-      <div className="bg-[#fbf9f8] border-b border-[#c1c6d7] px-4 py-2 flex gap-2">
-        {/* ここにツールバーを配置 */}
+    <div className="bg-white border border-[#c1c6d7] rounded-lg shadow-sm overflow-hidden flex flex-col h-full">
+      <div className="bg-[#fbf9f8] border-b border-[#c1c6d7] px-4 py-3 flex flex-wrap gap-2.5 items-center">
         <button
           onClick={() => editor?.chain().focus().toggleBold().run()}
-          className="px-2 py-1 text-xs font-bold border rounded hover:bg-gray-200">
+          className="px-2 py-1 text-xs font-bold border rounded hover:bg-gray-200 bg-white">
           B
         </button>
         <button
           onClick={() => editor?.chain().focus().toggleHeading({ level: 2 }).run()}
-          className="px-2 py-1 text-xs font-bold border rounded hover:bg-gray-200">
+          className="px-2 py-1 text-xs font-bold border rounded hover:bg-gray-200 bg-white">
           H2
         </button>
       </div>
-      <EditorContent editor={editor} />
+
+      <div className="flex-1 overflow-y-auto custom-scrollbar">
+        <EditorContent editor={editor} />
+      </div>
     </div>
   );
 };

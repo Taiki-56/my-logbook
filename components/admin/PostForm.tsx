@@ -41,17 +41,10 @@ const PostForm = ({ mode, sourceData, initialData }: PostFormProps) => {
   const t = useTranslations("Admin.editor");
   const router = useRouter();
 
-  //* State to track translation progress
   const [isTranslating, setIsTranslating] = useState(false);
-
-  //* Editor states
   const [editorAST, setEditorAST] = useState<Prisma.InputJsonValue | null>(initialData?.projectData ?? null);
   const [editorHtml, setEditorHtml] = useState<string>(initialData?.html ?? "");
-
-  //* Thumbnail upload state
   const [isUploading, setIsUploading] = useState(false);
-
-  //* Tag management state
   const [tagInput, setTagInput] = useState("");
 
   const {
@@ -81,9 +74,6 @@ const PostForm = ({ mode, sourceData, initialData }: PostFormProps) => {
 
   const hasTranslated = useRef(false);
 
-  //* ==========================================
-  //* Trigger and apply auto-translation
-  //* ==========================================
   useEffect(() => {
     const doTranslation = async () => {
       if (hasTranslated.current) return;
@@ -94,28 +84,23 @@ const PostForm = ({ mode, sourceData, initialData }: PostFormProps) => {
         try {
           const translated = await translatePostAction(sourceData.targetLang, sourceData.postId);
 
-          //* 1. Set basic fields
           setValue("title", translated.title, { shouldDirty: true, shouldValidate: true });
           setValue("seoTitle", translated.seoTitle ?? "", { shouldDirty: true });
           setValue("seoDescription", translated.seoDescription ?? "", { shouldDirty: true });
 
-          //* 2. Inherit thumbnail
           if (translated.thumbnail) {
             setValue("thumbnail", translated.thumbnail, { shouldDirty: true, shouldValidate: true });
           }
 
-          //* 3. Apply translated slug
           if (translated.slug) {
             setValue("slug", formatSlug(translated.slug), { shouldDirty: true, shouldValidate: true });
           }
 
-          //* 4. Apply translated tags (extracting names)
           if (translated.tags && Array.isArray(translated.tags)) {
             const tagNames = translated.tags.map((tag: { name: string }) => tag.name);
             setValue("tags", tagNames, { shouldDirty: true, shouldValidate: true });
           }
 
-          //* 5. Set HTML content
           setEditorHtml(translated.html);
           setEditorAST(null);
         } catch (error) {
@@ -130,9 +115,6 @@ const PostForm = ({ mode, sourceData, initialData }: PostFormProps) => {
     doTranslation();
   }, [mode, sourceData, setValue]);
 
-  //* ==========================================
-  //* UI logic below
-  //* ==========================================
   const currentThumbnail = watch("thumbnail");
   const tags = watch("tags") || [];
 
@@ -212,7 +194,6 @@ const PostForm = ({ mode, sourceData, initialData }: PostFormProps) => {
 
     if (mode === "create") {
       if (sourceData?.postId && sourceData?.targetLang) {
-        //* Flow A: Save Translated Post
         try {
           const res = await createTranslatedPostAction({
             postId: sourceData.postId,
@@ -232,23 +213,24 @@ const PostForm = ({ mode, sourceData, initialData }: PostFormProps) => {
             alert(`Server Error:\n${res.error}`);
           } else {
             alert("Translation saved successfully!");
-            //* Redirect back to the edit page of the translated content
-            router.push("/admin/posts/edit/dashboard");
+            router.push("/admin/posts");
           }
         } catch (error) {
           console.error("Network error:", error);
         }
       } else {
-        //* Flow B: Create Brand New Post (Base Language)
         try {
           const res = await createPostAction(payload);
-          if (res?.error) alert(`Server Error:\n${res.error}`);
+          if (res?.error) {
+            alert(`Server Error:\n${res.error}`);
+          } else {
+            router.push("/admin/posts");
+          }
         } catch (error) {
           console.error("Network error:", error);
         }
       }
     } else {
-      //* Flow C: Update Existing Post Content
       if (!initialData?.postId || !initialData?.locale) return;
       try {
         const res = await savePostAction({
@@ -286,28 +268,26 @@ const PostForm = ({ mode, sourceData, initialData }: PostFormProps) => {
 
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="flex gap-6 p-6 flex-1 min-h-0 items-stretch">
-        <div className="flex-1 min-w-0 h-full">
+        className="flex flex-col lg:flex-row gap-6 p-4 lg:p-6 flex-1 min-h-0 items-stretch overflow-y-auto lg:overflow-hidden custom-scrollbar">
+        <div className="w-full lg:flex-1 min-w-0 lg:h-full lg:overflow-y-auto flex flex-col pb-2 lg:pb-0 custom-scrollbar space-y-6">
+          <div className="bg-white border border-[#c1c6d7] rounded-lg p-6 shadow-sm">
+            <input
+              {...register("title")}
+              type="text"
+              placeholder={t("titlePlaceholder") || "Enter post title..."}
+              className="w-full text-3xl lg:text-[36px] font-bold text-[#1b1c1c] outline-none font-['Liberation_Serif:Bold'] placeholder:text-gray-300 bg-transparent"
+            />
+            {errors.title && <p className="text-red-500 text-xs mt-1">{errors.title.message}</p>}
+          </div>
+
           <RichEditor
             key={isTranslating ? "translating" : "ready"}
             initialContent={editorHtml || (initialData?.projectData as JSONContent | undefined)}
             onChange={handleEditorChange}
-            titleSlot={
-              <div>
-                <input
-                  {...register("title")}
-                  type="text"
-                  placeholder={t("titlePlaceholder") || "Enter post title..."}
-                  className="w-full text-[28px] font-bold text-[#1b1c1c] outline-none font-['Liberation_Serif:Bold'] placeholder:text-gray-300"
-                />
-                {errors.title && <p className="text-red-500 text-xs mt-1">{errors.title.message}</p>}
-              </div>
-            }
           />
         </div>
-
-        {/* 🌟 右側：サイドバーペイン (ここだけが独立して縦スクロール可能) */}
-        <div className="w-[320px] h-full overflow-y-auto shrink-0 pr-2 space-y-6">
+        <div className="w-full lg:w-[320px] shrink-0 space-y-6 lg:h-full lg:overflow-y-auto lg:pr-2 custom-scrollbar">
+          {" "}
           <div className="bg-white border border-[#c1c6d7] rounded-lg p-4 shadow-sm">
             <h3 className="font-['Geist:Bold'] font-bold text-[11px] text-[#414754] tracking-[0.88px] mb-4 uppercase">
               {t("publishSettings")}
@@ -474,12 +454,11 @@ const PostForm = ({ mode, sourceData, initialData }: PostFormProps) => {
               </div>
             </div>
           </div>
-          {/* 🌟 Saveボタンもサイドバーのスクロール終端に配置 */}
-          <div className="sticky bottom-0 bg-[#fbf9f8] pt-3 pb-7 z-10 w-full mt-2">
+          <div className="sticky bottom-0 bg-[#fbf9f8] pt-3 pb-6 lg:pb-7 z-10 w-full mt-2">
             <button
               type="submit"
               disabled={isSubmitting || isTranslating}
-              className="w-full px-4 py-3 text-[14px] font-bold text-white bg-[#0058c3] rounded hover:bg-[#0046a0] transition-colors disabled:opacity-50 cursor-pointer shadow-sm">
+              className="w-full px-4 py-3 text-[14px] font-bold text-white bg-[#0058c3] rounded-lg hover:bg-[#0046a0] transition-colors disabled:opacity-50 cursor-pointer shadow-sm">
               {isSubmitting ? "Saving..." : "Save Post"}
             </button>
           </div>
