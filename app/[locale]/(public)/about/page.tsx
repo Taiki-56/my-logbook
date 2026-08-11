@@ -7,13 +7,13 @@ import TechStack from "./parts/TechStack";
 const Page = () => {
   return (
     <div className="max-w-384 w-full mx-auto px-4 lg:px-8 pb-16">
-      {/* Mobile Layout */}
-      <div className="flex flex-col gap-8 py-12 lg:hidden">
+      {/* 🌟 Mobile Layout */}
+      <div className="flex flex-col gap-10 py-8 lg:hidden">
         <Profile />
-        <TechStack />
-        <CoreFocus />
         <Biography />
         <Experiences />
+        <TechStack />
+        <CoreFocus />
       </div>
 
       {/* Desktop Layout */}

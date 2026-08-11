@@ -20,7 +20,8 @@
       "viewAll": "Voir tous les articles en vedette"
     },
     "latest": {
-      "heading": "DERNIERS ARTICLES"
+      "heading": "RÉCENTS",
+      "viewAll": "Voir tous les articles"
     },
     "tags": {
       "heading": "TAGS"

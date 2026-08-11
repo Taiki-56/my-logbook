@@ -20,7 +20,8 @@
       "viewAll": "View all featured posts"
     },
     "latest": {
-      "heading": "LATEST"
+      "heading": "LATEST",
+      "viewAll": "View all posts"
     },
     "tags": {
       "heading": "TAGS"

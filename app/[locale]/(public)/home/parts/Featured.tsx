@@ -38,50 +38,50 @@ const Featured = ({ posts }: Props) => {
         {displayPosts.map((post) => (
           <div
             key={post.id}
-            className="bg-[#fbf9f8] border border-[#c1c6d7] rounded-lg p-4 flex gap-4 hover:shadow-md transition-shadow h-auto min-h-36 relative group">
+            className="bg-[#fbf9f8] border border-[#c1c6d7] rounded-lg p-3 sm:p-4 flex gap-4 hover:shadow-md transition-shadow relative group items-center">
             <Link
               href={`/posts/${post.slug}`}
               className="absolute inset-0 z-0"
               aria-label={post.title}
             />
 
-            <div className="w-25 h-22 bg-[#e6e6e6] rounded shrink-0 relative overflow-hidden pointer-events-none z-10">
+            <div className="w-40 sm:w-50 bg-[#e6e6e6] rounded shrink-0 relative aspect-video overflow-hidden pointer-events-none z-10 border border-[#eaeaea]">
               <Image
                 src={post.thumbnail || DEFAULT_POST_IMAGE}
                 alt={post.title}
                 fill
-                sizes="100px"
-                className="object-cover"
+                sizes="(max-width: 640px) 160px, 200px"
+                className="object-cover transition-transform duration-500 group-hover:scale-105"
               />
             </div>
 
-            <div className="flex-1 flex flex-col z-10 pointer-events-none">
-              <h3 className="font-['Noto_Sans_JP'] font-bold text-[13px] text-black leading-normal mb-1 line-clamp-2 group-hover:text-[#0058c3] transition-colors">
+            <div className="flex-1 flex flex-col gap-1.5 z-10 pointer-events-none">
+              <h3 className="font-['Noto_Sans_JP'] font-bold text-[15px] sm:text-base text-black leading-snug mb-1 line-clamp-2 group-hover:text-[#0058c3] transition-colors">
                 {post.title}
               </h3>
-              <p className="font-['Noto_Sans_JP'] font-normal text-[11px] text-[#707581] leading-normal mb-2 line-clamp-2">
+              <p className="font-['Noto_Sans_JP'] font-normal text-[13px] sm:text-sm text-[#707581] leading-relaxed line-clamp-2">
                 {post.description}
               </p>
-              <div className="flex flex-wrap gap-1.5 items-center mb-2">
-                <span className="font-['JetBrains_Mono'] font-medium text-[10px] text-[#0058c3] uppercase">
+              <div className="flex flex-wrap gap-1.5 items-center">
+                <span className="font-['JetBrains_Mono'] font-medium text-[10px] sm:text-xs text-[#0058c3] uppercase tracking-wider">
                   {post.category}
                 </span>
                 <span className="text-[#c1c6d7] text-[10px]">•</span>
-                <span className="font-['Noto_Sans_JP'] font-normal text-[10px] text-[#707581] leading-normal">
+                <span className="font-['Noto_Sans_JP'] font-normal text-[10px] sm:text-xs text-[#707581] leading-normal">
                   {post.date}
                 </span>
                 <span className="text-[#c1c6d7] text-[10px]">•</span>
-                <span className="font-['Noto_Sans_JP'] font-normal text-[10px] text-[#707581] leading-normal flex items-center gap-1">
+                <span className="font-['Noto_Sans_JP'] font-normal text-[10px] sm:text-xs text-[#707581] leading-normal flex items-center gap-1">
                   <ClockIcon />
                   {post.readTime.toString().replace(" read", "")} min
                 </span>
               </div>
-              <div className="flex gap-1.5 flex-wrap mt-auto pointer-events-auto z-20">
+              <div className="flex gap-1.5 flex-wrap mt-auto pt-2 pointer-events-auto z-20">
                 {post.tags.slice(0, 3).map((tag) => (
                   <Link
                     key={tag}
                     href={`/posts?tag=${tag}`}
-                    className="bg-[#f5f3f3] border border-[#c1c6d7] rounded-sm px-1.5 py-0.5 font-['JetBrains_Mono'] font-normal text-[10px] text-[#414754] hover:bg-[#e9e8e7] hover:text-[#0058c3] transition-colors">
+                    className="bg-[#f5f3f3] border border-[#c1c6d7] rounded-sm px-1.5 py-0.5 font-['JetBrains_Mono'] font-normal text-[10px] sm:text-xs text-[#414754] hover:bg-[#e9e8e7] hover:text-[#0058c3] transition-colors">
                     {tag}
                   </Link>
                 ))}

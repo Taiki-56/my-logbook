@@ -1,9 +1,17 @@
 import { getPostBySlugAction } from "@/actions/post";
+import buildPostMetadata from "@/helpers/buildPostMetadata";
+import { Metadata } from "next";
 import { notFound } from "next/navigation";
-import ArticleContent from "./parts/ArticleContent";
 import AuthorWidget from "./parts/AuthorWidget";
+import PostContent from "./parts/PostContent";
 import TagsWidget from "./parts/TagsWidget";
 import TocWidget from "./parts/TocWidget";
+
+//* Create custom metadata for every post
+export async function generateMetadata(props: Props): Promise<Metadata> {
+  const params = await props.params;
+  return buildPostMetadata(params.slug, params.locale);
+}
 
 type Props = {
   params: Promise<{
@@ -25,19 +33,17 @@ const Page = async (props: Props) => {
   const post = res.data;
 
   const displayContent =
-    post.contents.find((c: any) => c.locale === locale) ||
-    post.contents.find((c: any) => c.locale === "ja") ||
-    post.contents[0];
+    post.contents.find((c) => c.locale === locale) || post.contents.find((c) => c.locale === "ja") || post.contents[0];
 
   if (!displayContent) {
     notFound();
   }
 
   return (
-    <div className="min-h-screen bg-[#fbf9f8] py-8 lg:py-16">
+    <div className="min-h-screen bg-[#fbf9f8] py-6 sm:py-8 lg:py-16">
       <div className="max-w-425 w-full mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10">
-          <ArticleContent
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-10">
+          <PostContent
             post={post}
             displayContent={displayContent}
           />
