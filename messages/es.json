@@ -10,6 +10,12 @@
   "SearchBar": {
     "placeholder": "Buscar artículos, etiquetas, temas..."
   },
+  "NotFound": {
+    "title": "Página no encontrada",
+    "description": "Es posible que la página que buscas haya sido eliminada o que su URL haya cambiado.",
+    "backToDashboard": "Volver al panel",
+    "backToHome": "Volver al inicio"
+  },
   "Home": {
     "title": {
       "title": "Sin Límites: Un Registro de Curiosidad",

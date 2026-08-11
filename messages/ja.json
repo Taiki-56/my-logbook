@@ -10,6 +10,12 @@
   "SearchBar": {
     "placeholder": "記事、タグ、トピックを検索..."
   },
+  "NotFound": {
+    "title": "ページが見つかりません",
+    "description": "お探しのページは削除されたか、URLが変更された可能性があります。",
+    "backToDashboard": "ダッシュボードに戻る",
+    "backToHome": "ホームに戻る"
+  },
   "Home": {
     "title": {
       "title": "枠に囚われない、好奇心の記録",
