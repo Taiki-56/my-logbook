@@ -10,6 +10,12 @@
   "SearchBar": {
     "placeholder": "Rechercher des articles, des tags, des sujets..."
   },
+  "NotFound": {
+    "title": "Page introuvable",
+    "description": "La page que vous recherchez a peut-être été supprimée ou son adresse URL a changé.",
+    "backToDashboard": "Retour au tableau de bord",
+    "backToHome": "Retour à l'accueil"
+  },
   "Home": {
     "title": {
       "title": "Sans Limites : Une Chronique de Curiosité",
