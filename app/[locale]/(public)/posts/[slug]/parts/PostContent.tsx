@@ -61,20 +61,15 @@ const PostContent = ({ post, displayContent }: Props) => {
 
       {/* 3. ボトムエリア：概要文と本文 */}
       <div className="px-4 pb-8 sm:px-6 sm:pb-10 md:px-10 md:pb-12 lg:px-12">
-        {displayContent.seoDescription && (
-          <p className="text-[14px] sm:text-[15px] md:text-base text-[#414754] font-medium leading-relaxed bg-[#fbf9f8] p-4 sm:p-5 rounded-xl border-l-4 border-[#0058c3] mb-6 sm:mb-8">
-            {displayContent.seoDescription}
-          </p>
-        )}
         <div
           className="prose max-w-none font-['Noto_Sans_JP'] text-[#2d313a]
                      
-                     /* H2のスタイル */
+                     /* 🌟 H2のスタイル：背景グレーと左オレンジ太線を適用 */
                      prose-headings:font-bold prose-headings:text-[#1b1c1c] prose-headings:tracking-tight
-                     prose-h2:text-[20px] sm:prose-h2:text-[24px] prose-h2:border-b prose-h2:border-gray-200 prose-h2:pb-2 prose-h2:mt-14 sm:prose-h2:mt-16 prose-h2:mb-4 sm:prose-h2:mb-6
+                     prose-h2:text-[20px] sm:prose-h2:text-[24px] prose-h2:bg-[#f8f8f8] prose-h2:border-l-[5px] prose-h2:border-l-[#ee7e22] prose-h2:py-3 prose-h2:px-4 sm:prose-h2:px-5 prose-h2:mt-14 sm:prose-h2:mt-16 prose-h2:mb-4 sm:prose-h2:mb-6
                      
-                     /* H3のスタイル */
-                     prose-h3:text-[18px] sm:prose-h3:text-[20px] prose-h3:mt-8 sm:prose-h3:mt-10 prose-h3:mb-2
+                     /* 🌟 H3のスタイル：オレンジ下線を適用 */
+                     prose-h3:text-[18px] sm:prose-h3:text-[20px] prose-h3:border-b-2 prose-h3:border-b-[#ee7e22] prose-h3:pb-2 prose-h3:mt-8 sm:prose-h3:mt-10 prose-h3:mb-3
                      
                      /* Pタグ・リストのスタイル */
                      prose-p:text-[15px] sm:prose-p:text-base prose-p:leading-[1.8] prose-p:mb-5 sm:prose-p:mb-6
@@ -85,7 +80,11 @@ const PostContent = ({ post, displayContent }: Props) => {
                      prose-img:rounded-xl prose-img:shadow-sm prose-img:mx-auto
                      
                      /* リストのスタイル */
-                     prose-ul:my-5 sm:prose-ul:my-6 prose-li:my-1.5 sm:prose-li:my-2 prose-li:marker:text-[#0058c3]"
+                     prose-ul:my-5 sm:prose-ul:my-6 prose-li:my-1.5 sm:prose-li:my-2 prose-li:marker:text-[#0058c3]
+                     
+                     /* 🌟 要約ボックス(Blockquote)とコードブロックのスタイル（エディタ側の装飾に合わせる） */
+                     prose-blockquote:border-l-4 prose-blockquote:border-[#0058c3] prose-blockquote:bg-[#f0f5ff] prose-blockquote:py-3 prose-blockquote:px-5 prose-blockquote:rounded-r prose-blockquote:not-italic prose-blockquote:text-[#1b1c1c]
+                     prose-pre:bg-[#1b1c1c] prose-pre:text-[#fbf9f8] prose-pre:rounded-md prose-pre:p-4 prose-pre:font-mono prose-pre:text-sm prose-pre:my-6"
           dangerouslySetInnerHTML={{ __html: displayContent.html || "<p>本文がありません。</p>" }}
         />
       </div>

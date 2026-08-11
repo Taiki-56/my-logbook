@@ -50,6 +50,7 @@ const removeEmptyImageTags = (html: string) => html.replace(/<img(?![^>]*\bsrc=)
 
 const editorExtensions = [
   StarterKit.configure({
+    link: false,
     codeBlock: {
       HTMLAttributes: {
         class: "bg-[#1b1c1c] text-[#fbf9f8] rounded-md p-4 font-mono text-sm my-6 overflow-x-auto"
@@ -90,7 +91,11 @@ const RichEditor = ({ initialContent, onChange }: RichEditorProps) => {
       attributes: {
         class:
           "tiptap-content prose prose-neutral max-w-none focus:outline-none h-full lg:h-full lg:overflow-y-auto lg:custom-scrollbar p-6 md:p-8 font-['Liberation_Serif:Regular'] text-[#1b1c1c] leading-relaxed " +
-          "prose-headings:font-['Liberation_Serif:Bold'] prose-headings:text-[#1b1c1c] prose-h2:mt-8 prose-h2:mb-3 prose-h2:text-[2rem] prose-h2:leading-tight prose-h3:mt-6 prose-h3:mb-2 prose-h3:text-[1.5rem] prose-h3:leading-snug " +
+          "prose-headings:font-['Liberation_Serif:Bold'] prose-headings:text-[#1b1c1c] " +
+          /* H2スタイル */
+          "prose-h2:mt-10 prose-h2:mb-5 prose-h2:text-[1.75rem] prose-h2:leading-tight prose-h2:bg-[#f8f8f8] prose-h2:border-l-[5px] prose-h2:border-[#ee7e22] prose-h2:py-3 prose-h2:px-5 " +
+          /* H3スタイル */
+          "prose-h3:mt-8 prose-h3:mb-4 prose-h3:text-[1.35rem] prose-h3:leading-snug prose-h3:border-b-2 prose-h3:border-[#ee7e22] prose-h3:pb-2 " +
           "prose-p:my-3 prose-ul:my-4 prose-ol:my-4 prose-ul:list-disc prose-ol:list-decimal prose-ul:pl-6 prose-ol:pl-6 prose-li:my-1 prose-li:marker:text-[#0058c3] " +
           "prose-blockquote:border-l-4 prose-blockquote:border-[#0058c3] prose-blockquote:bg-[#f0f5ff] prose-blockquote:py-3 prose-blockquote:px-5 prose-blockquote:rounded-r prose-blockquote:not-italic prose-blockquote:text-[#1b1c1c]"
       }
