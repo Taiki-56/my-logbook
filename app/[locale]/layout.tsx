@@ -1,8 +1,8 @@
-import { routing } from "@/i18n/routing";
 import type { Metadata } from "next";
-import { NextIntlClientProvider, hasLocale } from "next-intl";
+import { NextIntlClientProvider } from "next-intl";
 import { notFound } from "next/navigation";
 
+import { isValidLocale } from "@/types/config";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -12,16 +12,14 @@ export const metadata: Metadata = {
 
 type Props = {
   children: React.ReactNode;
-  params: Promise<{ locale?: string }>;
+  params: Promise<{ locale: string }>;
 };
 
 const RootLayout = async (props: Props) => {
-  // Ensure that the incoming `locale` is valid
   const { locale } = await props.params;
-  if (!locale || !hasLocale(routing.locales, locale)) {
+  if (!isValidLocale(locale)) {
     notFound();
   }
-
   return (
     <html lang={locale}>
       <body>

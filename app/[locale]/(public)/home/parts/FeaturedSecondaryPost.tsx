@@ -2,6 +2,7 @@ import ClockIcon from "@/components/ui/ClockIcon";
 import { Link } from "@/i18n/navigation";
 import { DisplayPost } from "@/types/post";
 
+/** Compact card used for secondary featured posts alongside the hero card. */
 const FeaturedSecondaryCard = ({ post }: { post: DisplayPost }) => (
   <div className="bg-[#fbf9f8] border border-[#c1c6d7] rounded p-6.25 flex flex-col hover:shadow-md transition-shadow min-h-52 relative group">
     <Link

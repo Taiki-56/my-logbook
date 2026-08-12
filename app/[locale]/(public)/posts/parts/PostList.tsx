@@ -9,6 +9,7 @@ type Props = {
   totalPages: number;
 };
 
+/** Renders the paginated post grid/list on the posts list page, or an empty state when there are no results. */
 const PostList = ({ posts, currentPage, totalPages }: Props) => {
   if (posts.length === 0) {
     return (
@@ -20,7 +21,7 @@ const PostList = ({ posts, currentPage, totalPages }: Props) => {
 
   return (
     <div className="w-full pt-6 lg:pt-12">
-      {/* Desktop Layout (Grid) */}
+      {/* Desktop */}
       <div className="hidden lg:grid grid-cols-2 gap-8">
         {posts.map((post) => (
           <PostCard
@@ -30,8 +31,7 @@ const PostList = ({ posts, currentPage, totalPages }: Props) => {
           />
         ))}
       </div>
-
-      {/* Mobile Layout (Horizontal) */}
+      {/* Mobile Layout */}
       <div className="flex flex-col gap-6 lg:hidden">
         {posts.map((post) => (
           <PostCard
@@ -41,8 +41,6 @@ const PostList = ({ posts, currentPage, totalPages }: Props) => {
           />
         ))}
       </div>
-
-      {/* Pagination */}
       {totalPages > 1 && (
         <div className="w-full pt-10 lg:pt-16">
           <Pagination

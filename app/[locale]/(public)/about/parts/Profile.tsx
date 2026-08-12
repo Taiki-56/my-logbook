@@ -1,3 +1,7 @@
+/**
+ * Renders the About page's profile card: avatar, name, job title, and contact/social links.
+ */
+
 import GithubIcon from "@/components/ui/GithubIcon";
 import LinkedinIcon from "@/components/ui/Linkedin";
 import { Mail } from "lucide-react";
@@ -34,13 +38,11 @@ const Profile = () => {
         </p>
       </div>
 
-      {/* 🌟 スマホ時は gap-8 (32px) で間隔をさらに広げ、PC時は gap-4 (16px) */}
       <div className="flex gap-8 lg:gap-4 items-center pt-2 lg:pt-3">
         <a
           href="mailto:taiki.honda.tech@gmail.com"
           className="text-[#414754] hover:text-[#1b1c1c] transition-colors"
           aria-label="Email">
-          {/* 🌟 スマホ時は w-7 h-7 (28px) に拡大し、PC時は w-5 h-5 (20px) */}
           <Mail className="w-7 h-7 lg:w-5 lg:h-5" />
         </a>
         <a

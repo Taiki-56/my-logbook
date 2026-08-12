@@ -27,7 +27,7 @@ const ActiveFilters = ({ searchKeywords = [], activeTags = [] }: ActiveFiltersPr
     return params.toString() ? `/posts?${params.toString()}` : "/posts";
   };
 
-  //* 指定したタグを除外したURLを生成する関数
+  //* Builds the /posts URL with the given tag removed.
   const getRemoveTagUrl = (tagToRemove: string) => {
     const params = new URLSearchParams();
 
@@ -41,7 +41,7 @@ const ActiveFilters = ({ searchKeywords = [], activeTags = [] }: ActiveFiltersPr
 
   return (
     <div className="flex w-full items-center gap-2 flex-wrap">
-      {/* 検索キーワードのバッジ展開 */}
+      {/* Search keyword badges */}
       {searchKeywords.map((keyword, index) => (
         <div
           key={`search-${index}`}
@@ -49,7 +49,6 @@ const ActiveFilters = ({ searchKeywords = [], activeTags = [] }: ActiveFiltersPr
           <span className="font-['JetBrains_Mono'] font-medium text-[14px] leading-[19.6px] text-[#414754] whitespace-nowrap">
             {t("searchPrefix")} {keyword}
           </span>
-          {/* 🌟 button から Link に変更し、hrefに計算したURLを渡す */}
           <Link
             href={getRemoveKeywordUrl(keyword)}
             className="size-4 rounded-xl flex items-center justify-center text-[#414754] hover:bg-[#e5e3e3] transition-colors"
@@ -59,7 +58,7 @@ const ActiveFilters = ({ searchKeywords = [], activeTags = [] }: ActiveFiltersPr
         </div>
       ))}
 
-      {/* タグのバッジ展開 */}
+      {/* Tag badges */}
       {activeTags.map((tag, index) => (
         <div
           key={`tag-${index}`}
@@ -67,7 +66,6 @@ const ActiveFilters = ({ searchKeywords = [], activeTags = [] }: ActiveFiltersPr
           <span className="font-['JetBrains_Mono'] font-medium text-[14px] leading-[19.6px] text-[#001a43] whitespace-nowrap">
             {t("tagPrefix")} {tag}
           </span>
-          {/* 🌟 button から Link に変更し、hrefに計算したURLを渡す */}
           <Link
             href={getRemoveTagUrl(tag)}
             className="size-4 rounded-xl flex items-center justify-center text-[#001a43] hover:bg-[#b0c4f5] transition-colors"
@@ -77,7 +75,6 @@ const ActiveFilters = ({ searchKeywords = [], activeTags = [] }: ActiveFiltersPr
         </div>
       ))}
 
-      {/* 🌟 button から Link に変更し、href="/posts" を渡す */}
       <Link
         href="/posts"
         className="font-['Noto_Sans_JP'] font-medium text-[14px] leading-[19.6px] text-[#0058c3] hover:underline whitespace-nowrap ml-2">

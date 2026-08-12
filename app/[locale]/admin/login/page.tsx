@@ -1,3 +1,8 @@
+/**
+ * Admin login page. Redirects already-authenticated users to the dashboard;
+ * otherwise renders the branding panel and the login form.
+ */
+
 import { redirect } from "@/i18n/navigation";
 import { auth } from "@/libs/auth";
 import { getTranslations } from "next-intl/server";

@@ -8,12 +8,14 @@ type StatusBadgeProps = {
 
 type StatusTranslationKey = "published" | "draft" | "uncreated";
 
+/** Maps a raw post status to its i18n translation key for the status badge. */
 const getStatusTranslationKey = (status: string): StatusTranslationKey => {
   if (status === "PUBLISHED") return "published";
   if (status === "DRAFT") return "draft";
   return "uncreated";
 };
 
+/** Maps a post status to the badge's background/text/border color classes. */
 const getStatusColor = (status: string | null) => {
   if (!status) return "bg-gray-50 text-gray-400 border border-gray-200";
   switch (status) {
@@ -26,6 +28,7 @@ const getStatusColor = (status: string | null) => {
   }
 };
 
+/** Per-locale status badge shown in the admin post table; links to the edit page if the locale exists. */
 const StatusBadge = async ({ lang, statusObj }: StatusBadgeProps) => {
   const t = await getTranslations("Admin.posts.statusBadge");
 

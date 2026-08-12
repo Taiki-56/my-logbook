@@ -1,3 +1,7 @@
+/**
+ * Renders the About page's biography section from translated heading and paragraph text.
+ */
+
 import { useTranslations } from "next-intl";
 
 const Biography = () => {

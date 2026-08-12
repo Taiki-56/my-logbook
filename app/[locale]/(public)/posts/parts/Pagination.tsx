@@ -9,6 +9,7 @@ interface PaginationProps {
   totalPages: number;
 }
 
+/** Pagination controls for the posts list, with separate desktop and mobile layouts. */
 const Pagination = ({ currentPage, totalPages }: PaginationProps) => {
   const t = useTranslations("Posts");
   const router = useRouter();
@@ -50,7 +51,6 @@ const Pagination = ({ currentPage, totalPages }: PaginationProps) => {
     <>
       {/* Desktop Pagination */}
       <div className="hidden lg:flex border-t border-[#c1c6d7] pt-16.25 items-center justify-between w-full">
-        {/* Previous Button */}
         <button
           onClick={() => handlePageChange(currentPage - 1)}
           disabled={currentPage === 1}
@@ -63,7 +63,6 @@ const Pagination = ({ currentPage, totalPages }: PaginationProps) => {
           </span>
         </button>
 
-        {/* Page Numbers */}
         <div className="flex gap-2 items-center">
           {renderPageNumbers().map((page, index) => {
             if (page === "...") {
@@ -88,7 +87,6 @@ const Pagination = ({ currentPage, totalPages }: PaginationProps) => {
           })}
         </div>
 
-        {/* Next Button */}
         <button
           onClick={() => handlePageChange(currentPage + 1)}
           disabled={currentPage === totalPages}
@@ -104,7 +102,6 @@ const Pagination = ({ currentPage, totalPages }: PaginationProps) => {
 
       {/* Mobile Pagination */}
       <div className="lg:hidden flex gap-2 items-center justify-center pt-8">
-        {/* Previous Button */}
         <button
           onClick={() => handlePageChange(currentPage - 1)}
           disabled={currentPage === 1}
@@ -114,7 +111,6 @@ const Pagination = ({ currentPage, totalPages }: PaginationProps) => {
           <ChevronLeftIcon />
         </button>
 
-        {/* Page Numbers */}
         <div className="flex gap-1 items-center">
           {renderPageNumbers().map((page, index) => {
             if (page === "...") {
@@ -139,7 +135,6 @@ const Pagination = ({ currentPage, totalPages }: PaginationProps) => {
           })}
         </div>
 
-        {/* Next Button */}
         <button
           onClick={() => handlePageChange(currentPage + 1)}
           disabled={currentPage === totalPages}

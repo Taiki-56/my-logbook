@@ -2,27 +2,30 @@
 
 import { useEffect, useState } from "react";
 
-// 見出しのデータ構造を定義
+// * Shape of a single table-of-contents entry
 type TocItem = {
-  id: string; // アンカーリンク用（スクロール先）
-  text: string; // 見出しのテキスト
-  level: number; // 2 = h2, 3 = h3
-  displayNum: string; // "1.", "1.1." などの表示用番号
+  id: string;
+  text: string;
+  level: number;
+  displayNum: string; // Display numbering such as "1.", "1.2."
 };
 
+/**
+ * Sidebar table of contents built from the h2/h3 headings rendered inside the post body.
+ * Assigns anchor ids to headings that lack one and computes hierarchical numbering.
+ */
 const TocWidget = () => {
   const [toc, setToc] = useState<TocItem[]>([]);
 
   useEffect(() => {
-    // 🌟 ArticleContent 内の .prose クラスの中にある h2, h3 のみを取得する
+    // * Only collect h2/h3 elements inside the post's .prose content
     const elements = Array.from(document.querySelectorAll(".prose h2, .prose h3"));
 
     let h2Count = 0;
     let h3Count = 0;
 
     const tocItems = elements.map((el, index) => {
-      // 🌟 ここが魔法のコード！
-      // Tiptapにidがなくても、ここでブラウザ上のHTMLに直接idを付与してしまいます。
+      //* Assigns an id directly on the rendered DOM element even when Tiptap didn't set one
       if (!el.id) {
         el.id = `heading-${index}`;
       }
@@ -30,14 +33,14 @@ const TocWidget = () => {
       const level = el.tagName.toLowerCase() === "h2" ? 2 : 3;
       let displayNum = "";
 
-      // 階層番号の計算ロジック（1., 1.1., 1.2., 2...）
+      //* Computes hierarchical numbering (1., 1.1., 1.2., 2...)
       if (level === 2) {
         h2Count++;
-        h3Count = 0; // h2が変わったらh3のカウントをリセット
+        h3Count = 0; //* Reset the h3 counter whenever a new h2 starts
         displayNum = `${h2Count}.`;
       } else if (level === 3) {
         h3Count++;
-        // h2がないのにh3が先に来るイレギュラーなケースへの対応
+        //* Handle the edge case where an h3 appears before any h2
         const parentNum = h2Count === 0 ? 1 : h2Count;
         displayNum = `${parentNum}.${h3Count}.`;
       }
@@ -53,12 +56,11 @@ const TocWidget = () => {
     setToc(tocItems);
   }, []);
 
-  // 目次クリック時のスムーズスクロール処理
+  /** Smoothly scrolls to the heading corresponding to the clicked TOC entry. */
   const handleClick = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
     e.preventDefault();
     const element = document.getElementById(id);
     if (element) {
-      // 画面上部にくっつきすぎないように少し余白（オフセット）を持たせる
       const offset = 32;
       const bodyRect = document.body.getBoundingClientRect().top;
       const elementRect = element.getBoundingClientRect().top;
@@ -72,7 +74,7 @@ const TocWidget = () => {
     }
   };
 
-  // 見出しが1つもない場合は、ウィジェット自体を非表示にする
+  // * Hide the widget entirely when there are no headings
   if (toc.length === 0) return null;
 
   return (
@@ -124,8 +126,8 @@ const TocWidget = () => {
             key={item.id}
             className={`transition-colors line-clamp-2 ${
               item.level === 2
-                ? "font-medium" // h2 の場合は普通の太さ
-                : "pl-4 relative before:content-[''] before:absolute before:left-0 before:top-2 before:w-1.5 before:h-1.5 before:border-l before:border-b before:border-gray-400" // h3 の場合はインデントとL字アイコン
+                ? "font-medium"
+                : "pl-4 relative before:content-[''] before:absolute before:left-0 before:top-2 before:w-1.5 before:h-1.5 before:border-l before:border-b before:border-gray-400" // Indented with an L-shaped connector icon for h3 entries
             }`}>
             <a
               href={`#${item.id}`}

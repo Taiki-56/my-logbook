@@ -1,3 +1,8 @@
+/**
+ * Admin dashboard page. Fetches aggregate stats for the authenticated user and renders
+ * the overview cards, recent activity log, translation health, and category distribution.
+ */
+
 import { getDashboardStatsAction } from "@/actions/post";
 import AdminSidebar from "@/components/admin/AdminSidebar";
 import { getTranslations } from "next-intl/server";
@@ -23,7 +28,6 @@ const Page = async () => {
 
   return (
     <AdminSidebar>
-      {/* 🌟 修正: max-w-7xl(1280px) → max-w-[1600px] へ拡大。大画面(2xl)向けにゆとりのある余白(p-10)を追加 */}
       <div className="p-4 md:p-8 2xl:p-10 max-w-400 mx-auto w-full">
         <Overview
           totalPosts={totalPosts}
@@ -32,7 +36,6 @@ const Page = async () => {
           currentStreak={currentStreak}
         />
 
-        {/* 🌟 修正: 大画面で横に広がりすぎないように、ギャップを lg:gap-8 へ少しだけ広げる */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6 lg:gap-8">
           <RecentLogs activities={recentActivity} />
           <div className="space-y-4 md:space-y-6 lg:space-y-8">

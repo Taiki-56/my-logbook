@@ -1,5 +1,10 @@
 "use client";
 
+/**
+ * Admin media library page. Currently renders static placeholder media items in a
+ * grid or list view; not yet wired to a real media service (see actions/media.ts).
+ */
+
 import AdminSidebar from "@/components/admin/AdminSidebar";
 import { FileText, Grid3x3, Image as ImageIcon, List, Search, Upload, Video } from "lucide-react";
 import { useTranslations } from "next-intl";
@@ -9,7 +14,7 @@ export default function MediaPage() {
   const t = useTranslations("Admin.media");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
 
-  // Mock media data
+  // * Placeholder data for the media library UI (not yet wired to a backend service)
   const mediaItems = [
     {
       type: "image",
@@ -61,6 +66,7 @@ export default function MediaPage() {
     }
   ];
 
+  /** Maps a media item's type to its display icon. */
   const getIcon = (type: string) => {
     switch (type) {
       case "image":
@@ -77,17 +83,14 @@ export default function MediaPage() {
   return (
     <AdminSidebar>
       <div className="min-h-screen bg-white">
-        {/* Header */}
         <header className="border-b border-[#c1c6d7] bg-white px-8 py-6">
           <div className="mb-6">
             <h1 className="font-['Geist:Bold'] font-bold text-[28px] text-[#1b1c1c] mb-2">{t("title")}</h1>
             <p className="font-['Geist:Regular'] text-[14px] text-[#414754]">{t("subtitle")}</p>
           </div>
 
-          {/* Toolbar */}
           <div className="flex items-center justify-between gap-4">
             <div className="flex items-center gap-4 flex-1">
-              {/* Search */}
               <div className="flex-1 relative max-w-md">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#414754]" />
                 <input
@@ -97,7 +100,6 @@ export default function MediaPage() {
                 />
               </div>
 
-              {/* Type Filter */}
               <select className="h-11 px-4 border border-[#c1c6d7] rounded-lg font-['Geist:Regular'] text-[14px] text-[#414754] focus:outline-none focus:border-[#0058c3] bg-white">
                 <option>{t("allTypes")}</option>
                 <option>{t("images")}</option>
@@ -105,7 +107,6 @@ export default function MediaPage() {
                 <option>{t("video")}</option>
               </select>
 
-              {/* Sort */}
               <select className="h-11 px-4 border border-[#c1c6d7] rounded-lg font-['Geist:Regular'] text-[14px] text-[#414754] focus:outline-none focus:border-[#0058c3] bg-white">
                 <option>
                   {t("sortBy")} {t("dateAddedNewest")}
@@ -119,7 +120,6 @@ export default function MediaPage() {
             </div>
 
             <div className="flex items-center gap-2">
-              {/* View Toggle */}
               <div className="flex border border-[#c1c6d7] rounded-lg overflow-hidden">
                 <button
                   onClick={() => setViewMode("grid")}
@@ -137,7 +137,6 @@ export default function MediaPage() {
                 </button>
               </div>
 
-              {/* Upload Button */}
               <button className="bg-[#1b1c1c] text-white px-6 py-2.5 h-11 rounded-lg flex items-center gap-2 font-['Geist:Medium'] font-medium text-[14px] hover:bg-[#2a2b2b] transition-colors">
                 <Upload className="w-4 h-4" />
                 {t("uploadAssets")}
@@ -154,7 +153,6 @@ export default function MediaPage() {
                 <div
                   key={idx}
                   className="group border border-[#c1c6d7] rounded-xl overflow-hidden hover:shadow-lg transition-shadow cursor-pointer">
-                  {/* Thumbnail */}
                   <div className="aspect-square bg-[#f5f5f5] flex items-center justify-center relative overflow-hidden">
                     {item.thumbnail ? (
                       <div className="w-full h-full bg-linear-to-br from-[#c1c6d7] to-[#e2e2e2]" />
@@ -164,7 +162,6 @@ export default function MediaPage() {
                     <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors" />
                   </div>
 
-                  {/* Info */}
                   <div className="p-3 bg-white">
                     <div className="font-['Geist:Medium'] font-medium text-[13px] text-[#1b1c1c] truncate mb-1">
                       {item.name}
@@ -179,7 +176,6 @@ export default function MediaPage() {
             </div>
           ) : (
             <div className="border border-[#c1c6d7] rounded-xl overflow-hidden">
-              {/* List Header */}
               <div className="grid grid-cols-12 gap-4 px-6 py-4 bg-[#fbf9f8] border-b border-[#c1c6d7] font-['Geist:Medium'] font-medium text-[11px] text-[#414754] tracking-[0.88px]">
                 <div className="col-span-1">TYPE</div>
                 <div className="col-span-4">NAME</div>
@@ -188,7 +184,6 @@ export default function MediaPage() {
                 <div className="col-span-3">DATE ADDED</div>
               </div>
 
-              {/* List Items */}
               <div className="divide-y divide-[#c1c6d7]">
                 {mediaItems.map((item, idx) => (
                   <div

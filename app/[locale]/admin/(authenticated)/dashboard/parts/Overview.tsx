@@ -7,6 +7,7 @@ type Props = {
   currentStreak: number;
 };
 
+/** Dashboard summary cards: total posts, translation rate, draft count, and current streak. */
 const Overview = async ({ totalPosts, translationRate, draftPosts, currentStreak }: Props) => {
   const t = await getTranslations("Admin.dashboard.overview");
 

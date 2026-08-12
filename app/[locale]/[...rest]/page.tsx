@@ -1,5 +1,7 @@
-//* This is to show not found page.
-//* Check app/[locale]/not-found.tsx and components/NotFoundPage.tsx
+/**
+ * Catch-all route for any unmatched path under [locale]; triggers the not-found page.
+ * See app/[locale]/not-found.tsx and components/common/NotFoundPage.tsx.
+ */
 
 import { notFound } from "next/navigation";
 

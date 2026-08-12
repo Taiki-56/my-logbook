@@ -11,6 +11,7 @@ interface PostCardProps {
   layout?: "grid" | "horizontal";
 }
 
+/** Post preview card used on the posts list page, in either a grid or horizontal layout. */
 const PostCard = ({ post, layout = "grid" }: PostCardProps) => {
   const t = useTranslations("Posts");
 
@@ -25,7 +26,6 @@ const PostCard = ({ post, layout = "grid" }: PostCardProps) => {
 
         {/* Image */}
         <div className="bg-[#f5f3f3] border border-[#c1c6d7] rounded-xs w-full p-px pointer-events-none z-10">
-          {/* 🌟 aspect-video (16:9) でサムネが切り取られずにフル表示されます */}
           <div className="relative w-full aspect-video overflow-hidden rounded-[inherit]">
             <Image
               priority

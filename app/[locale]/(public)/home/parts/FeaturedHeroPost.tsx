@@ -4,6 +4,7 @@ import DEFAULT_POST_IMAGE from "@/libs/constants";
 import { DisplayPost } from "@/types/post";
 import Image from "next/image";
 
+/** Large hero-style card used for the home page's top featured post. */
 const FeaturedHeroCard = ({ post, className = "" }: { post: DisplayPost; className?: string }) => (
   <div
     className={`bg-[#fbf9f8] border border-[#c1c6d7] rounded overflow-hidden flex flex-col lg:flex-row items-center hover:shadow-md transition-shadow relative group ${className}`}>

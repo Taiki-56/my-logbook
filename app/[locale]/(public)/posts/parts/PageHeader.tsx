@@ -11,9 +11,11 @@ type Props = {
   searchQueryString: string;
 };
 
+/** Posts list header: dynamic title, search bar, tag filter pills, and active filter badges. */
 const PageHeader = async ({ title, allAvailableTags, activeTags, searchKeywords, searchQueryString }: Props) => {
   const t = await getTranslations("Posts");
 
+  //* Builds the /posts URL with the given tag toggled on/off in the query string.
   const getTagToggleUrl = (tagSlug: string) => {
     const params = new URLSearchParams();
     if (searchQueryString) params.set("search", searchQueryString);

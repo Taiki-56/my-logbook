@@ -10,6 +10,7 @@ type Props = {
   categories: CategoryStat[];
 };
 
+/** Dashboard card showing published posts distribution across categories as progress bars. */
 const CategoryDistribution = async ({ categories }: Props) => {
   const t = await getTranslations("Admin.dashboard.categoryDistribution");
 

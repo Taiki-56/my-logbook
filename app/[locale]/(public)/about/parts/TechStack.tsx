@@ -1,3 +1,8 @@
+/**
+ * Renders the About page's tech-stack grid, grouped by category, with a hover tooltip
+ * explaining why each technology is used.
+ */
+
 import { useTranslations } from "next-intl";
 import { FaSlack } from "react-icons/fa6";
 import {
@@ -26,6 +31,7 @@ import {
 
 const iconSize = 56;
 
+/** Maps a tech stack name to its brand icon, falling back to a lettered placeholder. */
 const getSkillIcon = (skillName: string) => {
   switch (skillName) {
     case "TypeScript":
@@ -193,8 +199,10 @@ const getSkillIcon = (skillName: string) => {
   }
 };
 
+// * Normalizes a tech stach name into the i18n message key used for its tooltip reason
 const formatKey = (name: string) => name.toLowerCase().replace(/[^a-z0-9]/g, "");
 
+// * Tech stack items grouped by category, rendered in the order defined here
 const techCategories = [
   {
     key: "languages",

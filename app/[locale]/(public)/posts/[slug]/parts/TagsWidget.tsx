@@ -1,11 +1,14 @@
 import { Link } from "@/i18n/navigation";
 import { PostWithRelations } from "@/types/post";
+import { getTranslations } from "next-intl/server";
 
 type Props = {
   postTags: PostWithRelations["postTags"];
 };
 
-const TagsWidget = ({ postTags }: Props) => {
+/** Sidebar widget listing a post's tags as links back to the filtered posts list. */
+const TagsWidget = async ({ postTags }: Props) => {
+  const t = await getTranslations("Posts.slug.tagsWidget");
   return (
     <div className="bg-white rounded-2xl shadow-[0_2px_8px_rgba(0,0,0,0.04)] border border-[#e4e2e2] p-5 lg:p-7">
       <h3 className="font-['JetBrains_Mono'] font-bold text-[13px] tracking-widest uppercase text-[#414754] mb-5 border-b border-gray-100 pb-2.5 flex items-center gap-2">
@@ -39,7 +42,7 @@ const TagsWidget = ({ postTags }: Props) => {
             </Link>
           );
         })}
-        {postTags.length === 0 && <span className="text-sm text-gray-400">タグがありません</span>}
+        {postTags.length === 0 && <span className="text-sm text-gray-400">{t("noTags")}</span>}
       </div>
     </div>
   );

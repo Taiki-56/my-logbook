@@ -1,3 +1,8 @@
+/**
+ * Renders the About page's career/experience timeline, with separate mobile and
+ * desktop (alternating left/right) layouts built from translated timeline data.
+ */
+
 import { ArrowRight, Sparkles } from "lucide-react";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
@@ -13,6 +18,7 @@ const Experiences = () => {
     linkUrl?: string;
   }>;
 
+  /** Splits a description into lines, bolding any line that marks a challenge/highlight. */
   const renderDescription = (text: string) => {
     return text.split("\n").map((line, i) => (
       <span
@@ -37,9 +43,8 @@ const Experiences = () => {
         </h3>
       </div>
       <div className="relative mt-2 lg:mt-0">
-        {/* 🌟 Mobile Layout - よりシャープなタイムラインへ */}
+        {/* Mobile Layout */}
         <div className="flex flex-col gap-8 lg:hidden">
-          {/* 線を w-0.5 から w-px (1px) にして洗練された印象に */}
           <div className="absolute left-2 top-2 bottom-0 w-px bg-[#d1d5db]" />
           {timelineData.map((item, index) => {
             const isCurrent = index === 0;
@@ -47,7 +52,6 @@ const Experiences = () => {
               <div
                 key={index}
                 className="flex items-start gap-4 relative">
-                {/* ドットのサイズを w-4 h-4 に微調整 */}
                 <div
                   className={`absolute left-2 top-1.5 -translate-x-1/2 w-4 h-4 rounded-full border-[2.5px] ${
                     isCurrent ? "border-[#0058c3] bg-white" : "border-[#d1d5db] bg-white"
@@ -82,7 +86,7 @@ const Experiences = () => {
           })}
         </div>
 
-        {/* Desktop Layout - Alternating left/right */}
+        {/* Desktop Layout */}
         <div className="hidden lg:flex lg:flex-col lg:gap-8">
           {/* Vertical Line */}
           <div className="absolute left-1/2 top-0 bottom-0 w-0.5 bg-[#c1c6d7] -translate-x-1/2" />

@@ -1,3 +1,8 @@
+/**
+ * Post detail page. Resolves the post by slug, picks the best-matching locale content,
+ * and renders the post alongside author/tags/table-of-contents widgets.
+ */
+
 import { getPostBySlugAction } from "@/actions/post";
 import buildPostMetadata from "@/helpers/buildPostMetadata";
 import { Metadata } from "next";
@@ -7,7 +12,7 @@ import PostContent from "./parts/PostContent";
 import TagsWidget from "./parts/TagsWidget";
 import TocWidget from "./parts/TocWidget";
 
-//* Create custom metadata for every post
+/** Builds page metadata (title, description, etc.) for the post at the given slug/locale. */
 export async function generateMetadata(props: Props): Promise<Metadata> {
   const params = await props.params;
   return buildPostMetadata(params.slug, params.locale);

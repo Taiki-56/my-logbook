@@ -14,6 +14,8 @@ const TAG_COLORS = [
   "text-[#ea580c]",
   "text-[#0891b2]"
 ];
+
+/** Renders the home page's popular tags, as a grid on mobile and pills on desktop. */
 const Tags = ({ tags }: Props) => {
   const t = useTranslations("Home.tags");
 
@@ -25,14 +27,14 @@ const Tags = ({ tags }: Props) => {
         </h2>
       </div>
 
-      {/* Mobile Layout - 3 Column Grid */}
+      {/* Mobile Layout */}
       <div className="grid grid-cols-3 gap-2 lg:hidden">
         {tags.map((tag, index) => {
           const colorClass = TAG_COLORS[index % TAG_COLORS.length];
 
           return (
             <Link
-              key={tag.slug} // 🌟 idの代わりにslugを使用
+              key={tag.slug}
               href={`/posts?tag=${tag.slug}`}
               className="bg-[#fbf9f8] border border-[#c1c6d7] rounded-lg p-2 hover:bg-[#f5f3f3] transition-colors h-16 flex flex-col justify-between">
               <p
@@ -47,11 +49,11 @@ const Tags = ({ tags }: Props) => {
         })}
       </div>
 
-      {/* Desktop Layout - Pills */}
+      {/* Desktop Layout */}
       <div className="hidden lg:flex flex-wrap gap-3 w-full">
         {tags.map((tag) => (
           <Link
-            key={tag.slug} // 🌟 idの代わりにslugを使用
+            key={tag.slug}
             href={`/posts?tag=${tag.slug}`}
             className="bg-[#fbf9f8] border border-[#c1c6d7] rounded-xl px-3.25 py-1 font-['JetBrains_Mono'] font-normal text-[13px] text-[#1b1c1c] leading-[20.8px] hover:bg-[#f5f3f3] transition-colors">
             {tag.name}

@@ -11,6 +11,10 @@ type Props = {
   posts: DisplayPost[];
 };
 
+/**
+ * Renders the home page's "Featured" section: a mobile list plus a desktop
+ * hero/secondary card layout that adapts to the number of featured posts.
+ */
 const Featured = ({ posts }: Props) => {
   const t = useTranslations("Home.featured");
 
