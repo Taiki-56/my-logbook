@@ -9,6 +9,7 @@ import { Metadata } from "next";
  * @param locale - The requested locale.
  * @returns Metadata for the post, or a fallback "not found" title if the post/content is missing.
  */
+
 const buildPostMetadata = async (slug: string, locale: string): Promise<Metadata> => {
   const res = await getPostBySlugAction(slug);
   if (!res.success || !res.data) {
