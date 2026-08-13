@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl";
 import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 
+/** Search input for the posts list page; navigates to /posts with the `search` query param. */
 const SearchBar = () => {
   const t = useTranslations("SearchBar");
   const router = useRouter();
@@ -44,7 +45,6 @@ const SearchBar = () => {
         />
       </div>
 
-      {/* 🌟 外部imgの代わりにSVGアイコンを直接配置して確実かつ綺麗に表示 */}
       <div
         className="absolute left-4 top-1/2 -translate-y-1/2 cursor-pointer flex items-center justify-center p-1"
         onClick={handleSearch}

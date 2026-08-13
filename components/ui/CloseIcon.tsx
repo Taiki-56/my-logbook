@@ -1,3 +1,4 @@
+/** X-shaped close/dismiss icon. */
 const CloseIcon = () => (
   <svg
     width="8"

@@ -4,6 +4,7 @@ import { Link, usePathname } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
 import LanguageSwitcher from "../common/LanguageSwitcher";
 
+/** Site-wide header with the logo, primary nav links, and the language switcher. */
 const Header = () => {
   const t = useTranslations();
   const pathname = usePathname();

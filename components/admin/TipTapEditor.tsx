@@ -1,5 +1,10 @@
 "use client";
 
+/**
+ * Minimal TipTap editor with a small toolbar (bold, H2). Currently unused in favor of
+ * the fuller-featured `RichEditor`; kept as a lightweight reference implementation.
+ */
+
 import { Prisma } from "@/libs/generated/client";
 import { EditorContent, JSONContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";

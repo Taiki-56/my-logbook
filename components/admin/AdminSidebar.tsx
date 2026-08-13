@@ -10,7 +10,8 @@ interface AdminSidebarProps {
   children: ReactNode;
 }
 
-export default function AdminSidebar({ children }: AdminSidebarProps) {
+/** Admin shell layout: desktop sidebar / mobile bottom nav plus the page content. */
+const AdminSidebar = ({ children }: AdminSidebarProps) => {
   const t = useTranslations("Admin.sidebar");
   const pathname = usePathname();
 
@@ -32,6 +33,7 @@ export default function AdminSidebar({ children }: AdminSidebarProps) {
     }
   ];
 
+  /** Whether the given nav item's href matches (or is a parent of) the current path. */
   const isActive = (href: string) => {
     return pathname.includes(href);
   };
@@ -71,10 +73,7 @@ export default function AdminSidebar({ children }: AdminSidebarProps) {
           })}
         </nav>
       </aside>
-
-      {/* Main Content */}
       <main className="flex-1 overflow-y-auto pb-20 md:pb-0">{children}</main>
-
       <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-[#c1c6d7] flex justify-around items-center h-16 z-50 px-2 pb-safe shadow-[0_-2px_10px_rgba(0,0,0,0.05)]">
         <Link
           href="/admin/posts/new"
@@ -102,4 +101,6 @@ export default function AdminSidebar({ children }: AdminSidebarProps) {
       </nav>
     </div>
   );
-}
+};
+
+export default AdminSidebar;

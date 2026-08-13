@@ -1,3 +1,4 @@
+/** Right-pointing chevron icon, used for "next" navigation controls. */
 const ChevronRightIcon = () => (
   <svg
     width="13.333"
