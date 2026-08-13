@@ -1,3 +1,12 @@
+/**
+ * Configures NextAuth.js for the application.
+ *
+ * Uses the Prisma adapter for database integration and a JWT-based strategy
+ * for session management (2-hour expiry, 30-minute rolling updates).
+ * Includes a Credentials provider that authenticates users against the database
+ * using bcrypt for password verification.
+ */
+
 import prisma from "@/libs/prisma";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import bcrypt from "bcrypt";
@@ -8,8 +17,10 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: PrismaAdapter(prisma),
   session: {
     strategy: "jwt",
-    maxAge: 2 * 60 * 60, //* セッション有効期限 = 2時間
-    updateAge: 30 * 60 //* 有効期限を自動延長（ローリングセッション）するための間隔（秒数）を設定
+    // * Session validity period = 2 hours
+    maxAge: 2 * 60 * 60,
+    // * Interval (in seconds) to automatically extend the expiration (rolling session)
+    updateAge: 30 * 60
   },
   providers: [
     Credentials({
@@ -24,11 +35,9 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         const user = await prisma.user.findUnique({
           where: { email: credentials.email as string }
         });
-
         if (!user || !user.passwordHash) return null;
 
         const isPasswordValid = await bcrypt.compare(credentials.password as string, user.passwordHash);
-
         if (!isPasswordValid) return null;
 
         return { id: user.id, email: user.email };
