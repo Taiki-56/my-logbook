@@ -1,3 +1,10 @@
+/**
+ * Supabase storage service.
+ *
+ * Handles file uploads (e.g., thumbnails, content images) directly
+ * to the configured Supabase bucket and returns public URLs.
+ */
+
 import { createClient } from "@supabase/supabase-js";
 import { v4 as uuidv4 } from "uuid";
 
@@ -7,8 +14,9 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 
 const bucketName = process.env.SUPABASE_BUCKET_NAME as string;
 
-type UploadType = "thumbnails" | "avatars" | "content-images";
+type UploadType = "thumbnails" | "content-images";
 
+// * Uploads a file to the specified Supabase storage folder and retrieves its public URL.
 const uploadImageToSupabase = async (file: File, uploadType: UploadType): Promise<string> => {
   const fileExt = file.name.split(".").pop();
   const fileName = `${uuidv4()}.${fileExt}`;

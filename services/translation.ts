@@ -1,5 +1,12 @@
 "use server";
 
+/**
+ * AI Translation server actions.
+ *
+ * Interacts with the Google GenAI (Gemini) API to translate blog posts
+ * and taxonomy tags while enforcing strict JSON output schemas.
+ */
+
 import { postTranslationPrompt, TagTranslationPrompt } from "@/prompts/translation";
 import { postTranslationSchema, tagTranslationSchema } from "@/schemas/translation";
 import { Locale } from "@/types/config";
@@ -10,10 +17,11 @@ const ai = new GoogleGenAI({});
 const getPromptLanguage = (lang: Locale) =>
   ({ ja: "Japanese", en: "English", fr: "French", es: "Spanish" })[lang] || lang;
 
+// * Translates a full blog post into the target language using Gemini.
 const translatePost = async (targetLang: Locale, sourceData: TranslatedPost): Promise<TranslatedPost> => {
   const lang = getPromptLanguage(targetLang);
 
-  //* Remove trailing empty tags (e.g., <p></p>, <p><br></p>) and whitespaces
+  // * Remove trailing empty tags (e.g., <p></p>, <p><br></p>) and whitespaces
   const cleanedHtml = sourceData.html.replace(/(<p><\/p>|<p><br><\/p>|<br>|\s)+$/g, "");
   const cleanSourceData = {
     ...sourceData,
@@ -26,7 +34,7 @@ const translatePost = async (targetLang: Locale, sourceData: TranslatedPost): Pr
     input: prompt,
     generation_config: {
       temperature: 0.4,
-      //* Hard limit to prevent excessive token usage
+      // * Hard limit to prevent excessive token usage
       max_output_tokens: 8192
     },
     response_format: {
@@ -44,6 +52,7 @@ const translatePost = async (targetLang: Locale, sourceData: TranslatedPost): Pr
   try {
     return JSON.parse(resultText);
   } catch (error) {
+    // ! Log critical parsing errors to prevent silent failures when output is truncated
     console.error("🚨 JSON Parse Error! AI output might be truncated.");
     console.error("Total output characters: ", resultText.length);
     console.error("End of output:", resultText.slice(-500));
@@ -51,6 +60,7 @@ const translatePost = async (targetLang: Locale, sourceData: TranslatedPost): Pr
   }
 };
 
+// * Translates an array of missing tags into the target language.
 const translateTags = async (targetLang: Locale, missingTags: string[]): Promise<TranslatedTag[]> => {
   if (missingTags.length === 0) return [];
 
@@ -78,6 +88,7 @@ const translateTags = async (targetLang: Locale, missingTags: string[]): Promise
   try {
     return JSON.parse(resultText);
   } catch (error) {
+    // ! Log critical parsing errors to prevent silent failures when output is truncated
     console.error("🚨 JSON Parse Error! AI output might be truncated.");
     console.error("Total output characters:", resultText.length);
     console.error("End of output:", resultText.slice(-500));

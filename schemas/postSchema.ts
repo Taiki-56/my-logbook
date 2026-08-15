@@ -1,3 +1,11 @@
+/**
+ * Post and content validation schemas.
+ *
+ * Defines Zod schemas used in the admin panel for validating post creation
+ * and content updates. Enforces required fields, SEO constraints based on
+ * publication status, and specific formatting rules.
+ */
+
 import { Prisma } from "@/libs/generated/client";
 import { routingLocales } from "@/types/config";
 import * as z from "zod";
@@ -6,7 +14,7 @@ const CATEGORY_VALUES = ["TECH", "WORK", "FITNESS", "FOOD", "TRAVEL", "LIFE"] as
 const STATUS_VALUES = ["DRAFT", "PUBLISHED"] as const;
 
 //* ==========================================
-//* 1. 新規作成用スキーマ (PostFormValues)
+//* Schema for creating a new post
 //* ==========================================
 const postSchema = z
   .object({
@@ -47,7 +55,7 @@ const postSchema = z
 type PostFormValues = z.infer<typeof postSchema>;
 
 //* ==========================================
-//* 2. 更新・保存用スキーマ (SaveContentInput)
+//* Schema for updating and saving content
 //* ==========================================
 const saveContentSchema = z
   .object({

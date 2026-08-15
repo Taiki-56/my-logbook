@@ -1,7 +1,10 @@
 import { Link } from "@/i18n/navigation";
+import { getTranslations } from "next-intl/server";
 import Image from "next/image";
 
-const AuthorWidget = () => {
+/** Sidebar widget introducing the blog's author, linking to the About page. */
+const AuthorWidget = async () => {
+  const t = await getTranslations("Posts.slug.authorWidget");
   return (
     <div className="bg-white rounded-2xl shadow-[0_2px_8px_rgba(0,0,0,0.04)] border border-[#e4e2e2] p-5 lg:p-7">
       <h3 className="font-['JetBrains_Mono'] font-bold text-[13px] tracking-widest uppercase text-[#414754] mb-5 border-b border-gray-100 pb-2.5 flex items-center gap-2">
@@ -39,7 +42,7 @@ const AuthorWidget = () => {
         </div>
       </Link>
       <p className="text-[13px] sm:text-[14px] text-[#414754] leading-relaxed font-['Noto_Sans_JP']">
-        ソフトウェアエンジニアリングやAIの探求から、ボディビル初出場への挑戦、音楽、料理、異文化への旅まで。枠に囚われず、日々の「面白い」を好奇心の赴くままに形にする記録を発信しています。
+        {t("description")}
       </p>
     </div>
   );

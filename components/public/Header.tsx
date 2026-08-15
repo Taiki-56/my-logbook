@@ -4,6 +4,7 @@ import { Link, usePathname } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
 import LanguageSwitcher from "../common/LanguageSwitcher";
 
+/** Site-wide header with the logo, primary nav links, and the language switcher. */
 const Header = () => {
   const t = useTranslations();
   const pathname = usePathname();
@@ -13,7 +14,7 @@ const Header = () => {
   };
 
   return (
-    <header className="bg-[#fbf9f8] border-b border-[#c1c6d7] border-solid w-full px-4 sm:px-8 lg:px-20">
+    <header className="sticky top-0 z-50 bg-[#fbf9f8] border-b border-[#c1c6d7] border-solid w-full px-4 sm:px-8 lg:px-20">
       <div className="w-full mx-auto h-16 flex items-center justify-between">
         <Link
           href={"/home"}

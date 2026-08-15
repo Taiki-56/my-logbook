@@ -5,10 +5,10 @@ import { CredentialFormValues, getLocalizedCredentialSchema } from "@/schemas/cr
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Lock, Mail } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { type } from "os";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 
+/** Admin login form: validates credentials with Zod and calls the `loginAction` server action. */
 const LoginForm = () => {
   const [submitStatus, setSubmitStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
   const t = useTranslations("Admin.login");
@@ -40,6 +40,7 @@ const LoginForm = () => {
       }
     } catch (error: unknown) {
       const err = error as Error & { digest?: string };
+      // * Next.js redirect() throws internally; rethrow so navigation isn't swallowed as an error
       const isRedirectError = err?.message === "NEXT_REDIRECT" || err?.digest?.startsWith("NEXT_REDIRECT");
       if (isRedirectError) {
         throw error;

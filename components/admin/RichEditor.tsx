@@ -1,5 +1,10 @@
 "use client";
 
+/**
+ * Full-featured TipTap rich text editor used in the admin post form, with a formatting
+ * toolbar (headings, marks, alignment, lists, links, images) and image upload support.
+ */
+
 import { uploadImageAction } from "@/actions/media";
 import { Prisma } from "@/libs/generated/client";
 import { Color } from "@tiptap/extension-color";
@@ -46,6 +51,7 @@ const EMPTY_DOCUMENT: JSONContent = {
   content: []
 };
 
+/** Strips `<img>` tags without a `src` (leftover empty nodes) from the editor's HTML output. */
 const removeEmptyImageTags = (html: string) => html.replace(/<img(?![^>]*\bsrc=)[^>]*>/gi, "");
 
 const editorExtensions = [
@@ -75,6 +81,7 @@ const editorExtensions = [
   TextAlign.configure({ types: ["heading", "paragraph"], alignments: ["left", "center", "right", "justify"] })
 ];
 
+/** Rich text editor component: renders the toolbar and the TipTap editor content area. */
 const RichEditor = ({ initialContent, onChange }: RichEditorProps) => {
   const t = useTranslations("Admin.editor");
 
@@ -85,16 +92,16 @@ const RichEditor = ({ initialContent, onChange }: RichEditorProps) => {
     content: initialEditorContent,
     immediatelyRender: false,
     onUpdate: ({ editor }) => {
-      onChange(editor.getJSON() as JSONContent, editor.getHTML());
+      onChange(editor.getJSON() as JSONContent, removeEmptyImageTags(editor.getHTML()));
     },
     editorProps: {
       attributes: {
         class:
           "tiptap-content prose prose-neutral max-w-none focus:outline-none h-full lg:h-full lg:overflow-y-auto lg:custom-scrollbar p-6 md:p-8 font-['Liberation_Serif:Regular'] text-[#1b1c1c] leading-relaxed " +
           "prose-headings:font-['Liberation_Serif:Bold'] prose-headings:text-[#1b1c1c] " +
-          /* H2スタイル */
+          /* H2 style */
           "prose-h2:mt-10 prose-h2:mb-5 prose-h2:text-[1.75rem] prose-h2:leading-tight prose-h2:bg-[#f8f8f8] prose-h2:border-l-[5px] prose-h2:border-[#ee7e22] prose-h2:py-3 prose-h2:px-5 " +
-          /* H3スタイル */
+          /* H3 style */
           "prose-h3:mt-8 prose-h3:mb-4 prose-h3:text-[1.35rem] prose-h3:leading-snug prose-h3:border-b-2 prose-h3:border-[#ee7e22] prose-h3:pb-2 " +
           "prose-p:my-3 prose-ul:my-4 prose-ol:my-4 prose-ul:list-disc prose-ol:list-decimal prose-ul:pl-6 prose-ol:pl-6 prose-li:my-1 prose-li:marker:text-[#0058c3] " +
           "prose-blockquote:border-l-4 prose-blockquote:border-[#0058c3] prose-blockquote:bg-[#f0f5ff] prose-blockquote:py-3 prose-blockquote:px-5 prose-blockquote:rounded-r prose-blockquote:not-italic prose-blockquote:text-[#1b1c1c]"
@@ -104,6 +111,7 @@ const RichEditor = ({ initialContent, onChange }: RichEditorProps) => {
 
   if (!editor) return null;
 
+  /** Opens a file picker, uploads the chosen image, and inserts it at the cursor position. */
   const addImage = () => {
     const input = document.createElement("input");
     input.type = "file";
@@ -131,6 +139,7 @@ const RichEditor = ({ initialContent, onChange }: RichEditorProps) => {
     input.click();
   };
 
+  /** Prompts for a URL and applies it as a link on the current selection, or removes the link if left empty. */
   const setLink = () => {
     const url = window.prompt("URLを入力してください");
     if (url === null) return;

@@ -1,3 +1,4 @@
+/** Calendar glyph icon used to mark dates. */
 const CalendarIcon = ({ size = 12 }: { size?: number }) => (
   <svg
     width={size}

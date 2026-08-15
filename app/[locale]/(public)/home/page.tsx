@@ -1,5 +1,10 @@
+/**
+ * Home page. Fetches featured/latest posts and popular tags for the current locale
+ * and composes them into separate mobile and desktop layouts.
+ */
+
 import { getFeaturedPosts, getLatestPosts, getPopularTags } from "@/services/post";
-import { isValidLocale } from "@/types/config";
+import { Locale } from "@/types/config";
 import { getLocale } from "next-intl/server";
 import Featured from "./parts/Featured";
 import Head from "./parts/Head";
@@ -7,10 +12,7 @@ import Latest from "./parts/Latest";
 import Tags from "./parts/Tags";
 
 const Page = async () => {
-  const locale = await getLocale();
-  if (!isValidLocale(locale)) {
-    return <div>サポートされていない言語です。</div>;
-  }
+  const locale = (await getLocale()) as Locale;
 
   const featuredPost = await getFeaturedPosts(locale, 4);
   const latestPost = await getLatestPosts(locale);
@@ -33,7 +35,7 @@ const Page = async () => {
         </div>
         <div className="lg:col-span-4 flex flex-col gap-12">
           <Tags tags={tags} />
-          {/* Todo Will implement this with Resend and will send a email when a new post is published */}
+          {/* TODO: Implement with Resend to send an email when a new post is published */}
           {/* <Newsletter /> */}
         </div>
       </div>

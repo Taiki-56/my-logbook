@@ -1,3 +1,7 @@
+/**
+ * Renders the About page's "core focus" card as a list of translated focus-area tags.
+ */
+
 import { useTranslations } from "next-intl";
 
 const CoreFocus = () => {

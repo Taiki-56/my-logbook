@@ -2,6 +2,14 @@ import { getPostBySlugAction } from "@/actions/post";
 import { PostWithRelations } from "@/types/post";
 import { Metadata } from "next";
 
+/**
+ * Builds Next.js page metadata (title/description) for a post detail page, using the
+ * content for the requested locale, falling back to Japanese, then to the first available locale.
+ * @param slug - The post's slug.
+ * @param locale - The requested locale.
+ * @returns Metadata for the post, or a fallback "not found" title if the post/content is missing.
+ */
+
 const buildPostMetadata = async (slug: string, locale: string): Promise<Metadata> => {
   const res = await getPostBySlugAction(slug);
   if (!res.success || !res.data) {

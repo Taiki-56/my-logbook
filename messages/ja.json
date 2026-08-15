@@ -168,13 +168,24 @@
     "previousPage": "前へ",
     "nextPage": "次へ",
     "popularTags": "人気のタグ",
-    "noResults": {
-      "heading": "結果が見つかりませんでした",
-      "description": "検索条件に一致する記事が見つかりませんでした。スペルを確認するか、より一般的な用語を使用してみてください。",
+    "EmptyState": {
+      "heading": "記事が見つかりませんでした",
+      "description": "別のキーワードで検索するか、以下のトピックをお試しください。",
       "suggestedTopics": "おすすめのトピック",
       "viewAll": "すべての記事を見る"
     },
-    "featuredPosts": "注目の記事"
+    "featuredPosts": "注目の記事",
+    "slug": {
+      "postContent": {
+        "noContent": "本文がありません。"
+      },
+      "authorWidget": {
+        "description": "ソフトウェアエンジニアリングやAIの探求から、ボディビル初出場への挑戦、音楽、料理、異文化への旅まで。枠に囚われず、日々の「面白い」を好奇心の赴くままに形にする記録を発信しています。"
+      },
+      "tagsWidget": {
+        "noTags": "タグがありません"
+      }
+    }
   },
   "Admin": {
     "login": {

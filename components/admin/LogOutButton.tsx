@@ -2,6 +2,7 @@ import { signOut } from "@/libs/auth";
 import { LogOut } from "lucide-react";
 import { getLocale } from "next-intl/server";
 
+/** Button that signs the admin user out and redirects to the localized login page. */
 const LogOutButton = async () => {
   const locale = await getLocale();
 

@@ -4,13 +4,12 @@ import { getTranslations } from "next-intl/server";
 import LanguageSwitcher from "../common/LanguageSwitcher";
 import LogOutButton from "./LogOutButton";
 
+/** Sticky top header shown on every admin page: logo, public-site link, language switcher, and logout. */
 const AdminHeader = async () => {
   const t = await getTranslations("Admin.adminHeader");
-
   return (
     <header className="border-b border-[#c1c6d7] bg-white sticky top-0 z-10 shrink-0">
       <div className="px-4 md:px-8 py-3 flex items-center justify-between">
-        {/* 左側：ロゴ */}
         <Link
           href={"/admin/dashboard"}
           className="font-mono text-[18px] md:text-[22px] font-bold text-[#1b1c1c] group tracking-tight transition-colors">
@@ -18,10 +17,7 @@ const AdminHeader = async () => {
           <span>MyLogbook</span>
           <span className="text-[#c1c6d7] ml-1 group-hover:text-[#0058c3] transition-colors">/&gt;</span>
         </Link>
-
-        {/* 右側：アクション群 */}
         <div className="flex items-center gap-2 md:gap-3">
-          {/* 1. ナビゲーションアクション（公開ページ） */}
           <Link
             href="/home"
             target="_blank"
@@ -33,11 +29,7 @@ const AdminHeader = async () => {
               strokeWidth={2.5}
             />
           </Link>
-
-          {/* 2. 視覚的な区切り線（Divider） */}
           <div className="w-px h-5 bg-[#e4e2e2] mx-0.5 md:mx-1" />
-
-          {/* 3. システムアクション（言語・ログアウト） */}
           <div className="flex items-center gap-1.5 md:gap-2">
             <LanguageSwitcher />
             <LogOutButton />

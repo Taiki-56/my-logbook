@@ -14,6 +14,7 @@ type Props = {
   activities: ActivityItem[];
 };
 
+/** Dashboard table listing recently edited posts with their category, language, and timestamp. */
 const RecentLogs = async ({ activities }: Props) => {
   const t = await getTranslations("Admin.dashboard.recentLogs");
 

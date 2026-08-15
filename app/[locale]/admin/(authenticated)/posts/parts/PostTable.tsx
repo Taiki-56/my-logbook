@@ -8,6 +8,7 @@ type Props = {
   posts: AdminDisplayPost[];
 };
 
+/** Admin table listing posts with per-locale status badges and quick translate actions. */
 const PostTable = async ({ posts }: Props) => {
   const t = await getTranslations("Admin.posts.postTable");
   return (
@@ -55,7 +56,7 @@ const PostTable = async ({ posts }: Props) => {
                   <div className="col-span-2 font-['Geist:Regular'] text-[13px] text-[#999]">{post.updatedAt}</div>
 
                   <div className="col-span-4 grid grid-cols-3 gap-2">
-                    {/* ENの定位置 */}
+                    {/* EN */}
                     <div className="flex justify-start">
                       {!post.statuses.en && post.statuses.ja && (
                         <Link
@@ -66,7 +67,7 @@ const PostTable = async ({ posts }: Props) => {
                         </Link>
                       )}
                     </div>
-                    {/* FRの定位置 */}
+                    {/* FR */}
                     <div className="flex justify-start">
                       {!post.statuses.fr && post.statuses.ja && (
                         <Link
@@ -77,7 +78,7 @@ const PostTable = async ({ posts }: Props) => {
                         </Link>
                       )}
                     </div>
-                    {/* ESの定位置 */}
+                    {/* ES */}
                     <div className="flex justify-start">
                       {!post.statuses.es && post.statuses.ja && (
                         <Link

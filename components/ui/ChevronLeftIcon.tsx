@@ -1,3 +1,4 @@
+/** Left-pointing chevron icon, used for "previous" navigation controls. */
 const ChevronLeftIcon = () => (
   <svg
     width="13.333"

@@ -1,5 +1,13 @@
+/**
+ * Dashboard statistics service.
+ *
+ * Aggregates user activity, post counts, translation rates, and category
+ * distributions for the admin dashboard overview.
+ */
+
 import prisma from "@/libs/prisma";
 
+// * Retrieves and calculates dashboard statistics for a specific author.
 const getDashboardStats = async (authorId: string) => {
   const totalPostsCount = await prisma.post.count({ where: { authorId } });
 
@@ -72,7 +80,8 @@ const getDashboardStats = async (authorId: string) => {
     totalPosts: totalPostsCount.toString(),
     draftPosts: draftPostsCount.toString(),
     translationRate: `${Math.min(100, Math.max(translationRate, 0))}%`,
-    currentStreak, // 継続日数の数値（例: 0, 1, 5...）をそのまま返す
+    // * Returns the streak count as a raw number (e.g., 0, 1, 5...)
+    currentStreak,
     recentActivity,
     categories,
     needsTranslationCount: jaPostsCount - Math.floor(translatedContentsCount / 2)

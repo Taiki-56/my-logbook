@@ -1,3 +1,13 @@
+/**
+ * AI translation prompt templates.
+ *
+ * Provides structured system prompts for translating blog posts and tags
+ * into target languages using LLMs. Enforces strict JSON formatting,
+ * SEO constraints, and safe URL slug generation.
+ */
+
+// * Generates a strict prompt for translating a full blog post (title, HTML body, SEO meta).
+// * Ensures HTML structure preservation, strict character limits, and valid JSON output.
 const postTranslationPrompt = (targetLang: string, sourceContent: string) => {
   return `
     You are a professional translator and an exceptional technical writer/engineer, well-versed in diverse niches including living abroad, culinary arts, fitness, and IT/software engineering.
@@ -43,6 +53,8 @@ const postTranslationPrompt = (targetLang: string, sourceContent: string) => {
   `;
 };
 
+// * Generates a prompt specifically for translating an array of tags.
+// * Ensures natural naming and enforces URL-friendly slugs (e.g., Romaji for Japanese).
 const TagTranslationPrompt = (targetLang: string, sourceTags: string[]) => {
   return `
     Translate the following tag names into ${targetLang} and generate a URL-friendly slug for each.

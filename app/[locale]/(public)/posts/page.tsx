@@ -1,7 +1,12 @@
+/**
+ * Posts listing page. Reads search/tag/page query params, filters and paginates
+ * published (or featured-only) posts, and renders the header and post list.
+ */
+
 import { getPublishedPostsAction } from "@/actions/post";
 import DEFAULT_POST_IMAGE from "@/libs/constants";
 import { getFeaturedPosts } from "@/services/post";
-import { isValidLocale } from "@/types/config";
+import { Locale } from "@/types/config";
 import { DisplayPost } from "@/types/post";
 import { getLocale, getTranslations } from "next-intl/server";
 import PageHeader from "./parts/PageHeader";
@@ -16,11 +21,7 @@ type Props = {
 const Page = async (props: Props) => {
   const t = await getTranslations("Posts");
   const searchParams = await props.searchParams;
-  const locale = await getLocale();
-
-  if (!isValidLocale(locale)) {
-    return <div>サポートされていない言語です。</div>;
-  }
+  const locale = (await getLocale()) as Locale;
   const searchQueryString = (searchParams.search as string) || "";
   const searchKeywords = searchQueryString.split(/[\s ]+/).filter(Boolean);
 
@@ -121,6 +122,7 @@ const Page = async (props: Props) => {
 
   let dynamicPageTitle = t("pageTitle");
 
+  //* Resolves active tag slugs to their display names for the dynamic page title
   const getActiveTagNames = () => {
     return activeTags.map((slug) => uniqueTagsMap.get(slug) || decodeURIComponent(slug));
   };
@@ -160,7 +162,6 @@ const Page = async (props: Props) => {
   return (
     <div className="max-w-400 w-full mx-auto px-4 lg:px-35 py-8 lg:py-16">
       <div className="w-full flex flex-col">
-        {/* ヘッダー部分（タイトル・検索・タグ・フィルター） */}
         <PageHeader
           title={dynamicPageTitle}
           allAvailableTags={allAvailableTags}

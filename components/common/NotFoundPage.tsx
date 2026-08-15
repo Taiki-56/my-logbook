@@ -5,6 +5,7 @@ import { Home, LayoutDashboard } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { usePathname } from "next/navigation";
 
+/** Not-found (404) view; renders an admin-styled variant under /admin and a public variant elsewhere. */
 const NotFound = () => {
   const pathname = usePathname() || "";
   const isAdmin = pathname.includes("/admin");

@@ -16,7 +16,7 @@ import z from "zod";
 const createPostAction = async (
   formData: PostFormValues & { projectData?: Prisma.InputJsonValue | null; html?: string | null; tags?: string[] }
 ) => {
-  //* 1. Server-side validation
+  //* Server-side validation
   const validFormData = postSchema.safeParse(formData);
   if (!validFormData.success) {
     return { error: "Validation failed. Please check your input." };
@@ -56,26 +56,27 @@ type CreateTranslatedPostInput = {
     seoDescription: string;
     tags?: string[];
     thumbnail?: string | null;
-    isFeatured?: boolean; // 🌟 追加
+    isFeatured?: boolean;
   };
 };
 
-//* Save a newly translated post to the database
+/**
+ * Persists a translated version of an existing post and revalidates its cached pages.
+ * @param input - The source post ID, target locale, and translated field values.
+ * @returns `{ success: true }` on success, or `{ success: false, error }` if auth/validation/database steps fail.
+ */
 const createTranslatedPostAction = async (input: CreateTranslatedPostInput): Promise<PostAction> => {
-  //* 1. Guard by Auth.js session
   const session = await auth();
   if (!session?.user?.id) {
     return { success: false, error: "Unauthorized" };
   }
 
   const { postId, targetLang, translatedData } = input;
-
   if (!postId || !targetLang || !translatedData) {
     return { success: false, error: "Missing required fields for translation." };
   }
 
   try {
-    //* 2. Call service layer to save translation
     await createTranslatedPost(postId, targetLang, translatedData);
   } catch (error) {
     console.error("Failed to save translated post:", error);
@@ -83,7 +84,6 @@ const createTranslatedPostAction = async (input: CreateTranslatedPostInput): Pro
   }
 
   try {
-    //* 3. Cache Purge
     revalidatePath(`/${targetLang}/admin/posts/edit/${translatedData.slug}`);
     revalidatePath(`/${targetLang}/posts/${translatedData.slug}`);
   } catch (error) {
@@ -94,15 +94,17 @@ const createTranslatedPostAction = async (input: CreateTranslatedPostInput): Pro
   return { success: true };
 };
 
-//* Update the existing post on /edit/[slug] page
+/**
+ * Validates and persists edits to an existing post on the `/edit/[slug]` page.
+ * @param input - The post content, metadata, and locale to save.
+ * @returns `{ success: true }` on success, or `{ success: false, error }` if auth/validation/database steps fail.
+ */
 const savePostAction = async (input: SaveContentInput): Promise<PostAction> => {
-  //* 1. Guard by Auth.js session
   const session = await auth();
   if (!session?.user?.id) {
     return { success: false, error: "Unauthorized" };
   }
 
-  //* 2. Validate payload via Zod
   const normalizedInput = JSON.parse(JSON.stringify(input)) as SaveContentInput;
 
   const validated = saveContentSchema.safeParse(normalizedInput);
@@ -119,7 +121,6 @@ const savePostAction = async (input: SaveContentInput): Promise<PostAction> => {
   const safeData = JSON.parse(JSON.stringify(validated.data)) as SaveContentInput;
 
   try {
-    //* 3. Call service layer
     await updatePost({
       ...safeData,
       seoTitle: safeData.seoTitle ?? "",
@@ -133,7 +134,6 @@ const savePostAction = async (input: SaveContentInput): Promise<PostAction> => {
   }
 
   try {
-    //* 4. Cache Purge
     revalidatePath(`/${safeData.locale}/admin/posts/edit/${safeData.slug}`);
     revalidatePath(`/${safeData.locale}/posts/${safeData.slug}`);
   } catch (error) {
@@ -143,7 +143,11 @@ const savePostAction = async (input: SaveContentInput): Promise<PostAction> => {
   return { success: true };
 };
 
-//* Fetches all posts
+/**
+ * Fetches all published posts for the given locale.
+ * @param locale - The locale to fetch published posts for.
+ * @returns `{ success: true, data }` with the posts, or `{ success: false, error }` on failure.
+ */
 const getPublishedPostsAction = async (locale: Locale): Promise<PostAction<PostWithRelations[]>> => {
   try {
     const posts = await getPublishedPosts(locale);
@@ -154,7 +158,11 @@ const getPublishedPostsAction = async (locale: Locale): Promise<PostAction<PostW
   }
 };
 
-//* Fetches a post by its slug
+/**
+ * Fetches a single post by its slug.
+ * @param slug - The slug of the post to fetch.
+ * @returns `{ success: true, data }` with the post, or `{ success: false, error }` if not found or on failure.
+ */
 const getPostBySlugAction = async (slug: string): Promise<PostAction<PostWithRelations | null>> => {
   try {
     const post = await getPostBySlug(slug);
@@ -168,6 +176,10 @@ const getPostBySlugAction = async (slug: string): Promise<PostAction<PostWithRel
   }
 };
 
+/**
+ * Fetches dashboard statistics for the currently authenticated user.
+ * @returns `{ success: true, data }` with the stats, or `{ success: false, error }` if unauthorized or on failure.
+ */
 const getDashboardStatsAction = async () => {
   const session = await auth();
   if (!session?.user?.id) {

@@ -1,3 +1,4 @@
+/** Clock glyph icon used to mark read time/duration. */
 const ClockIcon = ({ size = 12 }: { size?: number }) => (
   <svg
     width={size}

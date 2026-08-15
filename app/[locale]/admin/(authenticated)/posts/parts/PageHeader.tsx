@@ -2,6 +2,7 @@ import { Link } from "@/i18n/navigation";
 import { Plus } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 
+/** Admin posts list header with the title and a link to create a new post. */
 const PageHeader = async () => {
   const t = await getTranslations("Admin.posts.pageHeader");
   return (

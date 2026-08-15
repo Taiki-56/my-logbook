@@ -168,13 +168,24 @@
     "previousPage": "Précédent",
     "nextPage": "Suivant",
     "popularTags": "Tags populaires",
-    "noResults": {
-      "heading": "Aucun résultat trouvé",
-      "description": "Nous n'avons trouvé aucun article correspondant à votre recherche. Essayez de vérifier l'orthographe ou d'utiliser des termes plus généraux.",
-      "suggestedTopics": "SUJETS SUGGÉRÉS",
+    "EmptyState": {
+      "heading": "Aucun article trouvé",
+      "description": "Essayez de chercher avec des mots-clés différents ou explorez les sujets ci-dessous.",
+      "suggestedTopics": "Sujets suggérés",
       "viewAll": "Voir tous les articles"
     },
-    "featuredPosts": "Articles en vedette"
+    "featuredPosts": "Articles en vedette",
+    "slug": {
+      "postContent": {
+        "noContent": "Aucun contenu disponible."
+      },
+      "authorWidget": {
+        "description": "De l'exploration de l'ingénierie logicielle et de l'IA à mon premier concours de culturisme, en passant par la musique, la cuisine et la découverte de différentes cultures. Sans m'enfermer dans un cadre, je partage ici mes expériences pour donner vie à mes curiosités quotidiennes."
+      },
+      "tagsWidget": {
+        "noTags": "Aucun tag disponible"
+      }
+    }
   },
   "Admin": {
     "login": {

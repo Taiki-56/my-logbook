@@ -7,6 +7,11 @@ type Props = {
     targetLang?: string | string[];
   }>;
 };
+
+/**
+ * "New post" admin page. Renders the post form in create mode; if `postId` and
+ * `targetLang` query params are present, pre-fills it as a translation of that source post.
+ */
 const Page = async ({ searchParams }: Props) => {
   const { postId, targetLang } = await searchParams;
 

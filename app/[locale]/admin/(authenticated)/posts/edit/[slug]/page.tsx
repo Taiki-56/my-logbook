@@ -1,19 +1,18 @@
 import PostForm from "@/components/admin/PostForm";
 import { getPostContentBySlug } from "@/services/post";
-import { isValidLocale } from "@/types/config";
+import { Locale } from "@/types/config";
 import { notFound } from "next/navigation";
 
+/**
+ * Admin "edit post" page. Loads a post's content by slug and renders the post form
+ * pre-filled with its current data.
+ */
 const Page = async ({ params }: { params: Promise<{ slug: string }> | { slug: string } }) => {
   const resolvedParams = await params;
   const { slug } = resolvedParams;
 
   const fetchData = await getPostContentBySlug(slug);
   if (!fetchData) notFound();
-
-  //* Todo ここの文言を修正する
-  if (!isValidLocale(fetchData.locale)) {
-    return <div>サポートされていない言語です。</div>;
-  }
 
   const mappedTags = fetchData.post.postTags
     .map((pt) => {
@@ -25,7 +24,7 @@ const Page = async ({ params }: { params: Promise<{ slug: string }> | { slug: st
 
   const initialData = {
     postId: fetchData.postId,
-    locale: fetchData.locale,
+    locale: fetchData.locale as Locale,
     title: fetchData.title,
     slug: fetchData.slug,
     status: fetchData.status,

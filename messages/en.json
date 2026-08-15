@@ -168,13 +168,24 @@
     "previousPage": "Previous",
     "nextPage": "Next",
     "popularTags": "Popular Tags",
-    "noResults": {
-      "heading": "No results found",
-      "description": "We couldn't find any articles matching your search. Try checking your spelling or using more general terms.",
-      "suggestedTopics": "SUGGESTED TOPICS",
+    "EmptyState": {
+      "heading": "No articles found",
+      "description": "Try searching with different keywords or explore the topics below.",
+      "suggestedTopics": "Suggested Topics",
       "viewAll": "View all articles"
     },
-    "featuredPosts": "Featured Posts"
+    "featuredPosts": "Featured Posts",
+    "slug": {
+      "postContent": {
+        "noContent": "No content available."
+      },
+      "authorWidget": {
+        "description": "From exploring software engineering and AI, to challenging my first bodybuilding competition, music, cooking, and traveling to diverse cultures. Unbound by conventions, I share records of shaping my daily fascinations driven purely by curiosity."
+      },
+      "tagsWidget": {
+        "noTags": "No tags available"
+      }
+    }
   },
   "Admin": {
     "login": {

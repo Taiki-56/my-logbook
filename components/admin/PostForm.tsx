@@ -1,9 +1,14 @@
 "use client";
 
+/**
+ * Admin post editor form. Handles creating a new post, creating a post as an AI-translated
+ * copy of a source post, and editing an existing post's content and metadata.
+ */
+
 import { uploadImageAction } from "@/actions/media";
 import { createPostAction, createTranslatedPostAction, savePostAction } from "@/actions/post";
 import { translatePostAction } from "@/actions/translation";
-import formatSlug from "@/helpers/formatSlug";
+import slugify from "@/helpers/slugify";
 import { useRouter } from "@/i18n/navigation";
 import { Prisma } from "@/libs/generated/client";
 import { Category, PostStatus } from "@/libs/generated/enums";
@@ -37,6 +42,7 @@ type PostFormProps = {
   };
 };
 
+/** Post editor form for the create/translate/edit flows described above. */
 const PostForm = ({ mode, sourceData, initialData }: PostFormProps) => {
   const t = useTranslations("Admin.editor");
   const router = useRouter();
@@ -75,6 +81,7 @@ const PostForm = ({ mode, sourceData, initialData }: PostFormProps) => {
   const hasTranslated = useRef(false);
 
   useEffect(() => {
+    // * Auto-translates the source post into the target language when creating a translation
     const doTranslation = async () => {
       if (hasTranslated.current) return;
 
@@ -93,7 +100,7 @@ const PostForm = ({ mode, sourceData, initialData }: PostFormProps) => {
           }
 
           if (translated.slug) {
-            setValue("slug", formatSlug(translated.slug), { shouldDirty: true, shouldValidate: true });
+            setValue("slug", slugify(translated.slug), { shouldDirty: true, shouldValidate: true });
           }
 
           if (translated.tags && Array.isArray(translated.tags)) {
@@ -118,6 +125,7 @@ const PostForm = ({ mode, sourceData, initialData }: PostFormProps) => {
   const currentThumbnail = watch("thumbnail");
   const tags = watch("tags") || [];
 
+  /** Adds the current tag input value to the tags list, skipping duplicates and blanks. */
   const handleAddTag = (e?: React.MouseEvent | React.KeyboardEvent) => {
     e?.preventDefault();
     const trimmed = tagInput.trim();
@@ -127,6 +135,7 @@ const PostForm = ({ mode, sourceData, initialData }: PostFormProps) => {
     setTagInput("");
   };
 
+  /** Submits the tag input on Enter instead of submitting the whole form. */
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       e.preventDefault();
@@ -134,6 +143,7 @@ const PostForm = ({ mode, sourceData, initialData }: PostFormProps) => {
     }
   };
 
+  /** Removes the given tag from the tags list. */
   const removeTag = (tagToRemove: string) => {
     setValue(
       "tags",
@@ -145,11 +155,13 @@ const PostForm = ({ mode, sourceData, initialData }: PostFormProps) => {
   const seoTitleLength = watch("seoTitle")?.length || 0;
   const seoDescLength = watch("seoDescription")?.length || 0;
 
+  /** Syncs the editor's JSON AST and rendered HTML into local state whenever content changes. */
   const handleEditorChange = useCallback((json: JSONContent, html: string) => {
     setEditorAST(json as Prisma.InputJsonValue);
     setEditorHtml(html);
   }, []);
 
+  /** Uploads the selected thumbnail image and stores its URL in form state. */
   const handleThumbnailUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
@@ -174,6 +186,7 @@ const PostForm = ({ mode, sourceData, initialData }: PostFormProps) => {
     }
   };
 
+  /** Submits the post: creates, creates-as-translation, or updates depending on `mode`/`sourceData`. */
   const onSubmit = async (data: PostFormValues) => {
     if (data.status === "PUBLISHED") {
       const isEmptyEditor = !editorHtml || editorHtml === "<p></p>" || editorHtml === "";
@@ -183,7 +196,7 @@ const PostForm = ({ mode, sourceData, initialData }: PostFormProps) => {
       }
     }
 
-    const safeSlug = formatSlug(data.slug);
+    const safeSlug = slugify(data.slug);
 
     const payload = {
       ...data,
@@ -385,7 +398,7 @@ const PostForm = ({ mode, sourceData, initialData }: PostFormProps) => {
                 className="w-full px-3 py-2 text-[13px] text-[#1b1c1c] border border-[#c1c6d7] rounded"
                 onBlur={(e) => {
                   register("slug").onBlur(e);
-                  setValue("slug", formatSlug(e.target.value), { shouldValidate: true, shouldDirty: true });
+                  setValue("slug", slugify(e.target.value), { shouldValidate: true, shouldDirty: true });
                 }}
               />
               {errors.slug && <p className="text-red-500 text-xs mt-1">{errors.slug.message}</p>}

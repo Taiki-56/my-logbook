@@ -1,5 +1,6 @@
 import { useTranslations } from "next-intl";
 
+/** Renders the home page's translated title and subtitle. */
 const Title = () => {
   const t = useTranslations("Home.title");
   return (

@@ -6,6 +6,7 @@ type Props = {
   count: number;
 };
 
+/** Dashboard card highlighting how many posts still need translation, linking to the posts list. */
 const TranslationHealth = async ({ count }: Props) => {
   const t = await getTranslations("Admin.dashboard.translationHealth");
 

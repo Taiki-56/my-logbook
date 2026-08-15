@@ -1,5 +1,10 @@
 "use client";
 
+/**
+ * Lightweight compound dropdown menu (Trigger/Content/Item) built on React Context,
+ * with click-outside handling to close the menu.
+ */
+
 import * as React from "react";
 
 interface DropdownMenuContextType {
@@ -9,7 +14,7 @@ interface DropdownMenuContextType {
 
 const DropdownMenuContext = React.createContext<DropdownMenuContextType | undefined>(undefined);
 
-function DropdownMenu({ children }: { children: React.ReactNode }) {
+const DropdownMenu = ({ children }: { children: React.ReactNode }) => {
   const [open, setOpen] = React.useState(false);
 
   return (
@@ -17,9 +22,9 @@ function DropdownMenu({ children }: { children: React.ReactNode }) {
       <div className="relative">{children}</div>
     </DropdownMenuContext.Provider>
   );
-}
+};
 
-function DropdownMenuTrigger({ asChild, children }: { asChild?: boolean; children: React.ReactNode }) {
+const DropdownMenuTrigger = ({ asChild, children }: { asChild?: boolean; children: React.ReactNode }) => {
   const context = React.useContext(DropdownMenuContext);
   if (!context) throw new Error("DropdownMenuTrigger must be used within DropdownMenu");
 
@@ -32,9 +37,9 @@ function DropdownMenuTrigger({ asChild, children }: { asChild?: boolean; childre
   }
 
   return <button onClick={() => setOpen(!open)}>{children}</button>;
-}
+};
 
-function DropdownMenuContent({
+const DropdownMenuContent = ({
   align = "start",
   className = "",
   children
@@ -42,7 +47,7 @@ function DropdownMenuContent({
   align?: "start" | "end";
   className?: string;
   children: React.ReactNode;
-}) {
+}) => {
   const context = React.useContext(DropdownMenuContext);
   if (!context) throw new Error("DropdownMenuContent must be used within DropdownMenu");
 
@@ -73,9 +78,9 @@ function DropdownMenuContent({
       <div className="py-1">{children}</div>
     </div>
   );
-}
+};
 
-function DropdownMenuItem({
+const DropdownMenuItem = ({
   className = "",
   onClick,
   children
@@ -83,7 +88,7 @@ function DropdownMenuItem({
   className?: string;
   onClick?: () => void;
   children: React.ReactNode;
-}) {
+}) => {
   const context = React.useContext(DropdownMenuContext);
   if (!context) throw new Error("DropdownMenuItem must be used within DropdownMenu");
 
@@ -101,6 +106,6 @@ function DropdownMenuItem({
       {children}
     </button>
   );
-}
+};
 
 export { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger };

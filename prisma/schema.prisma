@@ -1,5 +1,9 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
+// * Prisma Schema Definition
+// * 
+// * Defines the database structure for the multilingual blog.
+// * Implements separation of core entities (Post, Tag) from their
+// * localized content (PostContent, TagContent) to support multiple languages.
+// * Learn more: https://pris.ly/d/prisma-schema
 
 generator client {
   provider = "prisma-client"
@@ -25,7 +29,7 @@ enum Category {
 }
 
 //* ==========================================
-//* 1. User
+//* User
 //* ==========================================
 
 model User {
@@ -43,7 +47,7 @@ model User {
 }
 
 //* ==========================================
-//* 2. Post & Content (Blog Core)
+//* Post & Content (Blog Core)
 //* ==========================================
 
 model Post {
@@ -63,10 +67,11 @@ model Post {
   @@map("posts")
 }
 
+// * Localized content for a post (e.g., title, HTML body, SEO meta).
 model PostContent {
   id             String      @id @default(uuid()) @db.Uuid
   postId         String      @db.Uuid
-  locale         String      //* "ja" | "en"
+  locale         String      // * e.g., "ja", "en", "fr", "es"
   status         PostStatus  @default(DRAFT) 
   publishedAt    DateTime?
   isFeatured     Boolean     @default(false)
@@ -87,7 +92,7 @@ model PostContent {
 }
 
 //* ==========================================
-//* 3. Taxonomy (Tags)
+//* Tags
 //* ==========================================
 
 model Tag {
@@ -103,12 +108,12 @@ model Tag {
   @@map("tags")
 }
 
+// * Localized display name for a tag.
 model TagContent {
   id        String   @id @default(uuid()) @db.Uuid
   tagId     String   @db.Uuid
-  locale    String   //* "ja" | "en"
-  name      String   //* 画面表示名 (例: 筋トレ, Workout)
-  // 🌟 削除: slug String @unique
+  locale    String
+  name      String   // * Display name (e.g., Workout, 筋トレ)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -116,7 +121,6 @@ model TagContent {
   tag       Tag      @relation(fields: [tagId], references: [id], onDelete: Cascade)
 
   @@unique([tagId, locale])
-  // 🌟 削除: @@unique([locale, slug])
   @@map("tag_contents")
 }
 
@@ -133,7 +137,7 @@ model PostTag {
 }
 
 //* ==========================================
-//* 4. Media Management
+//* Media
 //* ==========================================
 
 model Media {
