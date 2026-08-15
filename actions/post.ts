@@ -16,7 +16,7 @@ import z from "zod";
 const createPostAction = async (
   formData: PostFormValues & { projectData?: Prisma.InputJsonValue | null; html?: string | null; tags?: string[] }
 ) => {
-  //* 1. Server-side validation
+  //* Server-side validation
   const validFormData = postSchema.safeParse(formData);
   if (!validFormData.success) {
     return { error: "Validation failed. Please check your input." };
@@ -44,7 +44,7 @@ const createPostAction = async (
   redirect({ href: `/admin/posts/edit/${savedSlug}`, locale: locale });
 };
 
-// * Payload definition for the translation action
+//* Payload definition for the translation action
 type CreateTranslatedPostInput = {
   postId: string;
   targetLang: Locale;
@@ -56,7 +56,7 @@ type CreateTranslatedPostInput = {
     seoDescription: string;
     tags?: string[];
     thumbnail?: string | null;
-    isFeatured?: boolean; // * Newly added field
+    isFeatured?: boolean;
   };
 };
 
@@ -66,20 +66,17 @@ type CreateTranslatedPostInput = {
  * @returns `{ success: true }` on success, or `{ success: false, error }` if auth/validation/database steps fail.
  */
 const createTranslatedPostAction = async (input: CreateTranslatedPostInput): Promise<PostAction> => {
-  // * 1. Guard by Auth.js session
   const session = await auth();
   if (!session?.user?.id) {
     return { success: false, error: "Unauthorized" };
   }
 
   const { postId, targetLang, translatedData } = input;
-
   if (!postId || !targetLang || !translatedData) {
     return { success: false, error: "Missing required fields for translation." };
   }
 
   try {
-    // * 2. Call service layer to save translation
     await createTranslatedPost(postId, targetLang, translatedData);
   } catch (error) {
     console.error("Failed to save translated post:", error);
@@ -87,12 +84,11 @@ const createTranslatedPostAction = async (input: CreateTranslatedPostInput): Pro
   }
 
   try {
-    // * 3. Cache Purge
     revalidatePath(`/${targetLang}/admin/posts/edit/${translatedData.slug}`);
     revalidatePath(`/${targetLang}/posts/${translatedData.slug}`);
   } catch (error) {
     console.warn("Revalidation failed after saving translation:", error);
-    // * DB update is already successful; treat this as non-fatal.
+    //* DB update is already successful; treat this as non-fatal.
   }
 
   return { success: true };
@@ -104,13 +100,11 @@ const createTranslatedPostAction = async (input: CreateTranslatedPostInput): Pro
  * @returns `{ success: true }` on success, or `{ success: false, error }` if auth/validation/database steps fail.
  */
 const savePostAction = async (input: SaveContentInput): Promise<PostAction> => {
-  // * 1. Guard by Auth.js session
   const session = await auth();
   if (!session?.user?.id) {
     return { success: false, error: "Unauthorized" };
   }
 
-  // * 2. Validate payload via Zod
   const normalizedInput = JSON.parse(JSON.stringify(input)) as SaveContentInput;
 
   const validated = saveContentSchema.safeParse(normalizedInput);
@@ -127,7 +121,6 @@ const savePostAction = async (input: SaveContentInput): Promise<PostAction> => {
   const safeData = JSON.parse(JSON.stringify(validated.data)) as SaveContentInput;
 
   try {
-    // * 3. Call service layer
     await updatePost({
       ...safeData,
       seoTitle: safeData.seoTitle ?? "",
@@ -141,7 +134,6 @@ const savePostAction = async (input: SaveContentInput): Promise<PostAction> => {
   }
 
   try {
-    // * 4. Cache Purge
     revalidatePath(`/${safeData.locale}/admin/posts/edit/${safeData.slug}`);
     revalidatePath(`/${safeData.locale}/posts/${safeData.slug}`);
   } catch (error) {
