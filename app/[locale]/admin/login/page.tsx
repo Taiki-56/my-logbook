@@ -7,6 +7,15 @@ import { redirect } from "@/i18n/navigation";
 import { auth } from "@/libs/auth";
 import { getTranslations } from "next-intl/server";
 import LoginForm from "./parts/LoginForm";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Login",
+  robots: {
+    index: false,
+    follow: false
+  }
+};
 
 const Page = async () => {
   const session = await auth();
