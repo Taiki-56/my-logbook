@@ -168,13 +168,24 @@
     "previousPage": "Anterior",
     "nextPage": "Siguiente",
     "popularTags": "Etiquetas populares",
-    "noResults": {
-      "heading": "No se encontraron resultados",
-      "description": "No se encontraron artículos que coincidan con los criterios de búsqueda. Comprueba la ortografía o intenta usar términos más generales.",
+    "EmptyState": {
+      "heading": "No se encontraron artículos",
+      "description": "Intenta buscar con otras palabras clave o explora los temas a continuación.",
       "suggestedTopics": "Temas sugeridos",
       "viewAll": "Ver todos los artículos"
     },
-    "featuredPosts": "Artículos destacados"
+    "featuredPosts": "Artículos destacados",
+    "slug": {
+      "postContent": {
+        "noContent": "No hay contenido disponible."
+      },
+      "authorWidget": {
+        "description": "Desde la exploración de la ingeniería de software y la IA hasta el desafío de mi primer torneo de culturismo, pasando por la música, la cocina y los viajes a diferentes culturas. Sin limitarme a un solo molde, comparto registros de cómo doy forma a mis fascinaciones diarias guiado por la curiosidad."
+      },
+      "tagsWidget": {
+        "noTags": "No hay etiquetas"
+      }
+    }
   },
   "Admin": {
     "login": {
