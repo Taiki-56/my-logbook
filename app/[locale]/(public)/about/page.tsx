@@ -3,11 +3,23 @@
  * into separate mobile and desktop layouts.
  */
 
+import { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 import Biography from "./parts/Biography";
 import CoreFocus from "./parts/CoreFocus";
 import Experiences from "./parts/Experiences";
 import Profile from "./parts/Profile";
 import TechStack from "./parts/TechStack";
+
+export const generateMetadata = async (props: { params: Promise<{ locale: string }> }): Promise<Metadata> => {
+  const { locale } = await props.params;
+  const t = await getTranslations({ locale, namespace: "Metadata" });
+
+  return {
+    title: t("aboutTitle"),
+    description: t("aboutDescription")
+  };
+};
 
 const Page = () => {
   return (

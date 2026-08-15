@@ -11,6 +11,17 @@ import { DisplayPost } from "@/types/post";
 import { getLocale, getTranslations } from "next-intl/server";
 import PageHeader from "./parts/PageHeader";
 import PostList from "./parts/PostList";
+import { Metadata } from "next";
+
+export const generateMetadata = async (props: { params: Promise<{ locale: string }> }): Promise<Metadata> => {
+  const { locale } = await props.params;
+  const t = await getTranslations({ locale, namespace: "Metadata" });
+
+  return {
+    title: t("postsTitle"),
+    description: t("postsDescription")
+  };
+};
 
 const ITEMS_PER_PAGE = 6;
 

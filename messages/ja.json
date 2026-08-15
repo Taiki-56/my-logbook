@@ -1,4 +1,15 @@
 {
+  "Metadata": {
+    "defaultDescription": "ソフトウェアエンジニアリングからボディビル、異文化体験まで。日々の「面白い」を形にする記録です。",
+    "homeTitle": "Home",
+    "homeDescription": "MyLogbookのトップページです。最新の記事や注目のトピックをお届けします。",
+    "aboutTitle": "About",
+    "aboutDescription": "筆者のプロフィール、これまでの経歴、技術スタックについて紹介します。",
+    "postsTitle": "Posts",
+    "postsDescription": "テクノロジー、フィットネス、ライフスタイルなど、すべての記事一覧です。",
+    "notFoundTitle": "Page Not Found",
+    "notFoundDescription": "お探しのページは見つかりませんでした。"
+  },
   "Common": {
     "siteName": "Chronicle",
     "minRead": "分"

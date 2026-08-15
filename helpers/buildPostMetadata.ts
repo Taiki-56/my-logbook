@@ -30,7 +30,7 @@ const buildPostMetadata = async (slug: string, locale: string): Promise<Metadata
   const description = displayContent.seoDescription || undefined;
 
   return {
-    title: `${title} | MyLogbook`,
+    title,
     description: description
   };
 };

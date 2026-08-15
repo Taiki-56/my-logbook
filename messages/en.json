@@ -1,4 +1,15 @@
 {
+  "Metadata": {
+    "defaultDescription": "From software engineering to bodybuilding and cross-cultural experiences. A record of my daily interests.",
+    "homeTitle": "Home",
+    "homeDescription": "Welcome to MyLogbook. Discover the latest articles and featured topics.",
+    "aboutTitle": "About",
+    "aboutDescription": "Learn more about the author's profile, background, and tech stack.",
+    "postsTitle": "Posts",
+    "postsDescription": "Browse all articles covering technology, fitness, and lifestyle.",
+    "notFoundTitle": "Page Not Found",
+    "notFoundDescription": "The page you are looking for could not be found."
+  },
   "Common": {
     "siteName": "Chronicle",
     "minRead": "min read"
