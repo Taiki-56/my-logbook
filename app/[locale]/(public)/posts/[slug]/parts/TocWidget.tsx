@@ -78,7 +78,7 @@ const TocWidget = () => {
   if (toc.length === 0) return null;
 
   return (
-    <div className="bg-white rounded-2xl shadow-[0_2px_8px_rgba(0,0,0,0.04)] border border-[#e4e2e2] p-6 lg:p-7 sticky top-8 hidden lg:block max-h-[calc(100vh-4rem)] overflow-y-auto custom-scrollbar">
+    <div className="bg-white rounded-2xl shadow-[0_2px_8px_rgba(0,0,0,0.04)] border border-[#e4e2e2] p-6 lg:p-7 sticky top-24 hidden lg:block max-h-[calc(100vh-8rem)] overflow-y-auto custom-scrollbar">
       <h3 className="font-['JetBrains_Mono'] font-bold text-[13px] tracking-widest uppercase text-[#414754] mb-6 border-b border-gray-100 pb-3 flex items-center gap-2">
         <svg
           width="16"
