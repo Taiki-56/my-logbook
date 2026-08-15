@@ -37,7 +37,7 @@ const SearchBar = () => {
       <div className="bg-[#f5f3f3] border border-[#c1c6d7] border-solid rounded flex items-center pl-12 pr-4.5 py-4">
         <input
           type="text"
-          placeholder={t("placeholder") || "記事を検索..."}
+          placeholder={t("placeholder")}
           value={searchInput}
           onChange={(e) => setSearchInput(e.target.value)}
           onKeyDown={handleKeyDown}
