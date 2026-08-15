@@ -1,4 +1,3 @@
-import ClockIcon from "@/components/ui/ClockIcon";
 import { Link } from "@/i18n/navigation";
 import { DisplayPost } from "@/types/post";
 
@@ -26,15 +25,7 @@ const FeaturedSecondaryCard = ({ post }: { post: DisplayPost }) => (
       <span className="font-['JetBrains_Mono'] font-normal text-[13px] text-[#414754] leading-[20.8px]">
         {post.date}
       </span>
-      <span className="text-[#c1c6d7] text-sm">•</span>
-      <div className="flex items-center gap-1.5">
-        <ClockIcon />
-        <span className="font-['JetBrains_Mono'] font-normal text-[13px] text-[#414754] leading-[20.8px]">
-          {post.readTime}
-        </span>
-      </div>
     </div>
-
     <div className="flex gap-2 flex-wrap pointer-events-auto z-20">
       {post.tags.map((tag) => (
         <Link

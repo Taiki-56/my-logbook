@@ -3,7 +3,6 @@ import ClockIcon from "@/components/ui/ClockIcon";
 import { Link } from "@/i18n/navigation";
 import DEFAULT_POST_IMAGE from "@/libs/constants";
 import { DisplayPost } from "@/types/post";
-import { useTranslations } from "next-intl";
 import Image from "next/image";
 
 interface PostCardProps {
@@ -13,8 +12,6 @@ interface PostCardProps {
 
 /** Post preview card used on the posts list page, in either a grid or horizontal layout. */
 const PostCard = ({ post, layout = "grid" }: PostCardProps) => {
-  const t = useTranslations("Posts");
-
   if (layout === "grid") {
     return (
       <div className="bg-[#fbf9f8] border border-transparent rounded-sm hover:shadow-md transition-shadow p-2.25 flex flex-col gap-4 relative group">
@@ -43,13 +40,6 @@ const PostCard = ({ post, layout = "grid" }: PostCardProps) => {
           <div className="flex gap-2 items-center">
             <span className="font-['JetBrains_Mono'] font-medium text-[13px] lg:text-[14px] leading-[19.6px] text-[#414754] whitespace-nowrap">
               {post.date}
-            </span>
-            <span className="font-['JetBrains_Mono'] font-medium text-[13px] lg:text-[14px] leading-[19.6px] text-[#414754]">
-              ·
-            </span>
-            <span className="font-['Noto_Sans_JP'] font-medium text-[13px] lg:text-[14px] leading-[19.6px] text-[#414754] whitespace-nowrap">
-              {post.readTime}
-              {t("readTime")}
             </span>
           </div>
 

@@ -1,4 +1,3 @@
-import ClockIcon from "@/components/ui/ClockIcon";
 import { Link } from "@/i18n/navigation";
 import DEFAULT_POST_IMAGE from "@/libs/constants";
 import { DisplayPost } from "@/types/post";
@@ -40,13 +39,6 @@ const FeaturedHeroCard = ({ post, className = "" }: { post: DisplayPost; classNa
         <span className="font-['JetBrains_Mono'] font-normal text-[12px] sm:text-[13px] text-[#414754] leading-[20.8px]">
           {post.date}
         </span>
-        <span className="text-[#c1c6d7] text-sm">•</span>
-        <div className="flex items-center gap-1.5">
-          <ClockIcon />
-          <span className="font-['JetBrains_Mono'] font-normal text-[12px] sm:text-[13px] text-[#414754] leading-[20.8px]">
-            {post.readTime}
-          </span>
-        </div>
       </div>
 
       <div className="flex gap-2 flex-wrap pointer-events-auto z-20">

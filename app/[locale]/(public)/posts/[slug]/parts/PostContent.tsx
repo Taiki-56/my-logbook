@@ -24,25 +24,6 @@ const PostContent = async ({ post, displayContent }: Props) => {
               day: "numeric"
             })}
           </time>
-          <span>·</span>
-          <span className="flex items-center gap-1.5">
-            <svg
-              width="14"
-              height="14"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round">
-              <circle
-                cx="12"
-                cy="12"
-                r="10"></circle>
-              <polyline points="12 6 12 12 16 14"></polyline>
-            </svg>
-            5 min read
-          </span>
         </div>
         <h1 className="text-[22px] sm:text-3xl md:text-4xl font-bold font-['Noto_Sans_JP'] text-[#1b1c1c] leading-[1.4] tracking-tight mb-5 sm:mb-6">
           {displayContent.title}

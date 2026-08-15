@@ -1,4 +1,3 @@
-import ClockIcon from "@/components/ui/ClockIcon";
 import { Link } from "@/i18n/navigation";
 import DEFAULT_POST_IMAGE from "@/libs/constants";
 import { DisplayPost } from "@/types/post";
@@ -57,13 +56,6 @@ const Latest = ({ posts }: Props) => {
                 <span className="font-['Noto_Sans_JP'] lg:font-['JetBrains_Mono'] font-normal text-[11px] lg:text-[13px] text-[#707581] lg:text-[#414754] leading-normal lg:leading-[20.8px]">
                   {post.date}
                 </span>
-                <span className="text-[#c1c6d7] text-sm">•</span>
-                <div className="flex items-center gap-1 lg:gap-1.5">
-                  <ClockIcon />
-                  <span className="font-['Noto_Sans_JP'] lg:font-['JetBrains_Mono'] font-normal text-[11px] lg:text-[13px] text-[#707581] lg:text-[#414754] leading-normal lg:leading-[20.8px]">
-                    {post.readTime.replace(" read", "")} min
-                  </span>
-                </div>
               </div>
               <div className="hidden lg:flex gap-2 pt-1 pointer-events-auto z-20">
                 {post.tags.map((tag) => (
