@@ -1,4 +1,15 @@
 {
+  "Metadata": {
+    "defaultDescription": "De l'ingénierie logicielle au culturisme et aux expériences interculturelles. Un journal de mes intérêts quotidiens.",
+    "homeTitle": "Accueil",
+    "homeDescription": "Bienvenue sur MyLogbook. Découvrez les derniers articles et sujets à la une.",
+    "aboutTitle": "À propos",
+    "aboutDescription": "Découvrez le profil de l'auteur, son parcours et sa stack technologique.",
+    "postsTitle": "Publications",
+    "postsDescription": "Parcourez toutes les publications couvrant la technologie, le fitness et le style de vie.",
+    "notFoundTitle": "Page introuvable",
+    "notFoundDescription": "La page que vous recherchez est introuvable."
+  },
   "Common": {
     "siteName": "Chronicle",
     "minRead": "min de lecture"

@@ -5,11 +5,22 @@
 
 import { getFeaturedPosts, getLatestPosts, getPopularTags } from "@/services/post";
 import { Locale } from "@/types/config";
-import { getLocale } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import Featured from "./parts/Featured";
 import Head from "./parts/Head";
 import Latest from "./parts/Latest";
 import Tags from "./parts/Tags";
+import { Metadata } from "next";
+
+export const generateMetadata = async (props: { params: Promise<{ locale: string }> }): Promise<Metadata> => {
+  const { locale } = await props.params;
+  const t = await getTranslations({ locale, namespace: "Metadata" });
+
+  return {
+    title: t("homeTitle"),
+    description: t("homeDescription")
+  };
+};
 
 const Page = async () => {
   const locale = (await getLocale()) as Locale;
