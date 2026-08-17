@@ -74,7 +74,7 @@ const RecentLogs = async ({ activities }: Props) => {
                 </div>
               ))
             ) : (
-              <div className="text-sm text-gray-400 py-4 text-center">{t("Admin.dashboard.noActivity")}</div>
+              <div className="text-sm text-gray-400 py-4 text-center">{t("noActivity")}</div>
             )}
           </div>
         </div>
