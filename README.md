@@ -281,7 +281,7 @@ Detailed tasks, current issues, and technical debt management are tracked on the
 
 # MyLogbook 🌍
 
-> ソフトウェアエンジニアリングからボディビル、異文化体験まで。私の人生を構成する日々の「面白い」を、多言語で世界に発信するフルスタック・ブログシステム。
+> ソフトウェアエンジニアリングからボディビル、異文化体験まで。僕の人生を構成する日々の「面白い」を、多言語で世界に発信するフルスタック・ブログシステム。
 
 [![Next.js](https://img.shields.io/badge/Next.js-16.2-black?logo=next.js)](https://nextjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue?logo=typescript)](https://www.typescriptlang.org/)
