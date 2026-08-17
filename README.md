@@ -26,33 +26,31 @@
   </tr>
 </table>
 
-<!-- Admin Pages (Accordion View) -->
-<details>
-  <summary><b>🛠 View Admin Pages (Dashboard & AI Translation Flow)</b></summary>
-  <br>
-  <table width="100%">
-    <!-- Row 1: Dashboard -->
-    <tr>
-      <td colspan="2">
-        <b>📊 Admin Dashboard</b><br>
-        <img src="./public/captures/admin-dashboard.png" alt="Admin Dashboard" width="100%" />
-      </td>
-    </tr>
-    <!-- Row 2: AI Translation Process (Loading -> Complete) -->
-    <tr>
-      <td width="50%">
-        <b>⏳ AI Translation (Processing)</b><br>
-        <img src="./public/captures/loading.png" alt="AI Translation Loading" width="100%" />
-        <br><i>* Thoughtful loading UI during external API communication</i>
-      </td>
-      <td width="50%">
-        <b>✨ Translated Result (French)</b><br>
-        <img src="./public/captures/admin-posts-new-translation.png" alt="Translated Editor" width="100%" />
-        <br><i>* Automated translation to French (etc.) while perfectly preserving Tiptap's HTML structure</i>
-      </td>
-    </tr>
-  </table>
-</details>
+<br>
+
+<b>🛠 Admin Pages (Dashboard & AI Translation Flow)</b>
+<table width="100%">
+  <!-- Row 1: Dashboard -->
+  <tr>
+    <td colspan="2">
+      <b>📊 Admin Dashboard</b><br>
+      <img src="./public/captures/admin-dashboard.png" alt="Admin Dashboard" width="100%" />
+    </td>
+  </tr>
+  <!-- Row 2: AI Translation Process (Loading -> Complete) -->
+  <tr>
+    <td width="50%">
+      <b>⏳ AI Translation (Processing)</b><br>
+      <img src="./public/captures/loading.png" alt="AI Translation Loading" width="100%" />
+      <br><i>* Thoughtful loading UI during external API communication</i>
+    </td>
+    <td width="50%">
+      <b>✨ Translated Result (French)</b><br>
+      <img src="./public/captures/admin-posts-new-translation.png" alt="Translated Editor" width="100%" />
+      <br><i>* Automated translation to French (etc.) while perfectly preserving Tiptap's HTML structure</i>
+    </td>
+  </tr>
+</table>
 
 🔗 **Live Website:** [https://.com](https://.com)
 
@@ -301,33 +299,31 @@ Detailed tasks, current issues, and technical debt management are tracked on the
   </tr>
 </table>
 
-<!-- Admin Pages (アコーディオンでスッキリ見せる) -->
-<details>
-  <summary><b>🛠 管理者画面 (Dashboard & AI Translation Flow) を見る</b></summary>
-  <br>
-  <table width="100%">
-    <!-- 1段目: ダッシュボード -->
-    <tr>
-      <td colspan="2">
-        <b>📊 Admin Dashboard</b><br>
-        <img src="./public/captures/admin-dashboard.png" alt="Admin Dashboard" width="100%" />
-      </td>
-    </tr>
-    <!-- 2段目: AI翻訳のプロセス（ローディング → 完了） -->
-    <tr>
-      <td width="50%">
-        <b>⏳ AI Translation (Processing)</b><br>
-        <img src="./public/captures/loading.png" alt="AI Translation Loading" width="100%" />
-        <br><i>※ 外部API通信中のUXを考慮したローディングUI</i>
-      </td>
-      <td width="50%">
-        <b>✨ Translated Result (French)</b><br>
-        <img src="./public/captures/admin-posts-new-translation.png" alt="Translated Editor" width="100%" />
-        <br><i>※ TiptapのHTML構造を維持したままフランス語等へ自動翻訳</i>
-      </td>
-    </tr>
-  </table>
-</details>
+<br>
+
+<!-- Admin Pages -->
+<b>🛠 管理者画面 (Dashboard & AI Translation Flow)</b>
+<table width="100%">
+  <tr>
+    <td colspan="2">
+      <b>📊 Admin Dashboard</b><br>
+      <img src="./public/captures/admin-dashboard.png" alt="Admin Dashboard" width="100%" />
+    </td>
+  </tr>
+  <!-- 2段目: AI翻訳のプロセス（ローディング → 完了） -->
+  <tr>
+    <td width="50%">
+      <b>⏳ AI Translation (Processing)</b><br>
+      <img src="./public/captures/loading.png" alt="AI Translation Loading" width="100%" />
+      <br><i>※ 外部API通信中のUXを考慮したローディングUI</i>
+    </td>
+    <td width="50%">
+      <b>✨ Translated Result (French)</b><br>
+      <img src="./public/captures/admin-posts-new-translation.png" alt="Translated Editor" width="100%" />
+      <br><i>※ TiptapのHTML構造を維持したままフランス語等へ自動翻訳</i>
+    </td>
+  </tr>
+</table>
 
 🔗 **Live Website:** [https://.com](https://.com)
 
