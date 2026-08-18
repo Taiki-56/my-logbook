@@ -52,7 +52,7 @@
   </tr>
 </table>
 
-🔗 **Live Website:** [https://.com](https://.com)
+🔗 **Live Website:** [https://my-logbook.vercel.app/en/home](https://my-logbook.vercel.app/en/home)
 
 <br>
 
@@ -325,7 +325,7 @@ Detailed tasks, current issues, and technical debt management are tracked on the
   </tr>
 </table>
 
-🔗 **Live Website:** [https://.com](https://.com)
+🔗 **Live Website:** [https://my-logbook.vercel.app/ja/home](https://my-logbook.vercel.app/ja/home)
 
 <br>
 
