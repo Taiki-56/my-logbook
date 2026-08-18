@@ -52,7 +52,8 @@
   </tr>
 </table>
 
-🔗 **Live Website:** [https://my-logbook.vercel.app/en/home](https://my-logbook.vercel.app/en/home)
+🔗 **Live Website:** [https://my-logbook-ashy.vercel.app/en/home](https://my-logbook-ashy.vercel.app/en/home)<br>
+*(Note: The custom domain `mylogbook.me` is currently being set up. In the meantime, the site is temporarily hosted on the default Vercel domain.)*
 
 <br>
 
@@ -325,8 +326,8 @@ Detailed tasks, current issues, and technical debt management are tracked on the
   </tr>
 </table>
 
-🔗 **Live Website:** [https://my-logbook.vercel.app/ja/home](https://my-logbook.vercel.app/ja/home)
-
+🔗 **Live Website:** [https://my-logbook-ashy.vercel.app/ja/home](https://my-logbook-ashy.vercel.app/ja/home)<br>
+*(※現在、カスタムドメイン `mylogbook.me` の取得・移行手続き中です。一時的にVercelのデフォルトドメインにて公開しています。)*
 <br>
 
 ## 📝 プロジェクトの目的と概要
