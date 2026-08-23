@@ -30,6 +30,9 @@ jobs:
         run: pnpm install
 
       - name: Prisma Validate
+        env:
+          # Dummy URL to bypass validation since GitHub Actions doesn't have the real .env file
+          DATABASE_URL: "postgresql://dummy:dummy@localhost:5432/dummy"
         run: pnpm exec prisma validate
 
       - name: Check Types (TypeScript)
