@@ -18,6 +18,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { JSONContent } from "@tiptap/react";
 import { Loader2, X } from "lucide-react";
 import { useTranslations } from "next-intl";
+import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import RichEditor from "./RichEditor";
@@ -122,6 +123,8 @@ const PostForm = ({ mode, sourceData, initialData }: PostFormProps) => {
     doTranslation();
   }, [mode, sourceData, setValue]);
 
+  // ! Disabled React Compiler warning because `watch` is safe to use here without memoization.
+  // eslint-disable-next-line react-hooks/incompatible-library
   const currentThumbnail = watch("thumbnail");
   const tags = watch("tags") || [];
 
@@ -360,10 +363,12 @@ const PostForm = ({ mode, sourceData, initialData }: PostFormProps) => {
                 <p className="text-sm text-gray-500">Uploading...</p>
               ) : currentThumbnail ? (
                 <>
-                  <img
+                  <Image
                     src={currentThumbnail}
                     alt="Thumbnail preview"
-                    className="w-full h-full object-cover"
+                    fill
+                    className="object-cover"
+                    unoptimized
                   />
                   <button
                     type="button"

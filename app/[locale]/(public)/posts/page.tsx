@@ -8,10 +8,10 @@ import DEFAULT_POST_IMAGE from "@/libs/constants";
 import { getFeaturedPosts } from "@/services/post";
 import { Locale } from "@/types/config";
 import { DisplayPost } from "@/types/post";
+import { Metadata } from "next";
 import { getLocale, getTranslations } from "next-intl/server";
 import PageHeader from "./parts/PageHeader";
 import PostList from "./parts/PostList";
-import { Metadata } from "next";
 
 export const generateMetadata = async (props: { params: Promise<{ locale: string }> }): Promise<Metadata> => {
   const { locale } = await props.params;
@@ -151,24 +151,6 @@ const Page = async (props: Props) => {
       .map((tag) => `#${tag}`)
       .join(", ")} の記事`;
   }
-
-  const getTagToggleUrl = (tagSlug: string) => {
-    const params = new URLSearchParams();
-
-    if (searchQueryString) {
-      params.set("search", searchQueryString);
-    }
-
-    if (activeTags.includes(tagSlug)) {
-      activeTags.filter((t) => t !== tagSlug).forEach((t) => params.append("tag", t));
-    } else {
-      activeTags.forEach((t) => params.append("tag", t));
-      params.append("tag", tagSlug);
-    }
-
-    const queryString = params.toString();
-    return queryString ? `/posts?${queryString}` : "/posts";
-  };
 
   return (
     <div className="max-w-400 w-full mx-auto px-4 lg:px-35 py-8 lg:py-16">

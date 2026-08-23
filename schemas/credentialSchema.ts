@@ -30,4 +30,4 @@ const credentialSchema = z.object({
 
 type CredentialFormValues = z.infer<typeof credentialSchema>;
 
-export { getLocalizedCredentialSchema, type CredentialFormValues };
+export { credentialSchema, getLocalizedCredentialSchema, type CredentialFormValues };
