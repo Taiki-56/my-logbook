@@ -30,7 +30,7 @@ const translatePost = async (targetLang: Locale, sourceData: TranslatedPost): Pr
 
   const prompt = postTranslationPrompt(lang, JSON.stringify(cleanSourceData));
   const interaction = await ai.interactions.create({
-    model: "gemini-3.5-flash",
+    model: "gemini-3.5-flash-lite",
     input: prompt,
     generation_config: {
       temperature: 0.4,
@@ -54,6 +54,8 @@ const translatePost = async (targetLang: Locale, sourceData: TranslatedPost): Pr
   } catch (error) {
     // ! Log critical parsing errors to prevent silent failures when output is truncated
     console.error("🚨 JSON Parse Error! AI output might be truncated.");
+    console.error("Status: ", interaction.status);
+    console.error("Usage: ", JSON.stringify(interaction.usage));
     console.error("Total output characters: ", resultText.length);
     console.error("End of output:", resultText.slice(-500));
     throw error;
