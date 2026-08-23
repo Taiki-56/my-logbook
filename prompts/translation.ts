@@ -31,11 +31,12 @@ const postTranslationPrompt = (targetLang: string, sourceContent: string) => {
       - "seoDescription": STRICTLY within 160 characters. Paraphrase creatively to stay within the limit.
       - If input is empty/null, output empty/null. Do NOT auto-generate.
     5. URL Slug Generation:
-      - Generate a concise, URL-friendly slug based on the translated title.
-      - Use ONLY half-width lowercase English letters, separate words with hyphens (-), no symbols.
-      - If ${targetLang} is "Japanese", you MUST generate the slug using "Romaji" (e.g., kin-tore).
-
-    【Source Data】
+      - Translate the "slug" field from the Source Data into ${targetLang} to create the new slug. Do NOT generate it from the title.
+      - Keep it as concise as the original slug.
+      - The slug MUST be in ${targetLang}, NOT English (unless ${targetLang} is English).
+      - Remove all accents/diacritics (e.g., é -> e, ç -> c, à -> a).
+      - Use ONLY lowercase alphabet letters (a-z) and hyphens (-). Remove all other symbols.
+      - ONLY IF ${targetLang} is "Japanese", use Romaji (e.g., kin-tore-nikki).    【Source Data】
     ${sourceContent}
 
     Output strictly in the following JSON format:
