@@ -53,6 +53,8 @@ const TocWidget = () => {
       };
     });
 
+    // ! Disabled warning: State must be updated after the initial render to accurately parse the rendered DOM headings.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setToc(tocItems);
   }, []);
 

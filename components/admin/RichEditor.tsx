@@ -39,7 +39,6 @@ import {
   Strikethrough,
   Undo
 } from "lucide-react";
-import { useTranslations } from "next-intl";
 
 type RichEditorProps = {
   initialContent?: Prisma.InputJsonValue | null;
@@ -83,8 +82,6 @@ const editorExtensions = [
 
 /** Rich text editor component: renders the toolbar and the TipTap editor content area. */
 const RichEditor = ({ initialContent, onChange }: RichEditorProps) => {
-  const t = useTranslations("Admin.editor");
-
   const initialEditorContent = initialContent ? (initialContent as unknown as JSONContent) : EMPTY_DOCUMENT;
 
   const editor = useEditor({
