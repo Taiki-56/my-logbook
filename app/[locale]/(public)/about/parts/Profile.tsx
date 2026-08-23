@@ -3,7 +3,6 @@
  */
 
 import GithubIcon from "@/components/ui/GithubIcon";
-import LinkedinIcon from "@/components/ui/Linkedin";
 import { Mail } from "lucide-react";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
@@ -52,14 +51,6 @@ const Profile = () => {
           className="text-[#414754] hover:text-[#1b1c1c] transition-colors"
           aria-label="GitHub">
           <GithubIcon className="w-7 h-7 lg:w-5 lg:h-5" />
-        </a>
-        <a
-          href="https://www.linkedin.com/in/taiki-honda-b46b222a4"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-[#414754] hover:text-[#1b1c1c] transition-colors"
-          aria-label="LinkedIn">
-          <LinkedinIcon className="w-7 h-7 lg:w-5 lg:h-5" />
         </a>
       </div>
     </div>

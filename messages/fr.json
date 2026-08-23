@@ -68,49 +68,43 @@
     "techStack": {
       "heading": "Technologies & Outils",
       "tooltipTitle": "Pourquoi choisir {item} ?",
-      "categories": {
-        "languages": {
-          "title": "Langages"
-        },
-        "frontend": {
-          "title": "Frontend"
-        },
-        "backend": {
-          "title": "Backend & Base de données"
-        },
-        "services": {
-          "title": "IA & Services Externes"
-        },
-        "tools": {
-          "title": "Outils & Infrastructure"
-        }
-      },
       "reasons": {
-        "typescript": "Pour garantir la maintenabilité grâce à la sécurité des types et maximiser l'expérience développeur (DX).",
-        "javascript": "Pour implémenter des solutions flexibles, indépendantes des frameworks, basées sur une compréhension approfondie des standards du web.",
-        "react": "Adopté pour son riche écosystème et sa grande réutilisabilité grâce à une architecture orientée composants.",
-        "nextjs": "Pour tirer parti des avantages d'App Router (chargement initial rapide, SEO) et des stratégies de rendu flexibles.",
-        "tailwindcss": "Pour combler le fossé entre les composants et le style, permettant une implémentation d'interface utilisateur rapide et cohérente.",
-        "materialui": "Pour accélérer considérablement le développement d'écrans d'administration grâce à sa bibliothèque de composants robustes.",
-        "zustand": "Pour gérer l'état de manière légère et simple, en évitant les rendus inutiles spécifiques à React Context.",
-        "redux": "Pour construire un arbre de gestion d'état global unique et prévisible pour les applications à grande échelle.",
-        "formik": "Pour implémenter de manière robuste la validation de formulaires complexes et la gestion de l'état avec un minimum de code répétitif (boilerplate).",
-        "nextintl": "Pour implémenter un routage multilingue propre basé sur des URL, avec une grande affinité pour App Router.",
-        "tiptap": "Pour implémenter un éditeur de texte enrichi headless, très flexible et hautement personnalisable.",
-        "axios": "Pour simplifier la gestion globale des erreurs avec des intercepteurs et faciliter l'ajout de jetons d'authentification.",
-        "nodejs": "Pour éliminer les changements de contexte en écrivant le backend dans le même TypeScript que le frontend.",
-        "express": "Pour créer rapidement des API à l'aide de middlewares grâce à sa nature légère et hautement flexible.",
-        "postgresql": "Pour sa grande fiabilité dans les requêtes complexes et le traitement des transactions, ainsi que la flexibilité de manipulation des données.",
-        "mongodb": "Pour permettre des itérations rapides en tirant parti d'une flexibilité sans schéma pour des exigences très variables comme les données de produits.",
-        "prisma": "Pour sa gestion de schéma intuitive et son affinité exceptionnelle avec TypeScript en tant qu'ORM typé (type-safe).",
-        "geminiapi": "Pour intégrer un traitement avancé du langage naturel dans les produits, rapidement et à moindre coût, en utilisant les dernières IA génératives.",
-        "stripe": "Pour intégrer rapidement une infrastructure de paiement par carte de crédit sécurisée dans l'environnement Next.js, en utilisant son API conviviale pour les développeurs et ses webhooks complets.",
-        "resend": "Pour envoyer des e-mails transactionnels de manière fiable et rapide à l'aide d'une API adaptée aux développeurs, avec une affinité exceptionnelle pour Next.js et React Email.",
-        "docker": "Pour construire un environnement de conteneurs cohérent « fonctionnant partout », du développement à la production, en éliminant les dépendances environnementales.",
-        "github": "Pour un contrôle de version robuste et la construction de pipelines CI/CD fluides avec Actions.",
-        "jira": "Pour rationaliser le développement en équipe grâce à la gestion des sprints dans un cadre agile et à la visualisation des tâches.",
-        "slack": "Pour maintenir la transparence de l'information en tant que base de la communication asynchrone, en intégrant diverses notifications et bots.",
-        "figma": "Pour un prototypage UI/UX fluide et la gestion des systèmes de conception, conçus pour la collaboration avec les designers."
+        "html5": "Construire des bases solides pour l'accessibilité et le référencement (SEO) grâce à un balisage sémantique.",
+        "css3": "Exploiter les propriétés CSS modernes pour créer des animations et des mises en page fluides et légères.",
+        "sassscss": "Améliorer considérablement la maintenabilité et la réutilisabilité des styles grâce à l'imbrication et aux variables.",
+        "typescript": "Garantir la sécurité du typage pour améliorer la maintenabilité et maximiser l'expérience développeur (DX).",
+        "javascript": "Mettre en œuvre une logique flexible et indépendante des frameworks grâce à une maîtrise des standards du web.",
+        "react": "Choisi pour son riche écosystème et sa forte réutilisabilité axée sur les composants.",
+        "nextjs": "Bénéficier des avantages d'App Router (chargement initial rapide, SEO) et de stratégies de rendu flexibles.",
+        "tailwindcss": "Réduire l'écart entre composants et styles pour une implémentation d'interface rapide et cohérente.",
+        "materialui": "Accélérer le développement des tableaux de bord grâce à des composants robustes et prêts à l'emploi.",
+        "zustand": "Gérer l'état de manière légère et simple tout en évitant les re-rendus inutiles de React Context.",
+        "redux": "Construire un arbre de gestion d'état global unique et prévisible pour les grandes applications.",
+        "formik": "Gérer robustesse et validation des formulaires complexes avec un minimum de code répétitif.",
+        "nextintl": "Mettre en œuvre un routage multilingue propre basé sur l'URL, parfaitement intégré à App Router.",
+        "nextauthauthjs": "Mettre en place une authentification flexible et sécurisée, taillée sur mesure pour l'écosystème Next.js.",
+        "zod": "Appliquer un contrôle rigoureux du type à l'exécution pour garantir la sécurité des données des API et formulaires.",
+        "tiptap": "Intégrer un éditeur de texte riche « headless », hautement personnalisable et flexible.",
+        "axios": "Simplifier la gestion globale des erreurs et l'injection de jetons d'authentification via les intercepteurs.",
+        "nodejs": "Écrire le backend dans le même TypeScript que le frontend pour éliminer les changements de contexte.",
+        "express": "Permettre la création rapide d'API grâce à une architecture légère, flexible et axée sur les middlewares.",
+        "postgresql": "Assurer une haute fiabilité pour les requêtes complexes et les transactions avec une grande flexibilité.",
+        "mongodb": "itérer rapidement sur des données changeantes grâce à la flexibilité sans schéma.",
+        "mongodbatlas": "Garantir une haute disponibilité et une évolutivité sécurisée via un environnement MongoDB géré.",
+        "prisma": "Offrir une excellente synergie avec TypeScript en tant qu'ORM sécurisé pour une gestion intuitive des schémas.",
+        "supabase": "Intégrer rapidement l'authentification et les fonctionnalités en temps réel pour maximiser la vitesse initiale.",
+        "supabaseauthstorage": "Gérer efficacement l'authentification sécurisée et le stockage aux côtés de la base de données.",
+        "vercel": "Assurer un CI/CD fluide via Git et des vitesses de chargement fulgurantes grâce au réseau Edge global.",
+        "geminiapi": "Intégrer un traitement du langage naturel avancé rapidement et à moindre coût grâce à l'IA générative.",
+        "stripe": "Mettre en place une infrastructure de paiement sécurisée et rapide grâce à une API axée sur les développeurs.",
+        "resend": "Envoyer des e-mails transactionnels de manière fiable avec une API conviviale et une forte affinité Next.js.",
+        "cloudinary": "Optimiser automatiquement les images/vidéos et le CDN pour offrir des expériences multimédias rapides.",
+        "docker": "Éliminer les divergences d'environnement pour assurer des flux de conteneurs cohérents de dev en production.",
+        "github": "Permettre un contrôle de version puissant et des pipelines CI/CD fluides grâce à GitHub Actions.",
+        "sentry": "Détecter et suivre les erreurs en production en temps réel pour garantir une correction rapide des bugs.",
+        "jira": "Optimiser l'efficacité du développement en équipe grâce à la gestion des sprints et la visualisation des tâches.",
+        "slack": "Centraliser les notifications et les bots pour asseoir une communication asynchrone transparente.",
+        "figma": "Faciliter le prototypage d'interface et la gestion du système de design pour une collaboration étroite."
       }
     },
     "coreFocus": {

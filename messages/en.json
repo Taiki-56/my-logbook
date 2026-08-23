@@ -68,49 +68,43 @@
     "techStack": {
       "heading": "Tech Stack & Tools",
       "tooltipTitle": "Why choose {item}?",
-      "categories": {
-        "languages": {
-          "title": "Languages"
-        },
-        "frontend": {
-          "title": "Frontend"
-        },
-        "backend": {
-          "title": "Backend & Database"
-        },
-        "services": {
-          "title": "AI & External Services"
-        },
-        "tools": {
-          "title": "Tools & Infrastructure"
-        }
-      },
       "reasons": {
-        "typescript": "To ensure maintainability through type safety and maximize Developer Experience (DX).",
-        "javascript": "To implement flexible, framework-agnostic solutions based on a deep understanding of web standards.",
-        "react": "Adopted for its rich ecosystem and high reusability driven by a component-based architecture.",
-        "nextjs": "To leverage App Router benefits (faster initial loading, SEO) and flexible rendering strategies.",
-        "tailwindcss": "To bridge the gap between components and styling, achieving both rapid UI implementation and consistency.",
-        "materialui": "To dramatically accelerate the development of admin dashboards utilizing its robust component library.",
-        "zustand": "To manage state lightweight and simply, avoiding unnecessary re-renders typical of React Context.",
-        "redux": "To build a predictable, single global state management tree for large-scale applications.",
-        "formik": "To robustly implement complex form validation and state management with minimal boilerplate.",
-        "nextintl": "To implement clean, URL-based multilingual routing with high affinity for the App Router.",
-        "tiptap": "To implement a headless, highly flexible, and customizable rich text editor.",
-        "axios": "To simplify global error handling using interceptors and streamline authentication token attachment.",
-        "nodejs": "To eliminate context switching by writing the backend in the same TypeScript used for the frontend.",
-        "express": "To rapidly build APIs using middleware with its lightweight and highly flexible nature.",
-        "postgresql": "For its high reliability in complex queries and transaction processing, and data manipulation flexibility.",
-        "mongodb": "To enable fast iterations by leveraging schema-less flexibility for highly variable requirements like product data.",
-        "prisma": "For its highly intuitive schema management and exceptional affinity with TypeScript as a type-safe ORM.",
-        "geminiapi": "To integrate advanced natural language processing into products quickly and cost-effectively leveraging the latest generative AI.",
-        "stripe": "To rapidly integrate a secure credit card payment infrastructure into the Next.js environment, utilizing its developer-friendly API and robust webhooks.",
-        "resend": "To reliably and rapidly deliver transactional emails using a developer-friendly API with exceptional affinity for Next.js and React Email.",
-        "docker": "To build a consistent 'run anywhere' container environment from development to production, eliminating environmental dependencies.",
-        "github": "For robust version control and the construction of seamless CI/CD pipelines using Actions.",
-        "jira": "To streamline team development through sprint management in agile workflows and task visualization.",
-        "slack": "To maintain information transparency as the foundation for asynchronous communication by integrating various notifications and bots.",
-        "figma": "For seamless UI/UX prototyping and design system management, built on the premise of collaboration with designers."
+        "html5": "Building a solid foundation for accessibility and SEO performance through semantic markup.",
+        "css3": "Leveraging modern CSS properties to achieve lightweight, expressive animations and layouts.",
+        "sassscss": "Dramatically improving stylesheet maintainability and reusability using nesting, variables, and mixins.",
+        "typescript": "Maximizing maintainability through type safety and optimizing the developer experience (DX).",
+        "javascript": "Implementing flexible, framework-agnostic logic backed by a deep understanding of web standards.",
+        "react": "Chosen for its rich ecosystem and high component reusability.",
+        "nextjs": "Utilizing App Router benefits (fast initial load, SEO optimization) and flexible rendering strategies.",
+        "tailwindcss": "Closing the gap between components and styles to enable rapid UI implementation and consistency.",
+        "materialui": "Accelerating development speed for administrative dashboards using robust, ready-made components.",
+        "zustand": "Managing state lightly and simply while avoiding unnecessary re-renders typical of React Context.",
+        "redux": "Building a predictable, single global state management tree for large-scale applications.",
+        "formik": "Robustly handling complex form validation and state management with minimal boilerplate.",
+        "nextintl": "Implementing clean, URL-based multilingual routing with deep App Router integration.",
+        "nextauthauthjs": "Securely building a flexible and robust authentication foundation tailored for the Next.js environment.",
+        "zod": "Enforcing strong runtime type validation to guarantee data safety for API requests and form inputs.",
+        "tiptap": "Implementing a headless, highly flexible, and customizable rich text editor.",
+        "axios": "Simplifying global error handling and authentication token injection using interceptors.",
+        "nodejs": "Writing backend logic in the same TypeScript as the frontend to eliminate context-switching.",
+        "express": "Enabling rapid API construction using a lightweight, flexible, and middleware-driven architecture.",
+        "postgresql": "Ensuring high reliability for complex queries and transaction processing with flexible data manipulation.",
+        "mongodb": "Iterating rapidly on volatile data requirements by leveraging schema-less flexibility.",
+        "mongodbatlas": "Securing high availability and scalability through a fully managed MongoDB environment.",
+        "prisma": "Offering exceptional TypeScript affinity as a type-safe ORM for intuitive schema management.",
+        "supabase": "Quickly integrating authentication and real-time features to maximize early-stage development velocity.",
+        "supabaseauthstorage": "Efficiently operating secure authentication and storage alongside the database in a unified platform.",
+        "vercel": "Delivering seamless CI/CD via Git integration and blazing-fast loading speeds through a global edge network.",
+        "geminiapi": "Incorporating advanced natural language processing quickly and cost-effectively using cutting-edge generative AI.",
+        "stripe": "Building a secure payment infrastructure rapidly with a developer-first API and comprehensive Webhooks.",
+        "resend": "Reliably delivering transactional emails via a developer-friendly API with stellar Next.js and React Email affinity.",
+        "cloudinary": "Streamlining automatic image/video optimization and CDN delivery to offer rich media experiences quickly.",
+        "docker": "Eliminating environment disparities to build consistent containerized workflows from local to production.",
+        "github": "Enabling powerful version control and seamless CI/CD pipelines using GitHub Actions.",
+        "sentry": "Detecting and tracking production errors in real-time to ensure rapid bug fixing and high software quality.",
+        "jira": "Optimizing team development efficiency through sprint management and task visualization in Agile workflows.",
+        "slack": "Centralizing notifications and bot integrations as the backbone of asynchronous communication and transparency.",
+        "figma": "Facilitating seamless UI/UX prototyping and design system management for close designer collaboration."
       }
     },
     "coreFocus": {
