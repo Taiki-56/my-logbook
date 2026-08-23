@@ -1,0 +1,39 @@
+name: CI Checks
+
+# Run only on PRs targeting main/dev branches to avoid unnecessary executions and save CI minutes.
+on:
+  pull_request:
+    branches:
+      - main
+      - dev
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9 # Specify your pnpm version if necessary.
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "26" # Ensure this matches the project's Node.js version.
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Prisma Validate
+        run: pnpm exec prisma validate
+
+      - name: Check Types (TypeScript)
+        run: pnpm exec tsc --noEmit
+
+      - name: Run Linter (ESLint)
+        run: pnpm run lint
