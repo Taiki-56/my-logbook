@@ -5,11 +5,22 @@
 
 import { getDashboardStatsAction } from "@/actions/post";
 import AdminSidebar from "@/components/admin/AdminSidebar";
+import { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import CategoryDistribution from "./parts/CategoryDistribution";
 import Overview from "./parts/Overview";
 import RecentLogs from "./parts/RecentLogs";
 import TranslationHealth from "./parts/TranslationHealth";
+
+export const generateMetadata = async (props: { params: Promise<{ locale: string }> }): Promise<Metadata> => {
+  const { locale } = await props.params;
+  const t = await getTranslations({ locale, namespace: "Metadata" });
+
+  return {
+    title: t("adminDashboardTitle"),
+    description: t("adminDashboardDescription")
+  };
+};
 
 const Page = async () => {
   const t = await getTranslations("Admin.dashboard.general");

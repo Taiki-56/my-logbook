@@ -1,7 +1,19 @@
 import PostForm from "@/components/admin/PostForm";
 import { getPostContentBySlug } from "@/services/post";
 import { Locale } from "@/types/config";
+import { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
+
+export const generateMetadata = async (props: { params: Promise<{ locale: string }> }): Promise<Metadata> => {
+  const { locale } = await props.params;
+  const t = await getTranslations({ locale, namespace: "Metadata" });
+
+  return {
+    title: t("adminPostsEditTitle"),
+    description: t("adminPostsEditDescription")
+  };
+};
 
 /**
  * Admin "edit post" page. Loads a post's content by slug and renders the post form
