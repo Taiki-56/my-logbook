@@ -4,9 +4,10 @@
  */
 
 import { useTranslations } from "next-intl";
-import { FaSlack } from "react-icons/fa6";
+import { FaCss3Alt, FaHtml5, FaSlack } from "react-icons/fa6";
 import {
   SiAxios,
+  SiCloudinary,
   SiDocker,
   SiExpress,
   SiFigma,
@@ -24,9 +25,13 @@ import {
   SiReact,
   SiRedux,
   SiResend,
+  SiSass,
+  SiSentry,
   SiStripe,
+  SiSupabase,
   SiTailwindcss,
-  SiTypescript
+  SiTypescript,
+  SiVercel
 } from "react-icons/si";
 
 const iconSize = 56;
@@ -34,6 +39,27 @@ const iconSize = 56;
 /** Maps a tech stack name to its brand icon, falling back to a lettered placeholder. */
 const getSkillIcon = (skillName: string) => {
   switch (skillName) {
+    case "HTML5":
+      return (
+        <FaHtml5
+          size={iconSize}
+          color="#E34F26"
+        />
+      );
+    case "CSS3":
+      return (
+        <FaCss3Alt
+          size={iconSize}
+          color="#1572B6"
+        />
+      );
+    case "Sass (SCSS)":
+      return (
+        <SiSass
+          size={iconSize}
+          color="#CC6699"
+        />
+      );
     case "TypeScript":
       return (
         <SiTypescript
@@ -98,6 +124,7 @@ const getSkillIcon = (skillName: string) => {
         />
       );
     case "MongoDB":
+    case "MongoDB Atlas":
       return (
         <SiMongodb
           size={iconSize}
@@ -111,11 +138,26 @@ const getSkillIcon = (skillName: string) => {
           color="#2D3748"
         />
       );
+    case "Supabase":
+    case "supabase (Auth / Storage)":
+      return (
+        <SiSupabase
+          size={iconSize}
+          color="#3FCF8E"
+        />
+      );
     case "Stripe":
       return (
         <SiStripe
           size={iconSize}
           color="#008CDD"
+        />
+      );
+    case "Cloudinary":
+      return (
+        <SiCloudinary
+          size={iconSize}
+          color="#3448C5"
         />
       );
     case "Docker":
@@ -125,11 +167,25 @@ const getSkillIcon = (skillName: string) => {
           color="#2496ED"
         />
       );
+    case "Vercel":
+      return (
+        <SiVercel
+          size={iconSize}
+          color="#000000"
+        />
+      );
     case "GitHub":
       return (
         <SiGithub
           size={iconSize}
           color="#181717"
+        />
+      );
+    case "Sentry":
+      return (
+        <SiSentry
+          size={iconSize}
+          color="#362D59"
         />
       );
     case "Jira":
@@ -199,17 +255,19 @@ const getSkillIcon = (skillName: string) => {
   }
 };
 
-// * Normalizes a tech stach name into the i18n message key used for its tooltip reason
+// * Normalizes a tech stack name into the i18n message key used for its tooltip reason
 const formatKey = (name: string) => name.toLowerCase().replace(/[^a-z0-9]/g, "");
 
-// * Tech stack items grouped by category, rendered in the order defined here
+// * Tech stack items grouped by category with hardcoded titles (common across all languages)
 const techCategories = [
   {
     key: "languages",
-    items: ["TypeScript", "JavaScript"]
+    title: "Languages",
+    items: ["HTML5", "CSS3", "Sass (SCSS)", "TypeScript", "JavaScript"]
   },
   {
     key: "frontend",
+    title: "Frontend",
     items: [
       "React",
       "Next.js",
@@ -219,21 +277,30 @@ const techCategories = [
       "Redux",
       "Formik",
       "next-intl",
-      "Tiptap",
+      "NextAuth (Auth.js)",
+      "Zod",
       "Axios"
     ]
   },
   {
     key: "backend",
-    items: ["Node.js", "Express", "PostgreSQL", "MongoDB", "Prisma"]
+    title: "Backend & Database",
+    items: ["Node.js", "Express", "PostgreSQL", "MongoDB", "Prisma", "Supabase"]
+  },
+  {
+    key: "infrastructure",
+    title: "Infrastructure",
+    items: ["Vercel", "MongoDB Atlas", "supabase (Auth / Storage)"]
   },
   {
     key: "services",
-    items: ["Gemini API", "Stripe", "Resend"]
+    title: "AI & External Services",
+    items: ["Gemini API", "Stripe", "Resend", "Cloudinary"]
   },
   {
     key: "tools",
-    items: ["Docker", "GitHub", "Jira", "Slack", "Figma"]
+    title: "Tools",
+    items: ["Docker", "GitHub", "Sentry", "Jira", "Slack", "Figma"]
   }
 ];
 
@@ -242,14 +309,14 @@ const TechStack = () => {
 
   return (
     <div className="flex flex-col gap-6 p-7 bg-[#f9fafb] rounded-2xl border border-[#e5e7eb]">
-      <h2 className="font-['Geist'] font-semibold text-[22px] text-[#1b1c1c] tracking-[-0.44px]">{t("heading")}</h2>
+      <h2 className="font-['Geist'] font-semibold text-[22px] text-[#1b1c1c] tracking-[-0.44px]">Tech Stack & Tools</h2>
 
       <div className="flex flex-col gap-8">
-        {techCategories.map(({ key, items }) => (
+        {techCategories.map(({ key, title, items }) => (
           <div
             key={key}
             className="flex flex-col gap-4">
-            <h3 className="font-['Inter'] font-semibold text-[15px] text-[#6b7280]">{t(`categories.${key}.title`)}</h3>
+            <h3 className="font-['Inter'] font-semibold text-[15px] text-[#6b7280]">{title}</h3>
 
             <div className="grid grid-cols-3 gap-4 xl:gap-5">
               {items.map((item) => (
@@ -262,7 +329,7 @@ const TechStack = () => {
                   </span>
                   <div className="absolute z-50 invisible opacity-0 group-hover:visible group-hover:opacity-100 transition-all duration-300 bottom-[105%] left-1/2 -translate-x-1/2 w-55 p-3.5 bg-gray-900 text-white rounded-xl shadow-xl pointer-events-none transform translate-y-2 group-hover:translate-y-0 flex flex-col gap-1">
                     <span className="text-[14px] font-bold text-blue-300 border-b border-gray-700 pb-1.5 mb-1">
-                      {t("tooltipTitle", { item })}
+                      Why {item}?
                     </span>
                     <span className="text-[13px] leading-relaxed text-gray-200">{t(`reasons.${formatKey(item)}`)}</span>
 
